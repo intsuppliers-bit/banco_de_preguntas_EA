@@ -1,0 +1,1636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banco de Preguntas — Estadística Actuarial (751)</title>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    tags: 'ams'
+  },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre'] }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&family=Lora:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:           #090b11;
+    --surface:      #111520;
+    --surface2:     #181d2c;
+    --surface3:     #1f2538;
+    --border:       #222840;
+    --border-soft:  #1a1f30;
+    --accent:       #f0c93a;
+    --accent-dim:   rgba(240,201,58,0.12);
+    --accent-red:   #e85d5d;
+    --accent-red-dim: rgba(232,93,93,0.10);
+    --accent-green: #3dd68c;
+    --accent-blue:  #5b9cf6;
+    --accent-purple:#b197fc;
+    --text:         #cdd2e0;
+    --text-muted:   #7d8899;
+    --text-dim:     #3e4a60;
+    --heading:      #eef0ff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.85;
+    min-height: 100vh;
+  }
+
+  /* Subtle atmospheric glow */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 90% 60% at 10% 5%,  rgba(240,201,58,0.035) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 50% at 90% 95%, rgba(91,156,246,0.035) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 1;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 3.5rem 8rem;
+  }
+
+  /* ═══════════════════════════════════════
+     COVER
+  ════════════════════════════════════════ */
+  .cover {
+    padding: 5rem 0 4rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4rem;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3rem;
+    align-items: end;
+  }
+  .cover-left {}
+  .cover-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+  }
+  .cover-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 2.5rem;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.6;
+  }
+  .cover h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 3.8rem;
+    font-weight: 800;
+    color: var(--heading);
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+    margin-bottom: 1rem;
+  }
+  .cover h1 em { color: var(--accent); font-style: normal; }
+  .cover-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* Stats grid on the right */
+  .cover-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    min-width: 220px;
+  }
+  .stat-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--accent);
+    padding: 1rem 1.2rem;
+    border-radius: 6px;
+  }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* ═══════════════════════════════════════
+     LEGEND
+  ════════════════════════════════════════ */
+  .legend {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 1rem 1.8rem;
+    border-radius: 8px;
+    margin-bottom: 4rem;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .dot.red    { background: var(--accent-red); }
+  .dot.yellow { background: var(--accent); }
+  .dot.green  { background: var(--accent-green); }
+  .dot.purple { background: var(--accent-purple); }
+
+  /* ═══════════════════════════════════════
+     BLOCK DIVIDER
+  ════════════════════════════════════════ */
+  .block-divider {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin: 4rem 0 2.5rem;
+    color: var(--text-dim);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .block-divider::before, .block-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ═══════════════════════════════════════
+     SECTION
+  ════════════════════════════════════════ */
+  .section { margin-bottom: 4rem; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon {
+    width: 2.6rem;
+    height: 2.6rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+  .icon-red    { background: rgba(232,93,93,0.12); }
+  .icon-green  { background: rgba(61,214,140,0.10); }
+  .icon-purple { background: rgba(177,151,252,0.10); }
+  .icon-yellow { background: rgba(240,201,58,0.10); }
+
+  .section-header h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--heading);
+    letter-spacing: -0.02em;
+  }
+
+  /* ═══════════════════════════════════════
+     TOPIC CARDS
+  ════════════════════════════════════════ */
+  .topic-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 1.1rem;
+    overflow: hidden;
+    transition: border-color 0.18s;
+  }
+  .topic-card:hover { border-color: #2e3550; }
+  .topic-card.open  { border-color: #2e3a58; }
+
+  .topic-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.2rem 1.6rem;
+    cursor: pointer;
+    user-select: none;
+    gap: 1.2rem;
+    transition: background 0.15s;
+  }
+  .topic-header:hover { background: rgba(255,255,255,0.018); }
+  .topic-card.open .topic-header { background: rgba(255,255,255,0.012); }
+
+  .topic-title-wrap { flex: 1; min-width: 0; }
+
+  .topic-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.3rem;
+  }
+  .topic-title-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--heading);
+    letter-spacing: -0.01em;
+  }
+
+  .freq-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    padding: 0.18rem 0.6rem;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .freq-alta   { background: rgba(232,93,93,0.14);  color: var(--accent-red);    border: 1px solid rgba(232,93,93,0.32); }
+  .freq-media  { background: rgba(240,201,58,0.11); color: var(--accent);        border: 1px solid rgba(240,201,58,0.3); }
+  .freq-baja   { background: rgba(61,214,140,0.09); color: var(--accent-green);  border: 1px solid rgba(61,214,140,0.25); }
+  .freq-nueva  { background: rgba(177,151,252,0.1); color: var(--accent-purple); border: 1px solid rgba(177,151,252,0.28); }
+
+  .topic-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.66rem;
+    color: var(--text-dim);
+  }
+
+  .topic-chevron {
+    color: var(--text-dim);
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+    transition: transform 0.22s ease;
+    line-height: 1;
+  }
+  .topic-card.open .topic-chevron { transform: rotate(90deg); color: var(--accent); }
+
+  /* ── body ── */
+  .topic-body {
+    display: none;
+    padding: 1.6rem 1.8rem 1.8rem;
+    border-top: 1px solid var(--border-soft);
+  }
+  .topic-card.open .topic-body { display: block; }
+
+  /* Two-column layout inside body */
+  .body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem 2.5rem;
+    margin-bottom: 1.4rem;
+  }
+  .body-grid.full { grid-template-columns: 1fr; }
+
+  .body-section { }
+
+  .body-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.63rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    opacity: 0.7;
+    margin-bottom: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .body-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-soft);
+  }
+
+  ul.item-list {
+    list-style: none;
+    padding: 0;
+  }
+  ul.item-list li {
+    padding: 0.4rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 0.93rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    line-height: 1.65;
+  }
+  ul.item-list li::before {
+    content: '›';
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    flex-shrink: 0;
+    margin-top: 0.08rem;
+    opacity: 0.7;
+  }
+  ul.item-list li:last-child { border-bottom: none; }
+  ul.item-list li strong { color: var(--heading); font-weight: 600; }
+
+  /* Traps */
+  .trap-box {
+    background: var(--accent-red-dim);
+    border: 1px solid rgba(232,93,93,0.22);
+    border-left: 3px solid var(--accent-red);
+    border-radius: 7px;
+    padding: 1rem 1.1rem;
+    margin-top: 0.9rem;
+  }
+  .trap-box + .trap-box { margin-top: 0.7rem; }
+  .trap-box-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    color: var(--accent-red);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .trap-box p {
+    font-size: 0.91rem;
+    color: var(--text-muted);
+    margin-bottom: 0.35rem;
+    line-height: 1.6;
+  }
+  .trap-box p:last-child { margin-bottom: 0; }
+
+  /* Year tags */
+  .years-section {
+    margin-top: 1.2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+  }
+  .years-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    flex-shrink: 0;
+  }
+  .years-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .year-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 0.18rem 0.55rem;
+    border-radius: 4px;
+  }
+
+  /* ═══════════════════════════════════════
+     CHEAT TABLE
+  ════════════════════════════════════════ */
+  .table-wrap { overflow-x: auto; margin-top: 0.8rem; }
+  .cheat-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+  .cheat-table th {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.63rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    background: var(--surface2);
+    padding: 0.65rem 1rem;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    white-space: nowrap;
+  }
+  .cheat-table td {
+    padding: 0.6rem 1rem;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--text-muted);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+  .cheat-table tr:last-child td { border-bottom: none; }
+  .cheat-table tr:hover td { background: rgba(255,255,255,0.015); }
+  .cheat-table .verdict-false { color: var(--accent-red); font-weight: 700; }
+  .cheat-table .verdict-true  { color: var(--accent-green); font-weight: 700; }
+
+  /* ═══════════════════════════════════════
+     BACK TOP
+  ════════════════════════════════════════ */
+  .back-top {
+    position: fixed;
+    bottom: 2.2rem;
+    right: 2.2rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    padding: 0.55rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    z-index: 100;
+    transition: all 0.15s;
+  }
+  .back-top:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── Math-heavy list variant ── */
+  ul.math-list { display: flex; flex-direction: column; gap: 0; }
+  ul.math-list li {
+    display: grid;
+    grid-template-columns: minmax(180px, 26%) 1fr;
+    gap: 0 1.4rem;
+    align-items: start;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  ul.math-list li::before { display: none; }
+  ul.math-list li:last-child { border-bottom: none; }
+  .li-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--heading);
+    line-height: 1.5;
+    padding-top: 0.05rem;
+  }
+  .li-text {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* ── Context grid for applied contexts ── */
+  .context-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem 1.5rem;
+  }
+  .context-item {
+    background: var(--surface2);
+    border: 1px solid var(--border-soft);
+    border-radius: 6px;
+    padding: 0.65rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .ctx-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.63rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .ctx-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.55;
+  }
+
+  p { margin-bottom: 0.6rem; }
+  mjx-container { color: var(--text) !important; }
+
+  @media (max-width: 900px) {
+    .wrapper { padding: 0 1.5rem 5rem; }
+    .cover { grid-template-columns: 1fr; }
+    .cover-stats { grid-template-columns: repeat(4, 1fr); }
+    .cover h1 { font-size: 2.6rem; }
+    .body-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .cover h1 { font-size: 2rem; }
+    .cover-stats { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<!-- ══════════════════════
+     COVER
+═══════════════════════════ -->
+<div class="cover">
+  <div class="cover-left">
+    <div class="cover-eyebrow">FCE – UBA · Estadística Actuarial 751 · Prof. Del Rosso</div>
+    <h1>Banco de<br><em>Preguntas</em><br>2do Parcial</h1>
+    <div class="cover-sub">Análisis de 31 exámenes (parciales + recuperatorios) · 2016–2024</div>
+  </div>
+  <div class="cover-stats">
+    <div class="stat-box"><span class="stat-num">31</span><span class="stat-label">Exámenes analizados</span></div>
+    <div class="stat-box"><span class="stat-num">9</span><span class="stat-label">Años de historia</span></div>
+    <div class="stat-box"><span class="stat-num">5</span><span class="stat-label">Bloques temáticos</span></div>
+    <div class="stat-box"><span class="stat-num">★</span><span class="stat-label">Trampas mapeadas</span></div>
+  </div>
+</div>
+
+<!-- LEYENDA -->
+<div class="legend">
+  <div class="legend-item"><span class="dot red"></span> Frecuencia ALTA — aparece ≥7 veces</div>
+  <div class="legend-item"><span class="dot yellow"></span> Frecuencia MEDIA — aparece 4–6 veces</div>
+  <div class="legend-item"><span class="dot green"></span> Frecuencia BAJA — aparece 1–3 veces</div>
+  <div class="legend-item"><span class="dot purple"></span> Tema NUEVO — incorporado desde 2021</div>
+</div>
+
+
+<!-- ══════════════════════
+     BLOQUE I — PROCESOS BD
+═══════════════════════════ -->
+<div class="block-divider">Bloque I — Procesos Birth-Death y variantes</div>
+
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon icon-red">🧬</div>
+    <h2>Procesos BD continuos — el corazón del parcial</h2>
+  </div>
+
+  <!-- CARD: KC -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-alta">★★★ ALTA</span>
+          <span class="topic-title-text">Sistema de ecuaciones de Kolmogorov-Chapman</span>
+        </div>
+        <div class="topic-meta">Aparece en 16 de 31 exámenes · siempre como punto A o primer paso</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Qué piden exactamente</div>
+          <ul class="item-list">
+            <li>Derivar el sistema completo de EC dif-dif para BDI, BDIM, Logístico, o variantes con tasas polinómicas $\lambda_n = b_0 + b_1 n + b_2 n^2$</li>
+            <li>Con <strong>inmigración y/o migración</strong>: escribir los 4 tipos de transición con sus tasas — muchos olvidan la migración</li>
+            <li>Procesos <strong>bidimensionales</strong> (femenino/masculino): sistema desagregado $\partial P_{f,v}/\partial t$</li>
+            <li>A veces solo el sistema; a veces como paso previo para FGP o FGM</li>
+            <li>En contextos aplicados: cartera de créditos, epidemia SIS, puntos de tarjeta</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Trampas frecuentes</div>
+          <div class="trap-box">
+            <div class="trap-box-title">⚠ Tasas dependientes de n vs. constantes</div>
+            <p>Con $\lambda_n = b_0 + b_1 n + b_2 n^2$ el sistema tiene forma distinta. <strong>No copiar el sistema Poisson</strong> ($\lambda_n = \rho$ constante). Hay que expandir $\lambda_n P_n$ y $\lambda_{n-1} P_{n-1}$ correctamente.</p>
+          </div>
+          <div class="trap-box">
+            <div class="trap-box-title">⚠ Frontera n=0 en presencia de migración</div>
+            <p>Para $n=0$ el término de migración ($\theta$) desaparece: no puede haber egresos si la población es cero. El sistema para $n=0$ difiere del de $n \geq 1$. Omitirlo baja puntos.</p>
+          </div>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2016-2C P</span><span class="year-tag">2016-2C R</span><span class="year-tag">2017-1C R</span><span class="year-tag">2017-2C R</span><span class="year-tag">2018-1C P</span><span class="year-tag">2018-2C P</span><span class="year-tag">2019-1C P</span><span class="year-tag">2019-2C P</span><span class="year-tag">2020-2C P</span><span class="year-tag">2021-1C P</span><span class="year-tag">2022-1C R</span><span class="year-tag">2023-1C R</span><span class="year-tag">2024-1C P</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: FGM E y Var -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-alta">★★★ ALTA</span>
+          <span class="topic-title-text">FGM — Esperanza, Varianza y momentos superiores</span>
+        </div>
+        <div class="topic-meta">Aparece en ~20 de 31 exámenes · el tema más constante del parcial</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Procedimiento estándar (memorizar)</div>
+          <ul class="item-list">
+            <li>Derivar $\partial M/\partial t$ evaluada en $w=0$ → EDO para $m_1(t)$</li>
+            <li>Derivar dos veces para $m_2(t)$; la varianza: $\sigma^2 = m_2 - m_1^2$</li>
+            <li>BD puro lineal: $m_1(t) = n_0 e^{(\lambda-\mu)t}$</li>
+            <li>BDI ($\lambda \neq \mu$): $m_1(t) = \left(n_0 + \frac{\xi}{\rho}\right)e^{\rho t} - \frac{\xi}{\rho}$ con $\rho=\lambda-\mu$</li>
+            <li><strong>Coef. de asimetría</strong> (FP lineal): requiere 3er momento. Fórmula dada en el enunciado</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Variantes que aparecen</div>
+          <ul class="item-list">
+            <li><strong>Tasas orden superior</strong> ($b_2 n^2$, $b_3 n^3$): la FGM involucra $\partial^2 M/\partial w^2$; el sistema de momentos se acopla</li>
+            <li><strong>Poisson No Homogéneo</strong>: $\lambda(t)$ dependiente del tiempo; la EDP es $\partial M/\partial t = \lambda(t)(e^w-1)M$ — 2020-2C P</li>
+            <li><strong>Proceso bidimensional</strong>: derivar respecto de $w_2$ y evaluar en $w_1=w_2=0$ para obtener $m_1(v(t))$</li>
+            <li><strong>Asimetría del FP lineal</strong>: $AS = \frac{1-2e^{-\mu t}}{\sqrt{n_0 e^{-\mu t}(1-e^{-\mu t})}}$ — 2019-2C R y 2023-2C R</li>
+          </ul>
+          <div class="trap-box">
+            <div class="trap-box-title">⚠ Momentos factoriales vs. ordinarios</div>
+            <p>Al derivar dos veces y evaluar en $w=0$ se obtiene $m_2(t) = E[n(n-1)(t)] + m_1(t)$, <strong>no</strong> $E[n^2]$ directo. La varianza usa $\sigma^2 = E[n^2] - m_1^2$; hay que sumar $m_1$ antes.</p>
+          </div>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2016-2C P</span><span class="year-tag">2017-1C P</span><span class="year-tag">2017-2C P</span><span class="year-tag">2018-1C P</span><span class="year-tag">2018-1C R</span><span class="year-tag">2019-2C R</span><span class="year-tag">2020-2C P</span><span class="year-tag">2021-1C P</span><span class="year-tag">2021-2C P</span><span class="year-tag">2022-2C R</span><span class="year-tag">2023-1C R</span><span class="year-tag">2023-2C R</span><span class="year-tag">2024-1C P</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: FGP Lagrange -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-alta">★★★ ALTA</span>
+          <span class="topic-title-text">FGP — Resolución por Ecuaciones de Lagrange</span>
+        </div>
+        <div class="topic-meta">Aparece en ~12 exámenes · siempre "demostrar" · nunca "calcular numéricamente"</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Los 4 resultados que piden sistemáticamente</div>
+          <ul class="item-list">
+            <li><strong>Fallecimiento Puro Lineal</strong> → $\{n(t)\} \sim B(n_0, e^{-\mu t})$</li>
+            <li><strong>Nacimiento Puro Lineal</strong> → $\{n(t)\} \sim B^{-1}(n_0, e^{-\lambda t})$; la unicidad exige la <em>divergencia</em> de $\sum 1/\lambda_n$</li>
+            <li><strong>Birth-Death Lineal</strong> ($\lambda \neq \mu$): FGP en cociente de potencias con $C_1 = \frac{\lambda w-\mu}{w-1}e^{-(\lambda-\mu)t}$</li>
+            <li><strong>Probabilidad de extinción</strong>: $P_{n_0;0}(t) = \left(\frac{\mu(e^{(\lambda-\mu)t}-1)}{\lambda e^{(\lambda-\mu)t}-\mu}\right)^{n_0}$ — piden calcularla para $t\to\infty$</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Trampas críticas</div>
+          <div class="trap-box">
+            <div class="trap-box-title">⚠ Convergencia vs. Divergencia (trampa de V/F)</div>
+            <p>La unicidad del NP lineal se fundamenta en la <strong>divergencia</strong> de $\sum_{n=n_0}^\infty \frac{1}{n\lambda} = \infty$. Apareció como V/F con la palabra "convergencia" en 2018-1C P y 2018-2C P. Es <strong>FALSO</strong>.</p>
+          </div>
+          <div class="trap-box">
+            <div class="trap-box-title">⚠ L'Hôpital cuando λ → μ</div>
+            <p>Cuando $\lambda \to \mu$ en la FGP del BD, la forma $0/0$ exige L'Hôpital. El resultado debe tender a la distribución geométrica del fallecimiento puro. Apareció en 2020-2C R.</p>
+          </div>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2016-2C R</span><span class="year-tag">2017-1C P</span><span class="year-tag">2018-1C R</span><span class="year-tag">2018-2C P</span><span class="year-tag">2020-2C R</span><span class="year-tag">2022-2C R</span><span class="year-tag">2023-2C P</span><span class="year-tag">2024-1C P</span><span class="year-tag">2024-2C R</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: Tiempos -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-alta">★★★ ALTA</span>
+          <span class="topic-title-text">Tiempo de espera — Exponencial y Distribución Gamma</span>
+        </div>
+        <div class="topic-meta">Aparece en ~14 de 31 exámenes · siempre en distintos contextos aplicados</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid full">
+
+        <div class="body-section">
+          <div class="body-label">Las tres variantes estándar</div>
+          <ul class="item-list math-list">
+            <li>
+              <span class="li-label">$T_{0,1}$ — First Passage Time</span>
+              <span class="li-text">Demostrar que $T_{0,1} \sim Exp(\lambda_n + \mu_n)$. La permanencia en el estado $n$ sigue una exponencial con tasa $\lambda_n + \mu_n$ (suma de ambas tasas).</span>
+            </li>
+            <li>
+              <span class="li-label">$T_n = \sum_{i=1}^n T_{i-1,i}$ — Tiempo acumulado</span>
+              <span class="li-text">Demostrar por FGM que sigue $\Gamma\!\left(n,\; \dfrac{1}{\lambda_n+\mu_n}\right)$. Usar que la FGM de la suma de independientes es el producto de las FGMs individuales.</span>
+            </li>
+            <li>
+              <span class="li-label">E y Var de $T_n$</span>
+              <span class="li-text">$E[T_n] = \dfrac{n}{\lambda_n+\mu_n}$ $\quad$ $\sigma^2[T_n] = \dfrac{n}{(\lambda_n+\mu_n)^2}$</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="body-section" style="margin-top:1.2rem">
+          <div class="body-label">Contextos aplicados — el disfraz cambia, la matemática no</div>
+          <div class="context-grid">
+            <div class="context-item">
+              <span class="ctx-tag">COVID / SIS-SIR</span>
+              <span class="ctx-desc">$T_{0,1}$ hasta la primera infección — 2021-1C P y R</span>
+            </div>
+            <div class="context-item">
+              <span class="ctx-tag">Cartera de créditos</span>
+              <span class="ctx-desc">Tiempo hasta alcanzar $N$ créditos vigentes — 2021-2C P, 2023-1C R</span>
+            </div>
+            <div class="context-item">
+              <span class="ctx-tag">Tarjeta de puntos</span>
+              <span class="ctx-desc">Tiempo hasta acumular $N$ puntos "Actuarial" — 2020-2C R</span>
+            </div>
+            <div class="context-item">
+              <span class="ctx-tag">Proceso F/M bidimensional</span>
+              <span class="ctx-desc">Exponencial con tasa $f(\lambda_f+\lambda_v+\mu_f)+v\mu_v$ — 2019-1C P, 2022-1C R</span>
+            </div>
+            <div class="context-item">
+              <span class="ctx-tag">k-ésimo momento de $T_{0,1}$</span>
+              <span class="ctx-desc">$E[T_{0,1}^k] = k!\,/\,(\lambda_n+\mu_n)^k$ — 2023-2C R</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2017-1C P</span><span class="year-tag">2017-2C P</span><span class="year-tag">2018-1C P</span><span class="year-tag">2018-2C P</span><span class="year-tag">2019-1C P</span><span class="year-tag">2019-2C P</span><span class="year-tag">2020-2C R</span><span class="year-tag">2021-1C P</span><span class="year-tag">2021-1C R</span><span class="year-tag">2021-2C P</span><span class="year-tag">2022-1C R</span><span class="year-tag">2022-2C R</span><span class="year-tag">2023-1C R</span><span class="year-tag">2023-2C R</span><span class="year-tag">2024-1C P</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: Bidimensional -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-media">★★ MEDIA</span>
+          <span class="topic-title-text">Proceso bidimensional — población femenina / masculina</span>
+        </div>
+        <div class="topic-meta">Aparece en 5 exámenes · solo desde 2019 en adelante</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Qué piden</div>
+          <ul class="item-list">
+            <li>Sistema KC desagregado: $\partial P_{f,v}/\partial t = ...$</li>
+            <li>$m_1(v(t))$ a partir de la FGM dada: derivar respecto de $w_2$, evaluar en $w_1=w_2=0$</li>
+            <li>Cálculo numérico de $m_1(f(t))$ y $m_1(v(t))$ para $t=1,...,5$</li>
+            <li>Con inmigración/migración por género: $\xi_f, \xi_v, \theta_f, \theta_v$ en las tasas</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Trampa — equivalencia de tasas</div>
+          <div class="trap-box">
+            <div class="trap-box-title">⚠ Conversión de tasas semestrales a anuales</div>
+            <p>En 2019-2C P dieron tasas "por semestre" y pidieron proyección anual. Hay que convertir usando $1+i = e^\delta$ o $(1+i^{(m)}/m)^m = e^\delta$. No es simplemente multiplicar por 2.</p>
+          </div>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2019-1C P</span><span class="year-tag">2019-1C R</span><span class="year-tag">2019-2C P</span><span class="year-tag">2022-1C R</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: Poisson No Homogéneo -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-baja">★ BAJA</span>
+          <span class="topic-title-text">Proceso de Poisson No Homogéneo — $\lambda(t)$ dependiente del tiempo</span>
+        </div>
+        <div class="topic-meta">Apareció en 2020-2C P · ejercicio completo de 50 pts · puede volver en contexto actuarial</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Lo que piden — 4 subpuntos encadenados</div>
+          <ul class="item-list">
+            <li><strong>Sistema KC</strong>: igual que Poisson homogéneo pero con $\lambda(t)$ en lugar de $\rho$. La estructura es $P'_y(t) = -\lambda(t)P_y(t) + \lambda(t)P_{y-1}(t)$</li>
+            <li><strong>FGP → función de probabilidad</strong>: demostrar que $P_x(t) = \frac{e^{-\Lambda(t)}\,[\Lambda(t)]^x}{x!}$ donde $\Lambda(t) = \int_0^t \lambda(\tau)\,d\tau$. La distribución es Poisson con parámetro $\Lambda(t)$</li>
+            <li><strong>FGM → valor esperado</strong>: partir de $\partial M/\partial t = \lambda(t)(e^w - 1)M$; resolver → $m_1(t) = \Lambda(t)$</li>
+            <li><strong>$T_{0,1}$</strong>: demostrar que $f_{T_{0,1}}(t) = \lambda(t_1)\,e^{-\int_0^{t_1}\lambda(\tau)d\tau}$ — exponencial no estándar con parámetro variable</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Trampas específicas</div>
+          <div class="trap-box">
+            <div class="trap-box-title">⚠ La integral $\Lambda(t)$ no es $\lambda \cdot t$</div>
+            <p>Con $\lambda(t) = \lambda_0 + \lambda_1 t + \lambda_2 t^2$, la integral $\Lambda(t) = \lambda_0 t + \frac{\lambda_1}{2}t^2 + \frac{\lambda_2}{3}t^3$. Hay que integrar término a término. Un error muy común es tratar $\lambda(t)$ como constante.</p>
+          </div>
+          <div class="trap-box">
+            <div class="trap-box-title">⚠ Afirmación V/F: "todo Poisson es estacionario"</div>
+            <p>El Poisson No Homogéneo <strong>no es estacionario</strong>: su intensidad $\lambda(t)$ varía con el tiempo. Esta afirmación apareció como V/F en 2023-2C P con veredicto <strong>FALSO</strong>.</p>
+          </div>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2020-2C P</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: Probabilidad via recurrencia KC -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-baja">★ BAJA</span>
+          <span class="topic-title-text">Probabilidad $P_y(t)$ vía recurrencia del sistema KC — Proceso Poisson</span>
+        </div>
+        <div class="topic-meta">Apareció en 2023-2C P · ejercicio exclusivo sin precedentes · conceptualmente distinto</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">La fórmula y cómo demostrarla</div>
+          <ul class="item-list">
+            <li>Partiendo del sistema KC: $P'_y(t) = -\rho P_y(t) + \rho P_{y-1}(t)$, despejar $P_{y-1}(t) = \frac{P'_y(t)}{\rho} + P_y(t)$</li>
+            <li>Aplicar recursivamente: $P_y(t) = -\frac{1}{\rho}\sum_{j=0}^{y} P'_j(t)$</li>
+            <li><strong>Interpretación</strong>: la probabilidad de estar en estado $y$ en $t$ es la suma ponderada de las derivadas temporales de los estados anteriores — la "velocidad" de cambio acumulada desde 0 hasta $y$</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Cómo calcular $P(Y=2)$ con esta fórmula</div>
+          <ul class="item-list">
+            <li>$P_2(t) = -\frac{1}{\rho}\left[P'_0(t) + P'_1(t) + P'_2(t)\right]$</li>
+            <li>Con $P_0(t) = e^{-\rho t}$: $P'_0 = -\rho e^{-\rho t}$</li>
+            <li>Con $P_1(t) = \rho t e^{-\rho t}$: $P'_1 = \rho e^{-\rho t}(1-\rho t)$</li>
+            <li>Sustituir y simplificar → verifica que da $P_2(t) = \frac{(\rho t)^2}{2!}e^{-\rho t}$</li>
+            <li><strong>Probabilidad acumulada</strong>: $F_Y(y) = -\frac{1}{\rho}\sum_{j=0}^{y}\sum_{k=0}^{j} P'_k(t)$ o directamente acumular $P_j(t)$</li>
+          </ul>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2023-2C P</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /section -->
+
+
+<!-- ══════════════════════
+     BLOQUE II — SIMULACIÓN
+═══════════════════════════ -->
+<div class="block-divider">Bloque II — Simulación de Monte Carlo</div>
+
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon icon-green">🎲</div>
+    <h2>Simulación — peso creciente desde 2021 (~40 pts siempre)</h2>
+  </div>
+
+  <!-- CARD: Transformada Inversa -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-alta">★★★ ALTA</span>
+          <span class="topic-title-text">Transformada Inversa — discreta eficiente y continua</span>
+        </div>
+        <div class="topic-meta">Aparece en ~10 de 31 exámenes · siempre con números pseudo-aleatorios dados</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Método eficiente — discreta</div>
+          <ul class="item-list">
+            <li>Ordenar los valores de <strong>mayor a menor probabilidad</strong> (minimiza comparaciones promedio)</li>
+            <li>Dado $U \sim U(0,1)$: devolver $x_j$ si $F(x_{j-1}) \leq U < F(x_j)$</li>
+            <li>Las primeras comparaciones deben ser con los valores más probables</li>
+            <li>El número promedio de comparaciones = $1 + np$ (para binomial)</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Continua — fórmulas dadas en el enunciado</div>
+          <ul class="item-list">
+            <li><strong>Exponencial</strong>: $X = -\frac{1}{\lambda}\ln(U)$ — piden explícitamente esta fórmula</li>
+            <li><strong>Uniforme</strong> $(a,b)$: $X = U(b-a)+a$</li>
+            <li><strong>Normal</strong> (para AR(1)): generar $Z=\Phi^{-1}(U)$ o usar Box-Muller</li>
+            <li>Monto con ocurrencia: primero decidir siniestro ($U_1 < p$), luego simular el monto ($U_2$)</li>
+          </ul>
+          <div class="trap-box">
+            <div class="trap-box-title">⚠ Método eficiente vs. estándar</div>
+            <p>El enunciado pide <strong>explícitamente</strong> el método eficiente. Ordenar de mayor a menor probabilidad, no de menor a mayor. Es un error muy común que baja puntos.</p>
+          </div>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2021-1C P</span><span class="year-tag">2021-1C R</span><span class="year-tag">2021-2C P</span><span class="year-tag">2022-1C R</span><span class="year-tag">2022-2C R</span><span class="year-tag">2023-1C R</span><span class="year-tag">2024-1C P</span><span class="year-tag">2024-2C R</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: FGP siniestros -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-alta">★★★ ALTA</span>
+          <span class="topic-title-text">FGP aplicada — convolución de distribuciones de siniestros</span>
+        </div>
+        <div class="topic-meta">Aparece en ~8 de 31 exámenes · siempre en dupla con transformada inversa</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">El procedimiento — aprendérselo</div>
+          <ul class="item-list">
+            <li>Para cada póliza con prob. de siniestro $p$: $G_{S_i}(w) = (1-p) + p \cdot G_{monto}(w)$</li>
+            <li>La FGP de $S = S_1 + ... + S_n$ con pólizas <strong>independientes</strong> = producto de FGPs</li>
+            <li>Expandir el producto, colectar por potencias de $w$, leer la distribución de probabilidad</li>
+            <li>A veces dan condiciones extras: "$P(X=0) = k \cdot P(X=200)$" para hallar parámetros desconocidos (2022-2C R)</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Contextos usados</div>
+          <ul class="item-list">
+            <li>Aseguradora de incendio con 2–3 pólizas independientes (2021, 2022)</li>
+            <li>Starbucks — mesas ocupadas: $B(3, 0.5)$ + tabular + uniforme discreta (2022-1C R)</li>
+            <li>Dados — convolución de dos dados uniformes (2023-1C R)</li>
+            <li>Cartera con distribución en mezcla y parámetros incógnita (2022-2C R)</li>
+          </ul>
+          <div class="trap-box">
+            <div class="trap-box-title">⚠ No olvidar el $(1-p)$ de la póliza</div>
+            <p>La FGP de una póliza con prob. de siniestro $p$ es $G_{S_i}(w) = (1-p) + p \cdot G_{monto}(w)$. Sin el $(1-p)$, la distribución no suma 1 y todos los cálculos posteriores fallan.</p>
+          </div>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2021-1C P</span><span class="year-tag">2021-1C R</span><span class="year-tag">2021-2C P</span><span class="year-tag">2022-1C R</span><span class="year-tag">2022-2C R</span><span class="year-tag">2023-1C R</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: Composición -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-media">★★ MEDIA</span>
+          <span class="topic-title-text">Método de composición + Recursión de Panjer</span>
+        </div>
+        <div class="topic-meta">Aparece en 4 exámenes · 2022–2024 · siempre con vectores U dados</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Composición — los 3 pasos</div>
+          <ul class="item-list">
+            <li><strong>Paso 1</strong>: usar $U_0$ para elegir urna (X1, X2, X3) según pesos de participación (p.ej. 45%, 30%, 25%)</li>
+            <li><strong>Paso 2</strong>: usar el $U_i$ de la urna elegida para generar el valor de $X_i$ (transformada inversa)</li>
+            <li><strong>Paso 3</strong>: el valor generado es una realización de la mezcla $X$</li>
+            <li>Usar los vectores $U_0, U_1, U_2, U_3$ en el orden indicado por $U_0$</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Panjer para Geométrica, Binomial, Poisson (2023-1C R)</div>
+          <ul class="item-list">
+            <li><strong>Geométrica</strong>: $X = \lfloor \ln(U)/\ln(q) \rfloor + 1$ — fórmula cerrada</li>
+            <li><strong>Binomial</strong>: $p_{i+1} = \frac{n-i}{i+1}\cdot\frac{p}{q}\cdot p_i$, inicializar $p_0 = q^n$</li>
+            <li><strong>Poisson</strong>: $p_{i+1} = \frac{\lambda}{i+1} p_i$, inicializar $p_0 = e^{-\lambda}$</li>
+            <li>Una vez generadas las probabilidades, usar transformada inversa eficiente</li>
+          </ul>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2022-2C P</span><span class="year-tag">2023-1C R</span><span class="year-tag">2024-2C R</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: Chi2 y KS -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-media">★★ MEDIA</span>
+          <span class="topic-title-text">Bondad de ajuste — Chi-cuadrado y Kolmogorov-Smirnov</span>
+        </div>
+        <div class="topic-meta">Aparece en 4 exámenes · 2021–2024 · Chi2 siempre con los mismos datos</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Chi-cuadrado (datos discretos)</div>
+          <ul class="item-list">
+            <li>$T = \sum_{i=1}^k \frac{(N_i - np_i)^2}{np_i} \;\xrightarrow{n\to\infty}\; \chi^2_{k-1}$ bajo $H_0$</li>
+            <li>Calcular $T$ numéricamente con los $N_i$ y $p_i$ dados (los datos de la VA Uniforme $\{1,...,8\}$ con $n=60$ aparecieron 3 veces con los mismos valores)</li>
+            <li>P-valor = $P(\chi^2_{k-1} \geq T^{obs})$ — rechazar si $< 0.05$</li>
+            <li>Estimar P-valor por simulación: generar muestras bajo $H_0$, contar proporción con $T \geq t^{obs}$</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">KS (datos continuos) — en R</div>
+          <ul class="item-list">
+            <li>$D = \max_x |\tilde{F}(x) - F(x)|$ — más potente que Chi2 para datos continuos</li>
+            <li>En R: `ks.test()` + `fitdistr()` (librería MASS) para estimar parámetros</li>
+            <li>También pueden pedir `fit.cont` de `rriskDistributions`</li>
+            <li>Relacionado con el tiempo acumulado $T_n \sim \Gamma$ — verificar el ajuste a Gamma</li>
+          </ul>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2021-2C R</span><span class="year-tag">2022-2C P</span><span class="year-tag">2024-2C R</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: ARIMA simulación -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-media">★★ MEDIA</span>
+          <span class="topic-title-text">Simulación de series AR(1) y reparametrización ARIMA</span>
+        </div>
+        <div class="topic-meta">Aparece en 3 exámenes · 2021–2024 · siempre el mismo modelo AR(1) con φ=0.80</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Simulación del AR(1)</div>
+          <ul class="item-list">
+            <li>$Y_t = \phi_1 Y_{t-1} + \varepsilon_t$, con $\varepsilon_t \sim N(0, \sigma^2)$</li>
+            <li>Generar $\varepsilon_t$ via inversa de la normal: $Z = \Phi^{-1}(U)$, luego $\varepsilon_t = \sigma \cdot Z$</li>
+            <li>Calcular $Y_1, ..., Y_{15}$ con $Y_0 = 50$, $\phi_1 = 0.80$, $\sigma^2 = 2$</li>
+            <li>Calcular con los simulados: media, autocovarianzas hasta orden 3, autocorrelaciones</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Reparametrización ARIMA(1,2,1)</div>
+          <ul class="item-list">
+            <li>Dado $Z_t = \nabla^2 Y_t$: expandir en términos de $Y_t, Y_{t-1}, Y_{t-2}, Y_{t-3}$</li>
+            <li>Verificar estacionariedad de los coeficientes del modelo en niveles</li>
+            <li>Modelo estimado: $Z_t = 0.6512 Z_{t-1} + \epsilon_t - 0.9373 \epsilon_{t-1}$</li>
+          </ul>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2021-2C P</span><span class="year-tag">2021-2C R</span><span class="year-tag">2022-2C R</span><span class="year-tag">2024-2C R</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: Simulacion con límite y condicional -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-media">★★ MEDIA</span>
+          <span class="topic-title-text">Simulación con límite de pérdida, gastos adicionales y probabilidad condicional</span>
+        </div>
+        <div class="topic-meta">Aparece en 2024-1C P y 2021-2C R · variantes del escenario base de siniestros</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Límite de pérdida (franquicia por arriba) — 2024-1C P</div>
+          <ul class="item-list">
+            <li>La empresa paga $\min(X, L)$ donde $L$ es el límite (p.ej. 150). Si $X > L$, el asegurado paga el exceso</li>
+            <li>Calcular el monto simulado, luego aplicar: $\text{pago}_i = \min(X_i, 150)$ si hubo siniestro, $0$ si no</li>
+            <li>El monto promedio de la empresa <strong>baja</strong> respecto del caso sin límite</li>
+          </ul>
+          <div class="trap-box">
+            <div class="trap-box-title">⚠ Gastos adicionales condicionados al siniestro</div>
+            <p>Solo se generan gastos si hay siniestro (mismo $U_{Siniestro}$ del punto A). Usar un segundo vector $U_{Gastos}$ para simular $G \sim U(0,20)$ solo en los casos donde hubo siniestro. No simular gastos para todos los registros.</p>
+          </div>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Probabilidad condicional por simulación — 2021-2C R</div>
+          <ul class="item-list">
+            <li>Simular $n$ realizaciones de la mezcla $P_1(30\%), P_2(20\%), P_3(50\%)$</li>
+            <li>$\hat{P}(\text{consumo} > 10) = \frac{\text{casos con } X_i > 10}{n}$</li>
+            <li>$\hat{P}(\text{Planta 2} | X < 10) = \frac{\text{casos de Planta 2 con } X_i < 10}{\text{casos con } X_i < 10}$</li>
+            <li>Intervalo de confianza al 95% para una proporción: $\hat{p} \pm 1.96\sqrt{\hat{p}(1-\hat{p})/n}$</li>
+            <li>Costo esperado: aplicar la tarifa correspondiente a cada planta en cada simulación, luego promediar</li>
+          </ul>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2021-2C R</span><span class="year-tag">2024-1C P</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: Distribución mixta compleja con FGP -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-baja">★ BAJA</span>
+          <span class="topic-title-text">Distribución "evento D" — composición con umbrales y parámetros incógnita</span>
+        </div>
+        <div class="topic-meta">Apareció en 2023-2C P · el ejercicio más algebraicamente complejo de simulación</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Estructura del problema</div>
+          <ul class="item-list">
+            <li>Un evento $D$ asume distribución A, B o C según dónde cae $U$ respecto a umbrales $X_1 - 0.05$ y $X_1 + X_2$ (con $X_1, X_2$ parámetros de C desconocidos)</li>
+            <li>Datos dados: $G'_{A*B}(1) = 3.85$ y $P(Z=5) = 0.268334$ donde $Z = A*B*C$</li>
+            <li>Usar $G'_{A*B}(1) = E[A*B]$ para hallar $X_1$; usar $P(Z=5)$ para hallar $X_2$</li>
+            <li>Con $X_1$ y $X_2$ conocidos, los umbrales quedan definidos y se puede simular</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Procedimiento de simulación</div>
+          <ul class="item-list">
+            <li>Para cada realización: usar $U_D$ para decidir qué distribución aplica según los umbrales calculados</li>
+            <li>Usar $U_A$, $U_B$ o $U_C$ según corresponda para generar el valor de esa distribución (transformada inversa)</li>
+            <li>A, B son uniformes (fácil) y C tabular — una vez conocidos $X_1, X_2$ se construye la tabla de C y se aplica transformada inversa</li>
+          </ul>
+          <div class="trap-box">
+            <div class="trap-box-title">⚠ $G'(1)$ es el valor esperado de la convolución</div>
+            <p>$G'_{A*B}(w)\big|_{w=1} = E[A*B] = E[A] + E[B]$ (por la propiedad de la FGP de la convolución). Esto sirve para resolver $X_1$. No confundir con $G(1) = 1$ (que siempre es 1).</p>
+          </div>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2023-2C P</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /section -->
+
+
+<!-- ══════════════════════
+     BLOQUE III — GLM
+═══════════════════════════ -->
+<div class="block-divider">Bloque III — GLM (Modelos Lineales Generalizados)</div>
+
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon icon-purple">📊</div>
+    <h2>GLM — Tendencia creciente desde 2023 · probablemente en este parcial</h2>
+  </div>
+
+  <!-- CARD: Logística + Poisson -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-nueva">★ NUEVO</span>
+          <span class="topic-title-text">Regresión Logística y Regresión de Poisson</span>
+        </div>
+        <div class="topic-meta">Aparece en 4 exámenes · todos de 2023–2024 · un ejercicio completo de ~25 pts</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Regresión Logística</div>
+          <ul class="item-list">
+            <li><strong>Función vínculo canónico</strong>: $g(\pi) = \ln\!\left(\frac{\pi}{1-\pi}\right)$ (logit). Interpretar como cambio en log-odds</li>
+            <li><strong>Predicción</strong>: $\hat{\pi} = \frac{e^{\beta_0+\beta_1 X}}{1+e^{\beta_0+\beta_1 X}}$</li>
+            <li><strong>Significatividad</strong>: analizar estadístico Z y P-valor de cada coeficiente</li>
+            <li>Elegir modelo con/sin $X^2$: comparar AIC — el menor gana</li>
+            <li>Contextos: cifosis post-operatoria (2023-2C P), aprobación de estudiantes (2024-1C P)</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Regresión de Poisson</div>
+          <ul class="item-list">
+            <li><strong>Función vínculo canónico</strong>: $g(\mu) = \ln(\mu)$ → $\mu = e^{\beta_0+\beta_1 X}$</li>
+            <li>Un aumento de 1 unidad en $X$ multiplica $\mu$ por $e^{\beta_1}$ (efecto multiplicativo)</li>
+            <li>Comparar AIC entre link log e identity: en 2023-2C R el log ganaba (147.14 vs. 147.66)</li>
+            <li>Contexto: goles por equipo en la Copa LPF (2023-2C R)</li>
+          </ul>
+          <div class="trap-box">
+            <div class="trap-box-title">⚠ Cuándo usar cada modelo</div>
+            <p>Variable respuesta dicotómica (sí/no, presenta/no) → <strong>logística</strong>. Conteo (goles, siniestros) → <strong>Poisson con link log</strong>. El vínculo canónico de Poisson es logarítmico, no identidad.</p>
+          </div>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2023-2C P</span><span class="year-tag">2023-2C R</span><span class="year-tag">2024-1C P</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: Overdispersión y pasos GLM -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-nueva">★ NUEVO</span>
+          <span class="topic-title-text">GLM conceptual — pasos del ajuste y overdispersión</span>
+        </div>
+        <div class="topic-meta">Apareció en 2023-2C R · preguntas cortas (~10 pts) · pura teoría sin cálculo</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Pasos para ajustar un GLM</div>
+          <ul class="item-list">
+            <li><strong>1. Especificar</strong> la distribución de la variable respuesta (familia) y la función vínculo</li>
+            <li><strong>2. Estimar</strong> los coeficientes por máxima verosimilitud</li>
+            <li><strong>3. Evaluar significatividad</strong>: estadístico Z / Wald para cada coeficiente, P-valores</li>
+            <li><strong>4. Comparar modelos</strong>: AIC/BIC (menor = mejor); también Deviance residual</li>
+            <li><strong>5. Diagnósticos</strong>: residuos de Pearson, gráficos QQ, dispersión observada vs. teórica</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Overdispersión — qué es y cómo afecta</div>
+          <ul class="item-list">
+            <li>Ocurre cuando la varianza observada <strong>excede</strong> la varianza teórica del modelo ($\text{Var}[Y] > \mu$ en Poisson)</li>
+            <li>Consecuencia: los errores estándar quedan subestimados → los tests de significatividad resultan <strong>demasiado optimistas</strong> (p-valores más chicos de lo real)</li>
+            <li>En seguros: frecuencia de siniestros suele tener overdispersión por heterogeneidad de riesgo no capturada</li>
+            <li>Solución: usar distribución <strong>Binomial Negativa</strong> (en vez de Poisson) o modelos quasi-Poisson con parámetro de dispersión $\phi > 1$</li>
+          </ul>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2023-2C R</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: Familia exponencial -->
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-nueva">★ NUEVO</span>
+          <span class="topic-title-text">Familia exponencial — parámetro canónico y función a(θ)</span>
+        </div>
+        <div class="topic-meta">Apareció en 2023-2C R · muy técnico · probablemente vuelva</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Forma canónica</div>
+          <ul class="item-list">
+            <li>$f(y;\theta,\phi) = \exp\!\left(\frac{y\theta - a(\theta)}{\phi} + c(y,\phi)\right)$</li>
+            <li>Identificar $\theta$ (canónico), $\phi$ (dispersión), $a(\theta)$</li>
+            <li>Propiedad clave: $E[Y] = a'(\theta)$ y $\text{Var}[Y] = \phi \cdot a''(\theta)$</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Parámetros para cada distribución</div>
+          <ul class="item-list">
+            <li><strong>Binomial</strong>: $\theta = \ln(p/(1-p))$, $a(\theta) = n\ln(1+e^\theta)$, $\phi = 1$</li>
+            <li><strong>Normal</strong>: $\theta = \mu$, $a(\theta) = \theta^2/2$, $\phi = \sigma^2$</li>
+            <li><strong>Gamma</strong> (suma 2 Exp): $\theta = -\lambda$, $a(\theta) = -2\ln(-\theta)$, $\phi = 1$</li>
+          </ul>
+        </div>
+      </div>
+      <div class="years-section">
+        <span class="years-label">Aparece en</span>
+        <div class="years-tags">
+          <span class="year-tag">2023-2C R</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /section -->
+
+
+<!-- ══════════════════════
+     BLOQUE IV — TRAMPAS V/F
+═══════════════════════════ -->
+<div class="block-divider">Bloque IV — Trampas conceptuales y V/F</div>
+
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon icon-red">🎯</div>
+    <h2>Afirmaciones V/F — puntos fáciles que se pierden por descuido</h2>
+  </div>
+
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="freq-badge freq-alta">★★★ ALTA</span>
+          <span class="topic-title-text">Listado completo de trampas identificadas en 9 años</span>
+        </div>
+        <div class="topic-meta">Apareció como ejercicio completo en 2018-1C P, 2018-2C P y 2023-2C P</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid full">
+        <div class="table-wrap">
+          <table class="cheat-table">
+            <tr>
+              <th>Afirmación / Concepto</th>
+              <th>Veredicto</th>
+              <th>Por qué</th>
+              <th>Año(s)</th>
+            </tr>
+            <tr>
+              <td>Unicidad del NP lineal ↔ <em>convergencia</em> de $\sum 1/\lambda_n$</td>
+              <td class="verdict-false">FALSO</td>
+              <td>Es la <strong>divergencia</strong> de $\sum 1/n\lambda = \infty$</td>
+              <td>2018-1C P, 2018-2C P</td>
+            </tr>
+            <tr>
+              <td>Sobrediferenciación de un MA <em>solo</em> afecta la invertibilidad</td>
+              <td class="verdict-false">FALSO</td>
+              <td>También aumenta la varianza del proceso</td>
+              <td>2018-1C P, 2018-2C P</td>
+            </tr>
+            <tr>
+              <td>La transformación logarítmica resuelve la tendencia estocástica</td>
+              <td class="verdict-false">FALSO</td>
+              <td>Resuelve heterocedasticidad, no raíz unitaria</td>
+              <td>2018-1C P</td>
+            </tr>
+            <tr>
+              <td>Un Random Walk con Drift solo tiene tendencia estocástica</td>
+              <td class="verdict-false">FALSO</td>
+              <td>Tiene tendencia estocástica <strong>y</strong> determinística</td>
+              <td>2018-1C P, 2018-2C P</td>
+            </tr>
+            <tr>
+              <td>Todo Proceso de Poisson es estacionario</td>
+              <td class="verdict-false">FALSO</td>
+              <td>El no homogéneo ($\lambda(t)$ variable) no lo es</td>
+              <td>2023-2C P</td>
+            </tr>
+            <tr>
+              <td>La Geométrica no pertenece a la familia exponencial</td>
+              <td class="verdict-false">FALSO</td>
+              <td>Sí pertenece; tiene forma canónica con $\theta = \ln(1-p)$</td>
+              <td>2023-2C P</td>
+            </tr>
+            <tr>
+              <td>Más repeticiones de simulación siempre mejoran la precisión</td>
+              <td class="verdict-false">FALSO</td>
+              <td>La convergencia es asintótica; el error disminuye pero no desaparece</td>
+              <td>2023-2C P</td>
+            </tr>
+            <tr>
+              <td>$T_{0,1} \sim Exp$ es condición suficiente para un Proceso de Poisson</td>
+              <td class="verdict-false">FALSO</td>
+              <td>Es necesaria pero no suficiente; también requiere estacionariedad e independencia</td>
+              <td>2023-2C P</td>
+            </tr>
+            <tr>
+              <td>Box-Cox se usa solo para cumplir supuestos de Gauss-Markov</td>
+              <td class="verdict-false">FALSO</td>
+              <td>Sirve para estabilizar varianza, normalizar, y mejorar linealidad</td>
+              <td>2018-1C P</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /section -->
+
+
+<!-- ══════════════════════
+     BLOQUE V — MAPA
+═══════════════════════════ -->
+<div class="block-divider">Bloque V — Estrategia de estudio y mapa de contextos</div>
+
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon icon-yellow">🗺️</div>
+    <h2>Evolución por bloque y contextos aplicados</h2>
+  </div>
+
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="topic-title-text">Frecuencias por año — tabla completa</span>
+        </div>
+        <div class="topic-meta">Útil para ver qué temas son constantes vs. cuáles rotaron</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid full">
+        <div class="table-wrap">
+          <table class="cheat-table">
+            <tr>
+              <th>Tema</th>
+              <th>2016–18</th>
+              <th>2019–20</th>
+              <th>2021–22</th>
+              <th>2023–24</th>
+              <th>Tendencia</th>
+            </tr>
+            <tr>
+              <td>Sistema KC + FGM (E y Var)</td>
+              <td>✓ ✓ ✓</td><td>✓ ✓</td><td>✓ ✓</td><td>✓ ✓</td>
+              <td><strong style="color:var(--accent-green)">Constante</strong></td>
+            </tr>
+            <tr>
+              <td>FGP + Lagrange + extinción</td>
+              <td>✓ ✓</td><td>✓</td><td>✓ ✓</td><td>✓ ✓</td>
+              <td><strong style="color:var(--accent-green)">Constante</strong></td>
+            </tr>
+            <tr>
+              <td>Tiempos Exp + Gamma</td>
+              <td>✓ ✓</td><td>✓ ✓</td><td>✓ ✓</td><td>✓ ✓</td>
+              <td><strong style="color:var(--accent-green)">Constante</strong></td>
+            </tr>
+            <tr>
+              <td>Proceso bidimensional F/M</td>
+              <td>—</td><td>✓ ✓</td><td>✓</td><td>—</td>
+              <td>Bajó</td>
+            </tr>
+            <tr>
+              <td>Simulación + Transf. Inversa</td>
+              <td>—</td><td>—</td><td>✓ ✓ ✓</td><td>✓ ✓</td>
+              <td><strong style="color:var(--accent-red)">Creció mucho</strong></td>
+            </tr>
+            <tr>
+              <td>FGP convolución (siniestros)</td>
+              <td>—</td><td>—</td><td>✓ ✓</td><td>✓ ✓</td>
+              <td><strong style="color:var(--accent-red)">Creció</strong></td>
+            </tr>
+            <tr>
+              <td>Composición + Panjer</td>
+              <td>—</td><td>—</td><td>—</td><td>✓ ✓</td>
+              <td><strong style="color:var(--accent-purple)">Nuevo</strong></td>
+            </tr>
+            <tr>
+              <td>GLM (Logística / Poisson)</td>
+              <td>—</td><td>—</td><td>—</td><td>✓ ✓ ✓</td>
+              <td><strong style="color:var(--accent-purple)">Nuevo / creciendo</strong></td>
+            </tr>
+          </table>
+        </div>
+        <div class="body-section" style="margin-top:1.5rem">
+          <div class="body-label">Lectura estratégica</div>
+          <ul class="item-list">
+            <li><strong>Inamovibles</strong>: KC system, FGM para E y Var, tiempos Exp/Gamma. Nunca faltaron en 9 años. Sabérselos en automático.</li>
+            <li><strong>Simulación desplazó a las series</strong>: desde 2021 ocupa siempre un ejercicio completo (~40 pts). Antes prácticamente no existía.</li>
+            <li><strong>GLM es la apuesta para este parcial</strong>: Del Rosso lo incorporó con fuerza en 2023. Esperá 1 ejercicio de logística o Poisson.</li>
+            <li><strong>Bidimensional y epidemia SIS</strong>: tuvieron su pico 2019–2021, bajaron después. Pueden volver pero con menor probabilidad.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card" onclick="toggle(this)">
+    <div class="topic-header">
+      <div class="topic-title-wrap">
+        <div class="topic-title-row">
+          <span class="topic-title-text">Contextos aplicados — el disfraz cambia, la matemática no</span>
+        </div>
+        <div class="topic-meta">Reconocer el contexto evita perder tiempo tratando de "entender el problema"</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="topic-body">
+      <div class="body-grid">
+        <div class="body-section">
+          <div class="body-label">Procesos BD disfrazados</div>
+          <ul class="item-list">
+            <li><strong>Cartera de créditos bancarios</strong>: nacimientos = nuevos créditos, muertes = créditos morosos. Usado en 2021-2C P y 2023-1C R con las mismas tasas</li>
+            <li><strong>Epidemia COVID (SIS/SIR)</strong>: $\lambda_i = \beta i(1-i/N)$, $\mu_i = (b+\gamma)i$. Usado en 2021-1C P y R</li>
+            <li><strong>Tarjeta de puntos "Actuarial"</strong>: acumulación/canje de puntos = Poisson con inmigración. 2020-2C R</li>
+            <li><strong>Proceso de vacunación CABA</strong>: serie temporal. 2021-1C P y 2021-2C R</li>
+            <li><strong>Aseguradora de seguros de vida "Picapiedras"</strong>: Poisson No Homogéneo. 2020-2C P</li>
+          </ul>
+        </div>
+        <div class="body-section">
+          <div class="body-label">Simulación disfrazada</div>
+          <ul class="item-list">
+            <li><strong>Aseguradora de incendio</strong>: FGP + transformada inversa. 2021–2023</li>
+            <li><strong>Juego "Trato Hecho"</strong>: VaR, valor esperado, decisión bayesiana. 2021-2C P</li>
+            <li><strong>Casa de apuestas con dados</strong>: convolución FGP + análisis de equidad. 2023-1C R</li>
+            <li><strong>Opción financiera GGAL</strong>: GBM, payoff del Call. 2022-2C P</li>
+            <li><strong>Empresa de cemento 3 plantas</strong>: N+Exp+U, probabilidad condicional. 2021-2C R</li>
+            <li><strong>Starbucks mesas ocupadas</strong>: $B(3,0.5)$ + tabular + uniforme discreta. 2022-1C R</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /section -->
+
+</div><!-- /wrapper -->
+
+<a href="#" class="back-top">↑ TOP</a>
+
+<script>
+function toggle(card) {
+  card.classList.toggle('open');
+}
+// Open all cards with alta frequency by default for quick review
+document.querySelectorAll('.freq-alta').forEach(badge => {
+  badge.closest('.topic-card').classList.add('open');
+});
+</script>
+</body>
+</html>
