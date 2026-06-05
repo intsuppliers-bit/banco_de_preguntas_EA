@@ -2804,11 +2804,6 @@ function toggle(card) {
   card.classList.toggle('open');
 }
 
-// Toggle for exam-cards and teo-cards (added in bloque V, VI, VII)
-document.querySelectorAll('.exam-header, .teo-header').forEach(h => {
-  h.addEventListener('click', () => h.parentElement.classList.toggle('open'));
-});
-
 // Auto-open cards with alta frequency on load
 document.querySelectorAll('.freq-alta').forEach(badge => {
   badge.closest('.topic-card').classList.add('open');
