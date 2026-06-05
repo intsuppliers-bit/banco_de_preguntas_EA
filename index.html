@@ -1621,15 +1621,1187 @@ MathJax = {
 
 </div><!-- /wrapper -->
 
-<a href="#" class="back-top">↑ TOP</a>
+<!-- ══════════════════════════════════════════════════════
+     BLOQUE V — EXÁMENES RESUELTOS PASO A PASO
+══════════════════════════════════════════════════════════ -->
+
+<style>
+  /* ══ Solved exam styles ══ */
+  .exam-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 1.4rem;
+    overflow: hidden;
+  }
+  .exam-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.3rem 1.8rem;
+    cursor: pointer;
+    user-select: none;
+    gap: 1.2rem;
+    transition: background 0.15s;
+  }
+  .exam-header:hover { background: rgba(255,255,255,0.018); }
+  .exam-card.open .exam-header { background: rgba(255,255,255,0.012); }
+  .exam-card.open .topic-chevron { transform: rotate(90deg); color: var(--accent); }
+
+  .exam-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 20px;
+    white-space: nowrap;
+    background: rgba(240,201,58,0.11);
+    color: var(--accent);
+    border: 1px solid rgba(240,201,58,0.3);
+    flex-shrink: 0;
+  }
+  .exam-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--heading);
+  }
+  .exam-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.66rem;
+    color: var(--text-dim);
+    margin-top: 0.2rem;
+  }
+  .exam-body {
+    display: none;
+    padding: 0 1.8rem 2rem;
+    border-top: 1px solid var(--border-soft);
+  }
+  .exam-card.open .exam-body { display: block; }
+
+  /* Exercise within exam */
+  .ejercicio {
+    margin-top: 1.6rem;
+    border-left: 3px solid var(--border);
+    padding-left: 1.4rem;
+  }
+  .ejercicio-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+  .ej-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid rgba(240,201,58,0.3);
+    padding: 0.18rem 0.6rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .ej-pts {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+  }
+  .ej-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--heading);
+    flex: 1;
+  }
+  .ej-enunciado {
+    background: var(--surface2);
+    border: 1px solid var(--border-soft);
+    border-radius: 7px;
+    padding: 0.9rem 1.1rem;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+
+  /* Step-by-step solution */
+  .solucion { margin-top: 0.5rem; }
+  .paso {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.9rem;
+    align-items: flex-start;
+  }
+  .paso-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.62rem;
+    background: var(--surface3);
+    color: var(--accent-blue);
+    border: 1px solid rgba(91,156,246,0.3);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 0.12rem;
+  }
+  .paso-contenido {
+    font-size: 0.91rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    flex: 1;
+  }
+  .paso-contenido strong { color: var(--heading); }
+  .paso-nota {
+    background: rgba(61,214,140,0.07);
+    border-left: 3px solid var(--accent-green);
+    border-radius: 0 6px 6px 0;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.86rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    font-style: italic;
+  }
+  .resultado-final {
+    background: var(--accent-dim);
+    border: 1px solid rgba(240,201,58,0.25);
+    border-radius: 7px;
+    padding: 0.7rem 1rem;
+    margin-top: 0.6rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--accent);
+  }
+
+  /* ══ Theoretical questions styles ══ */
+  .teo-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent-purple);
+    border-radius: 8px;
+    margin-bottom: 0.9rem;
+    overflow: hidden;
+  }
+  .teo-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem 1.4rem;
+    cursor: pointer;
+    user-select: none;
+    gap: 1rem;
+  }
+  .teo-header:hover { background: rgba(177,151,252,0.04); }
+  .teo-card.open .teo-header { background: rgba(177,151,252,0.03); }
+  .teo-card.open .topic-chevron { transform: rotate(90deg); color: var(--accent-purple); }
+  .teo-q {
+    font-family: 'Lora', serif;
+    font-size: 0.95rem;
+    color: var(--heading);
+    font-weight: 500;
+    flex: 1;
+    line-height: 1.55;
+  }
+  .teo-freq {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .teo-body {
+    display: none;
+    padding: 1rem 1.6rem 1.2rem;
+    border-top: 1px solid var(--border-soft);
+  }
+  .teo-card.open .teo-body { display: block; }
+  .teo-respuesta {
+    font-size: 0.91rem;
+    color: var(--text-muted);
+    line-height: 1.75;
+  }
+  .teo-respuesta strong { color: var(--heading); }
+  .teo-respuesta p { margin-bottom: 0.5rem; }
+  .teo-origin {
+    margin-top: 0.8rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--text-dim);
+  }
+</style>
+
+<div class="wrapper" style="padding-top: 0;">
+
+<!-- ══ BLOQUE V ══ -->
+<div class="block-divider">Bloque V — Exámenes resueltos paso a paso</div>
+
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon icon-yellow">📝</div>
+    <h2>Los ejercicios más repetidos — resueltos con comentarios</h2>
+  </div>
+
+  <!-- ══════════════════════════════════
+       EXAMEN 1: 2024-1C
+  ═══════════════════════════════════ -->
+  <div class="exam-card open">
+    <div class="exam-header" onclick="this.parentElement.classList.toggle('open')">
+      <div>
+        <div class="topic-title-row">
+          <span class="exam-tag">2024-1C PARCIAL</span>
+          <span class="exam-title">BD lineal · Simulación siniestros con límite · GLM logístico</span>
+        </div>
+        <div class="exam-meta">24 de Junio 2024 · Ejercicio tipo más frecuente de los últimos años · 35+40+25 pts</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="exam-body">
+
+      <!-- EJ 1 -->
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 1</span><span class="ej-pts">35 pts</span>
+          <span class="ej-title">Proceso BD lineal — KC + FGM + extinción numérica</span>
+        </div>
+        <div class="ej-enunciado">
+          $\{n(t)\}$ proceso BD lineal con $\lambda_n = n\lambda$, $\mu_n = n\mu$, $n_0 = 100$. Piden: A) Sistema KC. B) $m_1(n(t))$ por FGM. C) Extinción con $\mu=0{,}01$, $\lambda=0{,}0104$ para $t=1000$ y $t\to\infty$.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">A.1</span>
+            <div class="paso-contenido">
+              <strong>Transiciones infinitesimales del BD lineal.</strong> En $[t, t+\Delta t)$: nacen $\lambda_n \Delta t = n\lambda\Delta t$, mueren $\mu_n \Delta t = n\mu\Delta t$. Aplicar KC + probabilidad total:
+              $$P_n(t+\Delta t) = P_n(t)(1-n\lambda\Delta t - n\mu\Delta t) + P_{n-1}(t)(n-1)\lambda\Delta t + P_{n+1}(t)(n+1)\mu\Delta t$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">A.2</span>
+            <div class="paso-contenido">
+              <strong>Cociente incremental y límite.</strong> Restar $P_n(t)$, dividir por $\Delta t$, tomar $\lim_{\Delta t \to 0}$:
+              $$\boxed{P'_n(t) = -n(\lambda+\mu)P_n(t) + (n-1)\lambda P_{n-1}(t) + (n+1)\mu P_{n+1}(t)}$$
+              <div class="paso-nota">⚠ Frontera $n=0$: $P'_0(t) = \mu P_1(t)$. Solo hay ingreso desde $n=1$ por fallecimiento. No hay nacimiento desde $n=0$.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">B.1</span>
+            <div class="paso-contenido">
+              <strong>EDP de la FGM para BD lineal.</strong> Multiplicar sistema KC por $e^{wn}$ y sumar $\sum_{n=0}^\infty$:
+              $$\frac{\partial M}{\partial t} = \left[-(\lambda+\mu)+\lambda e^w + \mu e^{-w}\right]\frac{\partial M}{\partial w}$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">B.2</span>
+            <div class="paso-contenido">
+              <strong>Obtener $m_1(t) = E[n(t)]$.</strong> Derivar respecto a $w$, evaluar en $w=0$. Notar que $\frac{\partial M}{\partial w}\big|_{w=0} = m_1(t)$ y $M(0,t)=1$:
+              $$m'_1(t) = (\lambda-\mu)\,m_1(t)$$
+              EDO lineal homogénea con condición inicial $m_1(0)=n_0$:
+              $$\boxed{m_1(t) = n_0\,e^{(\lambda-\mu)t}}$$
+              <div class="paso-nota">💡 Es el mismo resultado que el proceso determinístico: la esperanza crece/decrece exponencialmente con tasa $\rho=\lambda-\mu$.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">C.1</span>
+            <div class="paso-contenido">
+              <strong>Extinción para $t=1000$.</strong> Con $\mu=0{,}01$, $\lambda=0{,}0104$, $\rho=0{,}0004$, $n_0=100$:
+              $$P_{100;0}(1000) = \left(\frac{0{,}01(e^{0{,}0004\cdot1000}-1)}{0{,}0104\cdot e^{0{,}4}-0{,}01}\right)^{100}$$
+              $$e^{0{,}4} \approx 1{,}4918 \implies \text{num}=0{,}01\cdot0{,}4918=0{,}004918;\;\text{den}=0{,}01514\;\Rightarrow \left(\frac{0{,}004918}{0{,}01514}\right)^{100} \approx (0{,}3248)^{100} \approx 0$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">C.2</span>
+            <div class="paso-contenido">
+              <strong>Extinción cuando $t\to\infty$.</strong> Con $\lambda > \mu$, $e^{(\lambda-\mu)t}\to\infty$, entonces $\frac{\mu(e^{\rho t}-1)}{\lambda e^{\rho t}-\mu} \to \frac{\mu}{\lambda}$:
+              $$P_{n_0;0}(\infty) = \left(\frac{\mu}{\lambda}\right)^{n_0} = \left(\frac{0{,}01}{0{,}0104}\right)^{100} = (0{,}9615)^{100} \approx 0{,}0204$$
+              <div class="resultado-final">→ La probabilidad de extinción asintótica es ~2% cuando λ &gt; μ. Si λ = μ: P = 1 (extinción segura).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EJ 2 -->
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 2</span><span class="ej-pts">40 pts</span>
+          <span class="ej-title">Simulación de siniestros — límite de pérdida y gastos adicionales</span>
+        </div>
+        <div class="ej-enunciado">
+          $P(\text{siniestro})=0{,}7$; monto $\sim\text{Exp}(\lambda=0{,}01)$. Vectores $U_{\text{sin}}$ y $U_{\text{monto}}$ dados. Puntos: A) explicar procedimiento. B) monto promedio + $P(\text{pago}>150)$. C) con límite $L=150$. D) gastos $\sim U(0,20)$ solo si hay siniestro.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">A</span>
+            <div class="paso-contenido">
+              <strong>Procedimiento (siempre lo piden primero).</strong> (1) Generar $U_{\text{sin}}\sim U(0,1)$. (2) Si $U_{\text{sin}}<0{,}7$: hay siniestro, generar $U_{\text{monto}}$, calcular $X=-\frac{1}{0{,}01}\ln(U_{\text{monto}})$. (3) Si $U_{\text{sin}}\geq 0{,}7$: $X=0$.
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">B</span>
+            <div class="paso-contenido">
+              <strong>Tabla de simulación.</strong> $U_{\text{sin}}=[0{,}3188;\,0{,}3399;\,0{,}2491;\,\mathbf{0{,}755};\,0{,}3625;\,\mathbf{0{,}8214};\,\mathbf{0{,}8889};\,0{,}147;\,0{,}187;\,\mathbf{0{,}6523}]$. Los valores en negrita $\geq 0{,}7$ → no hay siniestro ($X=0$). Los restantes 6 casos generan monto:
+              $$X_1 = -100\ln(0{,}5912)\approx52{,}7;\quad X_2=-100\ln(0{,}6855)\approx37{,}8;\quad\ldots$$
+              <div class="paso-nota">💡 $E[X] = 1/\lambda = 100$. Los valores simulados van a rondar eso en promedio. Si el promedio sale muy distinto, verificar cuántos tuvieron siniestro.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">C</span>
+            <div class="paso-contenido">
+              <strong>Límite de pérdida $L=150$.</strong> Para cada siniestro: $\text{Pago}_i = \min(X_i, 150)$. Los montos simulados $>150$ se truncan a 150 — la empresa no paga el exceso. El promedio baja respecto al punto B.
+              <div class="paso-nota">⚠ Aplicar el $\min$ solo a los casos con siniestro. Para los registros sin siniestro el pago sigue siendo 0.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">D</span>
+            <div class="paso-contenido">
+              <strong>Gastos adicionales condicionados.</strong> Usar $U_{\text{gastos}}$ solo en los registros donde $U_{\text{sin}}<0{,}7$ (mismos 6 casos de antes). $G_i = U_{\text{gastos},i}\cdot(20-0)+0 = 20\,U_{\text{gastos},i}$. Promediar solo los $G_i$ de esos 6 casos.
+              <div class="resultado-final">→ Costo total promedio = promedio(Pago) + promedio(Gastos sobre siniestros ocurridos × proporción siniestros)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EJ 3 -->
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 3</span><span class="ej-pts">25 pts</span>
+          <span class="ej-title">GLM — elegir modelo, significatividad y predicción</span>
+        </div>
+        <div class="ej-enunciado">
+          Variable respuesta: cifosis (sí/no). Variable explicativa: edad en meses. Resultados del ajuste logístico dados con y sin $\text{Meses}^2$. Elegir modelo, analizar significatividad, interpretar coeficiente.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1</span>
+            <div class="paso-contenido">
+              <strong>Elegir distribución y función vínculo.</strong> Variable respuesta dicotómica (presenta/no presenta cifosis) → <strong>Regresión Logística</strong>. Función vínculo canónica: $g(\pi) = \ln\!\left(\frac{\pi}{1-\pi}\right)$ (logit).
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2</span>
+            <div class="paso-contenido">
+              <strong>Significatividad del modelo sin $\text{Meses}^2$.</strong> P-valor de Meses = 0{,}463 $>\alpha=0{,}05$ → <strong>no significativo</strong>. El intercepto tampoco lo es (0{,}342). El modelo sin cuadrático no tiene poder predictivo.
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>Modelo con $\text{Meses}^2$.</strong> Ahora Meses: P=0{,}024; Meses²: P=0{,}036 → <strong>ambos significativos</strong>. Elegir este modelo. La relación es cuadrática: a cierta edad el riesgo aumenta y luego baja (o viceversa).
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">4</span>
+            <div class="paso-contenido">
+              <strong>Predicción para un paciente de $X$ meses.</strong>
+              $$\ln\!\left(\frac{\hat\pi}{1-\hat\pi}\right) = -2{,}0463 + 0{,}0600\cdot X - 0{,}000328\cdot X^2$$
+              $$\hat\pi = \frac{e^{\hat\eta}}{1+e^{\hat\eta}}$$
+              <div class="resultado-final">→ El AIC del modelo con Meses² es menor → confirma que es el mejor.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /exam 2024-1C -->
+
+  <!-- ══════════════════════════════════
+       EXAMEN 2: 2022-2C RECU
+  ═══════════════════════════════════ -->
+  <div class="exam-card">
+    <div class="exam-header" onclick="this.parentElement.classList.toggle('open')">
+      <div>
+        <div class="topic-title-row">
+          <span class="exam-tag">2022-2C RECU</span>
+          <span class="exam-title">FGM BD · AR(1) simulado · FGP pólizas + transformada inversa eficiente</span>
+        </div>
+        <div class="exam-meta">1 de Diciembre 2022 · Contiene el ejercicio tipo de AR(1) y el de FGP con parámetros incógnita</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="exam-body">
+
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 1</span><span class="ej-pts">30 pts</span>
+          <span class="ej-title">BD lineal — FGM para $m_1$ + FGP por Lagrange</span>
+        </div>
+        <div class="ej-enunciado">
+          BD lineal $\lambda_n=n\lambda$, $\mu_n=n\mu$. Punto 1: calcular $m_1$ desde la EDP de la FGM dada. Punto 2: FGP por Lagrange.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1.1</span>
+            <div class="paso-contenido">
+              <strong>Derivar la EDP de la FGM respecto a $w$, evaluar en $w=0$.</strong>
+              $$\frac{\partial M}{\partial t} = \left[-(\lambda+\mu)+\lambda e^w+\mu e^{-w}\right]\frac{\partial M}{\partial w}$$
+              Derivar ambos lados en $w$, evaluar en $w=0$: $M(0,t)=1$, $\frac{\partial M}{\partial w}\big|_{w=0}=m_1$, $\frac{\partial^2 M}{\partial w^2}\big|_{w=0}=m_2$. El coeficiente $[-(\lambda+\mu)+\lambda e^w+\mu e^{-w}]$ evaluado en $w=0$ da $0$. Su derivada en $w=0$ da $\lambda-\mu=\rho$:
+              $$m'_1(t) = \rho\, m_1(t) \implies m_1(t) = n_0 e^{\rho t}$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2.1</span>
+            <div class="paso-contenido">
+              <strong>EDP de la FGP y variable auxiliar.</strong>
+              $$\frac{\partial G}{\partial t} = (\lambda w - \mu)(w-1)\frac{\partial G}{\partial w}$$
+              Ecuaciones de Lagrange: $\frac{dt}{1} = \frac{dw}{(\lambda w-\mu)(w-1)} = \frac{dG}{0}$. De la última: $G=\text{cte}$. De la primera pareja: $C_1 = \frac{\lambda w-\mu}{w-1}e^{-\rho t}$.
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2.2</span>
+            <div class="paso-contenido">
+              <strong>Condición inicial y FGP final.</strong> $G(w,0)=w^{n_0}$. Con $s=C_1=\frac{\lambda w-\mu}{w-1}e^{-\rho t}$, despejar $w=\frac{\mu-s}{\lambda-s}$. Condición: $G=f(s)=\left(\frac{\mu-s}{\lambda-s}\right)^{n_0}$. Sustituir $s$:
+              $$\boxed{G(w,t) = \left(\frac{\mu(e^{\rho t}-1)-(\mu-\lambda w)}{(\lambda e^{\rho t}-\mu)(1-w)+\lambda(e^{\rho t}-1)(w-1)}\right)^{n_0}}$$
+              <div class="paso-nota">💡 Para $\lambda\to\mu$: usar L'Hôpital, el resultado tiende a la distribución del fallecimiento puro.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 2</span><span class="ej-pts">30 pts</span>
+          <span class="ej-title">Simulación AR(1) — procedimiento + valores + estadísticas</span>
+        </div>
+        <div class="ej-enunciado">
+          $Y_t = 0{,}80\,Y_{t-1} + \varepsilon_t$, $Y_0=50$, $\varepsilon_t\sim N(0,2)$. Vector $U$ de 15 números dado. Piden: explicar procedimiento, obtener valores, calcular media / autocovarianzas hasta orden 3 / autocorrelaciones.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1</span>
+            <div class="paso-contenido">
+              <strong>Procedimiento para simular $\varepsilon_t\sim N(0,2)$.</strong> Generar $U_t\sim U(0,1)$ → aplicar inversa de la normal estándar: $Z_t = \Phi^{-1}(U_t)$ → escalar: $\varepsilon_t = \sqrt{2}\cdot Z_t$.
+              <div class="paso-nota">⚠ En el examen se puede usar tabla de la normal estándar: si $U=0{,}841$ → $Z\approx1{,}00$. Si $U=0{,}159$ → $Z\approx-1{,}00$.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2</span>
+            <div class="paso-contenido">
+              <strong>Calcular $Y_1,\ldots,Y_{15}$.</strong> Ejemplo con primeros valores del vector $U=[0{,}139;\,0{,}452;\,0{,}341;\ldots]$:
+              $$Z_1=\Phi^{-1}(0{,}139)\approx-1{,}082 \implies \varepsilon_1=\sqrt{2}\cdot(-1{,}082)\approx-1{,}530$$
+              $$Y_1 = 0{,}80\cdot50 + (-1{,}530) = 38{,}47$$
+              Repetir para cada $t=2,\ldots,15$.
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>Estadísticas con los valores simulados $\hat{Y}_1,\ldots,\hat{Y}_{15}$.</strong>
+              $$\bar{Y} = \frac{1}{15}\sum_{t=1}^{15}\hat{Y}_t$$
+              $$\hat\gamma_k = \frac{1}{15}\sum_{t=k+1}^{15}(\hat{Y}_t-\bar{Y})(\hat{Y}_{t-k}-\bar{Y}) \quad k=1,2,3$$
+              $$\hat\rho_k = \frac{\hat\gamma_k}{\hat\gamma_0}$$
+              <div class="resultado-final">→ Teórico: $\gamma_0=\sigma^2/(1-\phi^2)=2/0{,}36\approx5{,}56$; $\rho_k=0{,}80^k$. Los simulados deben aproximarse.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 3</span><span class="ej-pts">40 pts</span>
+          <span class="ej-title">FGP pólizas con parámetros incógnita + transformada inversa eficiente</span>
+        </div>
+        <div class="ej-enunciado">
+          Cartera 2 pólizas independientes $X_1$ y $X_2$. $X_1$: $p=0{,}30$, montos USD 50/100/200/400 con probs 79%/10%/7%/4%. $X_2$: probs incógnita $A$ y $B$. Condición: $P(X=0)=7{,}757\cdot P(X=200)$. Piden: distribución de $X=X_1+X_2$ por FGP, $P(X\geq400)$, transformada inversa eficiente.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1</span>
+            <div class="paso-contenido">
+              <strong>Hallar $A$ y $B$.</strong> $X_2$ tiene $P(X_2=0)=0{,}65$, ya conocemos $P(X_2=50)=0{,}15$, $P(X_2=100)=0{,}10$, y $A+B=0{,}10$. Usar la condición sobre la convolución para encontrar $A$ y $B$.
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2</span>
+            <div class="paso-contenido">
+              <strong>FGP de $X_1$ y $X_2$.</strong>
+              $$G_{X_1}(w) = (1-0{,}30) + 0{,}30\left[0{,}79\,w^{50}+0{,}10\,w^{100}+0{,}07\,w^{200}+0{,}04\,w^{400}\right]$$
+              $$G_{X_2}(w) = 0{,}65 + 0{,}15\,w^{50}+0{,}10\,w^{100}+A\,w^{200}+B\,w^{400}$$
+              $$G_X(w) = G_{X_1}(w)\cdot G_{X_2}(w) \quad \text{(independencia)}$$
+              <div class="paso-nota">⚠ No olvidar el $(1-p)$ de $X_1$ — sin él, $G_{X_1}(1)\neq 1$ y toda la distribución queda incorrecta.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>Transformada inversa eficiente.</strong> Ordenar los valores de $X$ de mayor a menor probabilidad (no de mayor a menor monto). El valor más probable va primero. Construir los intervalos de $U$ acumulando en ese orden.
+              <div class="resultado-final">→ El método eficiente reduce el número promedio de comparaciones. Siempre aclarar explícitamente el orden si el enunciado lo pide.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /exam 2022-2C recu -->
+
+  <!-- ══════════════════════════════════
+       EXAMEN 3: 2023-2C RECU
+  ═══════════════════════════════════ -->
+  <div class="exam-card">
+    <div class="exam-header" onclick="this.parentElement.classList.toggle('open')">
+      <div>
+        <div class="topic-title-row">
+          <span class="exam-tag">2023-2C RECU</span>
+          <span class="exam-title">GLM conceptual · BDI con FGM · Familia exponencial (Binomial + Normal + Gamma)</span>
+        </div>
+        <div class="exam-meta">4 de Diciembre 2023 · El examen con más teoría GLM · 4 ejercicios · 10+40+25+25 pts</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="exam-body">
+
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 1</span><span class="ej-pts">10 pts</span>
+          <span class="ej-title">GLM — pasos del ajuste y overdispersión (pura teoría)</span>
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1</span>
+            <div class="paso-contenido">
+              <strong>Pasos para ajustar un GLM.</strong> (1) Elegir distribución de la respuesta (familia). (2) Elegir función vínculo $g(\mu)$. (3) Estimar $\hat\beta$ por máxima verosimilitud. (4) Evaluar significatividad con test de Wald (z / p-valor). (5) Comparar modelos por AIC/BIC o devianza residual. (6) Diagnósticos: residuos de Pearson, QQ-plot.
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2</span>
+            <div class="paso-contenido">
+              <strong>Overdispersión en seguros.</strong> Ocurre cuando $\text{Var}[Y] > \mu$ (Poisson) o $\text{Var}[Y] > n\pi(1-\pi)$ (Binomial). En frecuencia de siniestros es muy frecuente por heterogeneidad de riesgo no capturada. Consecuencia: SE subestimados → p-valores demasiado pequeños → falsos positivos. Solución: Binomial Negativa o quasi-Poisson con $\hat\phi>1$.
+              <div class="paso-nota">⚠ Los $\hat\beta_i$ puntuales no se ven afectados. Solo cambia su precisión (errores estándar).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 3</span><span class="ej-pts">25 pts</span>
+          <span class="ej-title">Familia exponencial — $\theta$, $\phi$, $a(\theta)$, $E[Y]$, $\text{Var}[Y]$ para B, N, Gamma</span>
+        </div>
+        <div class="ej-enunciado">
+          $X_1\sim B(n,p)$, $X_2\sim N(\mu,\sigma)$, $X_3=Y_1+Y_2$ con $Y_i\sim\text{Exp}(\lambda)$. Demostrar parámetros canónicos y función $a(\theta)$. Demostrar $E$ y $\text{Var}$ via $\dot a$ y $\ddot a$. Calcular numéricamente con $n=10$, $p=0{,}6$, $\mu=150$, $\sigma=10$, $\lambda=0{,}002$.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">B</span>
+            <div class="paso-contenido">
+              <strong>Binomial $B(n,p)$:</strong> $\theta=\ln\frac{p}{1-p}$, $a(\theta)=n\ln(1+e^\theta)$, $\phi=1$.
+              $$E[Y]=\dot a(\theta)=\frac{n e^\theta}{1+e^\theta}=np \qquad \text{Var}[Y]=\ddot a(\theta)=np(1-p)$$
+              Numérico: $E=10\cdot0{,}6=6$, $\text{Var}=10\cdot0{,}6\cdot0{,}4=2{,}4$.
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">N</span>
+            <div class="paso-contenido">
+              <strong>Normal $N(\mu,\sigma^2)$:</strong> $\theta=\mu$, $a(\theta)=\theta^2/2$, $\phi=\sigma^2$.
+              $$E[Y]=\dot a(\theta)=\theta=\mu=150 \qquad \text{Var}[Y]=\phi\,\ddot a(\theta)=\sigma^2\cdot1=100$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">G</span>
+            <div class="paso-contenido">
+              <strong>$X_3=Y_1+Y_2\sim\Gamma(2,1/\lambda)$:</strong> $\theta=-\lambda$, $a(\theta)=-2\ln(-\theta)$, $\phi=1$.
+              $$E[Y]=\dot a(\theta)=\frac{2}{-\theta}=\frac{2}{\lambda} \qquad \text{Var}[Y]=\ddot a(\theta)=\frac{2}{\lambda^2}$$
+              Numérico con $\lambda=0{,}002$: $E=1000$, $\text{Var}=500000$.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 4</span><span class="ej-pts">25 pts</span>
+          <span class="ej-title">Regresión Poisson — AIC, Wald, impacto de 1 unidad en $X$</span>
+        </div>
+        <div class="ej-enunciado">
+          Variable respuesta: goles por equipo en 10 partidos. Variable explicativa: valor de mercado (millones €). AIC con link log = 147{,}14; link identity = 147{,}66. Coeficientes del modelo log dados.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1</span>
+            <div class="paso-contenido"><strong>Mejor modelo.</strong> AIC log (147{,}14) $<$ AIC identity (147{,}66) → elegir <strong>link logarítmico</strong>. Menor AIC = mejor ajuste penalizado por complejidad.</div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2</span>
+            <div class="paso-contenido"><strong>Significatividad.</strong> Analizar p-valor del coeficiente del valor de mercado. Si p-valor $<0{,}05$ → variable significativa. Si $>0{,}05$ → no hay evidencia de efecto.</div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>Impacto de 1 millón extra.</strong> Con link log: $\ln\mu = \beta_0+\beta_1 X$. Un aumento de 1 unidad en $X$:
+              $$\mu' = e^{\beta_0+\beta_1(X+1)} = e^{\beta_0+\beta_1 X}\cdot e^{\beta_1} = \mu\cdot e^{\beta_1}$$
+              <div class="resultado-final">→ La cantidad de goles se multiplica por $e^{\hat\beta_1}$ (no se suma $\beta_1$). Esto es el efecto multiplicativo del link log.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /exam 2023-2C recu -->
+
+  <!-- ══════════════════════════════════
+       EXAMEN 4: 2022-2C PARCIAL
+  ═══════════════════════════════════ -->
+  <div class="exam-card">
+    <div class="exam-header" onclick="this.parentElement.classList.toggle('open')">
+      <div>
+        <div class="topic-title-row">
+          <span class="exam-tag">2022-2C PARCIAL</span>
+          <span class="exam-title">Tiempos BD · Simulación composición 3 uniformes · GBM opción financiera</span>
+        </div>
+        <div class="exam-meta">24 de Noviembre 2022 · El ejercicio de composición más completo · 25+25+25 pts</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="exam-body">
+
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 2</span><span class="ej-pts">25 pts</span>
+          <span class="ej-title">Composición — 3 uniformes discretas con pesos 45/30/25%</span>
+        </div>
+        <div class="ej-enunciado">
+          $X_1\sim U_D[1,10]$ (45%), $X_2\sim U_D[4,8]$ (30%), $X_3\sim U_D[2,10]$ (25%). Vectores $U_0$ (urna), $U_1, U_2, U_3$ dados.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1</span>
+            <div class="paso-contenido">
+              <strong>Procedimiento de composición.</strong> (1) Generar $U_0$: si $U_0<0{,}45\to X_1$; si $0{,}45\leq U_0<0{,}75\to X_2$; si $U_0\geq0{,}75\to X_3$. (2) Una vez elegida la urna, generar el $U_i$ correspondiente y aplicar: $X=\text{ent}(n\cdot U_i)+a$ donde $n=$ cantidad de valores, $a=$ mínimo.
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2</span>
+            <div class="paso-contenido">
+              <strong>Fórmulas para cada uniforme discreta.</strong>
+              $$X_1: n=10,\; a=1 \implies X_1=\text{ent}(10\,U_1)+1$$
+              $$X_2: n=5,\; a=4 \implies X_2=\text{ent}(5\,U_2)+4$$
+              $$X_3: n=9,\; a=2 \implies X_3=\text{ent}(9\,U_3)+2$$
+              <div class="paso-nota">💡 Ejemplo: $U_0=0{,}139<0{,}45\to X_1$. $U_1=0{,}321\to X_1=\text{ent}(3{,}21)+1=4$.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>Aplicar a los 10 valores.</strong> Para cada observación: leer $U_0$ para decidir urna, tomar el $U_i$ del vector correspondiente (no confundir columnas), calcular $X$. Completar la tabla.
+              <div class="resultado-final">→ Usar el $U_i$ de la urna elegida, no el siguiente disponible del vector general.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /exam 2022-2C parcial -->
+
+</div><!-- /section exámenes resueltos -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     BLOQUE VI — PREGUNTAS TEÓRICAS FRECUENTES
+══════════════════════════════════════════════════════════ -->
+
+<div class="block-divider">Bloque VI — Preguntas teóricas y conceptuales frecuentes</div>
+
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon icon-purple">🧠</div>
+    <h2>Conceptos que siempre aparecen — con la respuesta exacta</h2>
+  </div>
+
+  <!-- ══ SUBGRUPO: PROCESOS BD ══ -->
+  <div style="margin-bottom:1.2rem;">
+    <div style="font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.8rem;">Procesos de nacimiento–fallecimiento</div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Qué es la propiedad AR(1) (autorregresividad de primer orden) y por qué la usan los procesos de Poisson y BD?</span>
+        <span class="teo-freq">★★★ 2016 · 2017 · 2018 · 2021 · 2022 · 2023</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p>La propiedad AR(1) (también llamada <strong>propiedad Markoviana</strong>) establece que el comportamiento futuro del proceso en el intervalo $(t_0, t)$ depende <em>exclusivamente</em> del estado en $t_0$, y no de toda la historia anterior. Es decir, dado el presente, el pasado es irrelevante para predecir el futuro.</p>
+          <p>Formalmente: $P\{n(t)\leq y \mid n(t_0)=x,\; n(t_{-1})=z,\ldots\} = P\{n(t)\leq y \mid n(t_0)=x\}$.</p>
+          <p>Se usa porque simplifica enormemente el cálculo de probabilidades de transición: la condición KC se puede aplicar al descomponer el intervalo en dos subintervalos disjuntos independientes, lo que permite el producto de probabilidades en cada tramo.</p>
+        </div>
+        <div class="teo-origin">Apareció como parte del enunciado en: 2016-2C P, 2018-1C P, 2021-1C P, 2022-2C P, 2023-2C R</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Por qué la condición de unicidad del Nacimiento Puro lineal requiere la <em>divergencia</em> de $\sum 1/\lambda_n$ y no su convergencia?</span>
+        <span class="teo-freq">★★ 2018-1C P · 2018-2C P — trampa V/F clásica</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p>La solución de la ecuación de Kolmogorov para el proceso de Nacimiento Puro puede no ser única: puede haber múltiples funciones que satisfagan el sistema diferencial. La condición que garantiza la <strong>unicidad</strong> es que la serie $\sum_{n=n_0}^\infty \frac{1}{n\lambda}$ <strong>diverja</strong>.</p>
+          <p>Para el Nacimiento Puro lineal ($\lambda_n=n\lambda$): $\sum_{n=1}^\infty \frac{1}{n\lambda} = \frac{1}{\lambda}\sum_{n=1}^\infty \frac{1}{n} = \infty$ (serie armónica). Entonces la solución <strong>es única</strong>.</p>
+          <p>La trampa de parcial es afirmar que "la unicidad requiere <em>convergencia</em>". Es <strong>FALSO</strong> — es la divergencia la que garantiza la unicidad.</p>
+        </div>
+        <div class="teo-origin">V/F en: 2018-1C P, 2018-2C P</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Cuáles son las limitaciones del proceso BD puro lineal para modelizar un brote epidémico?</span>
+        <span class="teo-freq">★ 2021-1C P — pregunta conceptual de 5 pts</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p><strong>1. Tasas lineales en $n$:</strong> el BD lineal supone que las tasas crecen proporcionalmente a la población. En una epidemia real, a medida que hay más infectados la tasa de nuevas infecciones baja (por agotamiento de susceptibles). El modelo no captura la saturación.</p>
+          <p><strong>2. No tiene estado "susceptible" explícito:</strong> el BD no distingue entre infectados y susceptibles — toda la población es "la misma". El modelo SIR/SIS necesita al menos 2 compartimentos.</p>
+          <p><strong>3. Extinción estocástica:</strong> el BD puede modelar extinción, pero en la versión lineal la extinción depende solo de la relación $\lambda/\mu$. No captura fenómenos de umbral ($R_0$) que determinan si hay pandemia o no.</p>
+          <p><strong>4. Memoria markoviana:</strong> asume AR(1) — el estado futuro depende solo del presente. Algunos procesos epidémicos tienen períodos de incubación que introducen dependencias temporales más largas.</p>
+        </div>
+        <div class="teo-origin">2021-1C P, Ej 1 punto 3</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Cuál es la diferencia entre el proceso de Poisson homogéneo y el no homogéneo? ¿El Poisson no homogéneo es estacionario?</span>
+        <span class="teo-freq">★★ 2020-2C P · 2023-2C P — V/F frecuente</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p>En el <strong>Poisson homogéneo</strong> la tasa $\lambda$ es constante en el tiempo. En el <strong>no homogéneo</strong>, la tasa $\lambda(t)$ varía con $t$ (por ejemplo, $\lambda(t)=\lambda_0+\lambda_1 t$). El parámetro de la distribución resultante es la integral acumulada $\Lambda(t)=\int_0^t\lambda(\tau)d\tau$.</p>
+          <p>El Poisson no homogéneo <strong>NO es estacionario</strong>: sus incrementos $n(t+s)-n(t)$ no tienen la misma distribución para todos los $t$ (dependen de $\Lambda(t+s)-\Lambda(t)$, que varía con $t$). La afirmación "todo Proceso de Poisson es siempre estacionario" es <strong>FALSA</strong>.</p>
+        </div>
+        <div class="teo-origin">V/F en: 2023-2C P Ej 1 punto 1</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Es la distribución exponencial de los tiempos entre eventos condición necesaria Y suficiente para que el proceso sea de Poisson?</span>
+        <span class="teo-freq">★★ 2023-2C P — V/F punto 4</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p>Es condición <strong>necesaria pero NO suficiente</strong>. Para que el proceso sea de Poisson se necesitan además: (1) AR(1) — propiedad markoviana; (2) linealidad — en cada intervalo infinitesimal ocurre a lo sumo un evento; (3) tasas constantes (para el homogéneo).</p>
+          <p>La exponencialidad de los tiempos entre eventos es una consecuencia de las propiedades de Poisson, pero existen procesos de renovación con tiempos exponenciales que no son procesos de Poisson (por ejemplo, si las tasas dependen del estado o si no hay AR(1)).</p>
+          <p>La afirmación "es condición necesaria y suficiente" es <strong>FALSA</strong>.</p>
+        </div>
+        <div class="teo-origin">2023-2C P, Ej 1 punto 4</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ SUBGRUPO: SIMULACIÓN ══ -->
+  <div style="margin-bottom:1.2rem;">
+    <div style="font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.8rem;">Simulación de Monte Carlo</div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Más repeticiones de simulación siempre dan un resultado más preciso?</span>
+        <span class="teo-freq">★★ 2023-2C P — V/F punto 3</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p>La afirmación es <strong>VERDADERA en general</strong>, con matices importantes. Más repeticiones reducen el error estándar del estimador: $\text{SE}=\sigma/\sqrt{k}$. A medida que $k\to\infty$, el estimador converge al valor teórico (ley de los grandes números).</p>
+          <p>Los matices: (1) la precisión crece como $1/\sqrt{k}$, no linealmente — duplicar la precisión requiere cuadruplicar las simulaciones; (2) si el generador pseudoaleatorio tiene un período corto, muchas repeticiones pueden repetir patrones (en la práctica no es un problema con generadores modernos); (3) el criterio de parada $S/\sqrt{k}<d$ formalmente garantiza que más simulaciones ayudan.</p>
+          <p>En el contexto del parcial: la afirmación suele aparecer como <strong>VERDADERA</strong>.</p>
+        </div>
+        <div class="teo-origin">2023-2C P, Ej 1 punto 3</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Cuál es la diferencia entre el método de transformada inversa estándar y el método eficiente para variables discretas?</span>
+        <span class="teo-freq">★★★ aparece en casi todos los exámenes de simulación desde 2021</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p>En el método <strong>estándar</strong>, los valores $x_j$ se verifican en orden natural (menor a mayor, o el orden dado). En el método <strong>eficiente</strong>, se reordenan de <strong>mayor a menor probabilidad</strong>, de modo que los valores más probables se comprueben primero.</p>
+          <p>El número promedio de comparaciones en el método eficiente es menor que en el estándar. Para la distribución Binomial: número promedio de comparaciones $= 1 + np$.</p>
+          <p>En el parcial siempre especifican si quieren el método eficiente. Cuando lo piden, hay que <strong>explicar explícitamente el reordenamiento</strong> y construir los intervalos de $U$ en ese orden. Es el error más común: aplicar la transformada inversa sin reordenar.</p>
+        </div>
+        <div class="teo-origin">2021-1C P · 2022-1C R · 2022-2C R · 2023-1C R · 2024-1C P · 2024-2C R</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Cómo se genera una variable $N(0,1)$ a partir de números $U(0,1)$? ¿Y una $N(\mu, \sigma^2)$?</span>
+        <span class="teo-freq">★★ AR(1) · 2021-2C P · 2022-2C R · 2024-2C R</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p>Para $Z\sim N(0,1)$: aplicar la inversa de la función de distribución normal estándar: $Z=\Phi^{-1}(U)$. En la práctica se usa la tabla de la normal: dado $U$, buscar el $z$ tal que $\Phi(z)=U$.</p>
+          <p>Para $X\sim N(\mu,\sigma^2)$: escalar $X=\mu + \sigma\cdot Z = \mu + \sigma\cdot\Phi^{-1}(U)$.</p>
+          <p>En el AR(1): $\varepsilon_t\sim N(0,\sigma^2_\varepsilon)$, se genera como $\varepsilon_t=\sigma_\varepsilon\cdot\Phi^{-1}(U_t)$. Si $\sigma^2=2$, entonces $\varepsilon_t=\sqrt{2}\cdot\Phi^{-1}(U_t)$.</p>
+        </div>
+        <div class="teo-origin">2021-2C P · 2022-2C R · 2024-2C R (AR(1))</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ SUBGRUPO: GLM ══ -->
+  <div style="margin-bottom:1.2rem;">
+    <div style="font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.8rem;">Modelos Lineales Generalizados</div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">La distribución geométrica, ¿forma parte de la familia exponencial?</span>
+        <span class="teo-freq">★★ 2023-2C P — V/F punto 2</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p>La afirmación "la distribución geométrica NO forma parte de la familia exponencial" es <strong>FALSA</strong>. La Geométrica sí pertenece a la familia exponencial.</p>
+          <p>Demostración: $f(y)=p(1-p)^{y-1}$, $y\geq1$. Aplicando logaritmo: $\ln f(y) = \ln p + (y-1)\ln(1-p) = y\ln(1-p) + [\ln p - \ln(1-p)]$. Identificamos $\theta=\ln(1-p)$, $a(\theta)=-\ln p = -\ln(1-e^\theta)-\theta$, $\phi=1$. La estructura encaja perfectamente en $\exp\!\left(\frac{y\theta-a(\theta)}{\phi}\right)\cdot c(y)$.</p>
+        </div>
+        <div class="teo-origin">V/F en: 2023-2C P Ej 1 punto 2</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Cuándo usar regresión logística vs. regresión de Poisson? ¿Cómo elegir la función vínculo?</span>
+        <span class="teo-freq">★★★ 2023-2C P · 2024-1C P · 2023-2C R</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p><strong>Regresión logística</strong> (Binomial + logit): variable respuesta dicotómica (sí/no, ocurre/no ocurre, presenta/no presenta). Ejemplos: ¿hay siniestro?, ¿el paciente presenta cifosis?, ¿el estudiante aprueba?</p>
+          <p><strong>Regresión de Poisson</strong> (Poisson + log): variable respuesta son conteos (0, 1, 2, ...). Ejemplos: cantidad de goles, número de siniestros, cantidad de llamadas.</p>
+          <p>La <strong>función vínculo canónica</strong> es la que surge naturalmente de la estructura de la familia exponencial: logit para Binomial, log para Poisson, identidad para Normal, inversa para Gamma. Se prefiere porque simplifica la estimación y las propiedades algebraicas.</p>
+          <p>Para <strong>elegir entre modelos</strong>: comparar AIC (menor = mejor). También analizar los residuos y si los supuestos de la distribución se cumplen.</p>
+        </div>
+        <div class="teo-origin">2023-2C P · 2023-2C R · 2024-1C P</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Cómo se interpreta el coeficiente $\hat\beta_1$ en una regresión logística? ¿Y en una regresión de Poisson?</span>
+        <span class="teo-freq">★★★ 2023-2C R · 2024-1C P — siempre piden "impacto de 1 unidad"</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p><strong>Logística:</strong> $\hat\beta_1$ es el cambio en el log-odds por unidad de $X$. Un aumento de 1 unidad en $X$ multiplica el odds $\pi/(1-\pi)$ por $e^{\hat\beta_1}$ (odds ratio). Si $e^{\hat\beta_1}>1$: aumenta la probabilidad del evento; si $<1$: la disminuye.</p>
+          <p><strong>Poisson:</strong> un aumento de 1 unidad en $X$ multiplica la media $\mu$ por $e^{\hat\beta_1}$. Numéricamente: $\mu_{\text{nueva}} = \mu_{\text{anterior}}\cdot e^{\hat\beta_1}$. El efecto es multiplicativo (no aditivo).</p>
+          <p><strong>Normal (identidad):</strong> un aumento de 1 unidad en $X$ aumenta $\mu$ en $\hat\beta_1$ unidades (efecto aditivo).</p>
+        </div>
+        <div class="teo-origin">2023-2C R Ej 4 · 2024-1C P Ej 3</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Qué es la overdispersión en GLM y qué consecuencias tiene ignorarla? ¿Cómo se detecta y corrige?</span>
+        <span class="teo-freq">★★ 2023-2C R — preguntas cortas de 5 pts</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p><strong>Definición:</strong> la varianza observada excede la varianza teórica del modelo. Para Poisson: $\hat\phi=\chi^2_\text{Pearson}/(n-p)>1$ indica overdispersión.</p>
+          <p><strong>Consecuencias de ignorarla:</strong> los errores estándar de $\hat\beta_i$ quedan <em>subestimados</em> → p-valores artificialmente pequeños → se rechazan $H_0$ con más frecuencia de la correcta (falsos positivos). Los estimadores puntuales $\hat\beta_i$ no se ven afectados.</p>
+          <p><strong>Correcciones:</strong> (1) Quasi-Poisson: escalar los SE por $\sqrt{\hat\phi}$ sin cambiar el modelo; (2) Binomial Negativa: usar una distribución con varianza $\mu(1+\kappa\mu)$ que tiene más flexibilidad; (3) modelos de efectos aleatorios para capturar la heterogeneidad.</p>
+        </div>
+        <div class="teo-origin">2023-2C R, Ej 1 punto 2</div>
+      </div>
+    </div>
+
+  </div>
+
+</div><!-- /section preguntas teóricas -->
+
+</div><!-- /wrapper extra -->
+
+<!-- ══════════════════════════════════════════════════════
+     BLOQUE VII — EJERCICIOS PUNTUALES RESUELTOS
+══════════════════════════════════════════════════════════ -->
+<div class="wrapper" style="padding-top:0;">
+
+<div class="block-divider">Bloque VII — Ejercicios puntuales con datos exactos de parciales</div>
+
+<div class="section">
+  <div class="section-header">
+    <div class="section-icon icon-green">🎯</div>
+    <h2>Ejercicios que se repiten con los mismos datos — resueltos completo</h2>
+  </div>
+
+  <!-- ══ EJERCICIO 1: Chi-cuadrado uniforme {1..8} n=60 ══ -->
+  <div class="exam-card open">
+    <div class="exam-header" onclick="this.parentElement.classList.toggle('open')">
+      <div>
+        <div class="topic-title-row">
+          <span class="exam-tag">CHI² · 2024-2C R · 2022-2C P · 2021-2C R</span>
+          <span class="exam-title">Bondad de ajuste — Uniforme Discreta $\{1,\ldots,8\}$, $n=60$</span>
+        </div>
+        <div class="exam-meta">Los mismos $N_i$ aparecen en al menos 3 exámenes · siempre piden estadístico + P-valor analítico + simulación del P-valor</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="exam-body">
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">ENUNCIADO</span>
+          <span class="ej-title">Datos exactos que aparecen en parcial</span>
+        </div>
+        <div class="ej-enunciado">
+          $X\sim U_D\{1,2,3,4,5,6,7,8\}$. Muestra $n=60$: $N_i = [12,\,5,\,19,\,7,\,7,\,12,\,10,\,8]$. Poner a prueba $H_0: P[X=i]=\frac{1}{8}$ para todo $i$. Calcular estadístico, P-valor analítico y explicar simulación del P-valor.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1</span>
+            <div class="paso-contenido">
+              <strong>Planteo de hipótesis.</strong>
+              $$H_0: P[X=i] = \frac{1}{8} = 0{,}125 \quad \forall\, i=1,\ldots,8 \qquad H_1: \exists\, i \text{ tal que } P[X=i]\neq\frac{1}{8}$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2</span>
+            <div class="paso-contenido">
+              <strong>Frecuencias esperadas.</strong> $n\cdot p_i^e = 60\cdot\frac{1}{8} = 7{,}5$ para cada categoría.
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>Tabla de cálculo.</strong>
+              <div class="table-wrap">
+                <table class="cheat-table">
+                  <tr><th>$i$</th><th>$N_i$</th><th>$n\,p_i^e$</th><th>$N_i - n\,p_i^e$</th><th>$(N_i - n\,p_i^e)^2$</th><th>$\frac{(N_i-n\,p_i^e)^2}{n\,p_i^e}$</th></tr>
+                  <tr><td>1</td><td>12</td><td>7,5</td><td>4,5</td><td>20,25</td><td>2,700</td></tr>
+                  <tr><td>2</td><td>5</td><td>7,5</td><td>−2,5</td><td>6,25</td><td>0,833</td></tr>
+                  <tr><td>3</td><td>19</td><td>7,5</td><td>11,5</td><td>132,25</td><td>17,633</td></tr>
+                  <tr><td>4</td><td>7</td><td>7,5</td><td>−0,5</td><td>0,25</td><td>0,033</td></tr>
+                  <tr><td>5</td><td>7</td><td>7,5</td><td>−0,5</td><td>0,25</td><td>0,033</td></tr>
+                  <tr><td>6</td><td>12</td><td>7,5</td><td>4,5</td><td>20,25</td><td>2,700</td></tr>
+                  <tr><td>7</td><td>10</td><td>7,5</td><td>2,5</td><td>6,25</td><td>0,833</td></tr>
+                  <tr><td>8</td><td>8</td><td>7,5</td><td>0,5</td><td>0,25</td><td>0,033</td></tr>
+                  <tr><td><strong>Σ</strong></td><td><strong>60</strong></td><td><strong>60</strong></td><td><strong>0</strong></td><td>—</td><td><strong>24,800</strong></td></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">4</span>
+            <div class="paso-contenido">
+              <strong>Estadístico y distribución.</strong>
+              $$T^e = \sum_{i=1}^{8}\frac{(N_i - n\,p_i^e)^2}{n\,p_i^e} = 24{,}800 \quad \xrightarrow{n\to\infty}\quad \chi^2_{k-1} = \chi^2_7 \quad\text{bajo }H_0$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">5</span>
+            <div class="paso-contenido">
+              <strong>P-valor analítico.</strong>
+              $$\text{P-valor} = P(\chi^2_7 \geq 24{,}800)$$
+              El valor crítico de $\chi^2_7$ al 1% es 18,48 y al 0,1% es 24,32. Como $T^e=24{,}8>24{,}32$, el P-valor $<0{,}001$.
+              <div class="resultado-final">→ P-valor $\approx 0{,}0008 &lt; \alpha = 0{,}05$ ⟹ <strong>Rechazar $H_0$</strong>. Los datos no son compatibles con una distribución uniforme discreta en $\{1,\ldots,8\}$.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">6</span>
+            <div class="paso-contenido">
+              <strong>Estimación del P-valor por simulación</strong> (siempre lo piden como punto 2).
+              <ol style="padding-left:1.2rem; margin:0.4rem 0; font-size:0.9rem; color:var(--text-muted);">
+                <li>Generar $n=60$ valores i.i.d. con la distribución bajo $H_0$: $Y_j^{(l)}\sim U_D\{1,\ldots,8\}$ usando transformada inversa.</li>
+                <li>Calcular las frecuencias $N_i^{(l)}$ y el estadístico $T^{(l)} = \sum_i \frac{(N_i^{(l)}-7{,}5)^2}{7{,}5}$.</li>
+                <li>Repetir $r$ veces (p.ej. $r=1000$).</li>
+                <li>El P-valor simulado es $\hat{p} = \frac{\#\{l: T^{(l)} \geq T^e\}}{r} = \frac{\#\{l: T^{(l)} \geq 24{,}8\}}{r}$.</li>
+              </ol>
+              <div class="paso-nota">💡 A medida que $r\to\infty$, $\hat{p}$ converge al P-valor analítico. Con $r=1000$ ya da una buena aproximación.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /chi2 card -->
+
+  <!-- ══ EJERCICIO 2: FGP pólizas de seguro ══ -->
+  <div class="exam-card">
+    <div class="exam-header" onclick="this.parentElement.classList.toggle('open')">
+      <div>
+        <div class="topic-title-row">
+          <span class="exam-tag">FGP PÓLIZAS · 2021-1C P · 2021-1C R · 2022-2C R</span>
+          <span class="exam-title">FGP aplicada a siniestros — convolución de pólizas independientes</span>
+        </div>
+        <div class="exam-meta">Aparece en 6 exámenes · siempre el mismo esquema · la trampa del $(1-p)$ baja muchos puntos</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="exam-body">
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">CASO BASE</span>
+          <span class="ej-title">2021-1C Parcial — 2 pólizas independientes, $p=20\%$, montos tabular</span>
+        </div>
+        <div class="ej-enunciado">
+          Cartera con 2 pólizas independientes $S_A$, $S_B$. Cada una tiene probabilidad de siniestro del 20%. Montos posibles: 50 USD (3%), 150 USD (6%), 250 USD (9%), 300 USD (82%). Obtener la distribución de $S = S_A + S_B$ por FGP.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1</span>
+            <div class="paso-contenido">
+              <strong>FGP de una póliza individual.</strong> Cada póliza tiene probabilidad 0,20 de siniestro. Dado siniestro, el monto sigue la distribución de montos. La FGP de $S_i$ combina ambas:
+              $$G_{S_i}(w) = \underbrace{(1-0{,}20)}_{\text{sin siniestro}} + \underbrace{0{,}20\cdot G_{\text{monto}}(w)}_{\text{con siniestro}}$$
+              <div class="paso-nota">⚠ El $(1-p)$ es la probabilidad de que $S_i=0$ (no hay siniestro). Omitirlo hace que $G_{S_i}(1)\neq 1$ y toda la distribución queda mal.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2</span>
+            <div class="paso-contenido">
+              <strong>FGP del monto dado siniestro.</strong>
+              $$G_{\text{monto}}(w) = 0{,}03\,w^{50} + 0{,}06\,w^{150} + 0{,}09\,w^{250} + 0{,}82\,w^{300}$$
+              Entonces:
+              $$G_{S_i}(w) = 0{,}80 + 0{,}20\left(0{,}03\,w^{50} + 0{,}06\,w^{150} + 0{,}09\,w^{250} + 0{,}82\,w^{300}\right)$$
+              $$= 0{,}80 + 0{,}006\,w^{50} + 0{,}012\,w^{150} + 0{,}018\,w^{250} + 0{,}164\,w^{300}$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>FGP de la cartera total.</strong> Como $S_A$ y $S_B$ son independientes e idénticas:
+              $$G_S(w) = G_{S_A}(w)\cdot G_{S_B}(w) = \left[G_{S_i}(w)\right]^2$$
+              Expandir el producto colectando por potencias de $w$. Los valores posibles de $S = S_A+S_B$ son: 0, 50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 600:
+              $$P(S=0) = (0{,}80)^2 = 0{,}6400$$
+              $$P(S=50) = 2\cdot 0{,}80\cdot 0{,}006 = 0{,}0096$$
+              $$P(S=100) = (0{,}006)^2 = 0{,}000036$$
+              $$P(S=150) = 2\cdot 0{,}80\cdot 0{,}012 = 0{,}0192$$
+              $$P(S=300) = 2\cdot 0{,}80\cdot 0{,}164 + (0{,}012)^2 + \ldots \approx 0{,}2624 + \text{cruce}$$
+              <div class="paso-nota">💡 Para los cruces intermedios: $P(S=x) = \sum_{k} P(S_A=k)\cdot P(S_B=x-k)$. Conviene hacer la tabla sistemáticamente.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">4</span>
+            <div class="paso-contenido">
+              <strong>Verificación.</strong> $\sum_x P(S=x) = G_S(1) = [G_{S_i}(1)]^2 = 1^2 = 1$. Si la suma no da 1, hay un error en las probabilidades.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">VARIANTE</span>
+          <span class="ej-title">2023-1C Recu — Convolución 2 dados, resultado del juego</span>
+        </div>
+        <div class="ej-enunciado">
+          Tirar 2 dados equilibrados. Premio: $\$3$ si sale 7; $\$5$ si sale 11; pagar $\$0{,}70$ cualquier otra combinación. Costo de la apuesta: $\$0{,}30$. Obtener distribución del resultado neto por FGP.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1</span>
+            <div class="paso-contenido">
+              <strong>FGP de un dado.</strong> $X\sim U_D\{1,\ldots,6\}$, cada valor con prob $1/6$:
+              $$G_X(w) = \frac{1}{6}(w + w^2 + w^3 + w^4 + w^5 + w^6)$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2</span>
+            <div class="paso-contenido">
+              <strong>FGP de la suma de 2 dados.</strong> Por independencia: $G_{X_1+X_2}(w) = [G_X(w)]^2$. Expandir y colectar por potencias $w^2, w^3, \ldots, w^{12}$:
+              $$P(S=2)=\tfrac{1}{36},\; P(S=3)=\tfrac{2}{36},\; P(S=4)=\tfrac{3}{36},\; P(S=5)=\tfrac{4}{36},\; P(S=6)=\tfrac{5}{36}$$
+              $$P(S=7)=\tfrac{6}{36},\; P(S=8)=\tfrac{5}{36},\; P(S=9)=\tfrac{4}{36},\; P(S=10)=\tfrac{3}{36},\; P(S=11)=\tfrac{2}{36},\; P(S=12)=\tfrac{1}{36}$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>Distribución del resultado neto del juego.</strong> Resultado neto $= \text{cobrado} - \text{costo}$:
+              <div class="table-wrap">
+                <table class="cheat-table">
+                  <tr><th>Resultado dado</th><th>Cobrado</th><th>Costo</th><th>Neto</th><th>Probabilidad</th></tr>
+                  <tr><td>Sale 7</td><td>$3,00</td><td>$0,30</td><td>$+2,70$</td><td>$6/36 = 0{,}1\overline{6}$</td></tr>
+                  <tr><td>Sale 11</td><td>$5,00</td><td>$0,30</td><td>$+4,70$</td><td>$2/36 = 0{,}05\overline{5}$</td></tr>
+                  <tr><td>Otra combinación</td><td>$0,00</td><td>$0,30+0,70$</td><td>$-1,00$</td><td>$28/36 = 0{,}7\overline{7}$</td></tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">4</span>
+            <div class="paso-contenido">
+              <strong>Resultado esperado.</strong>
+              $$E[\text{neto}] = 2{,}70\cdot\frac{6}{36} + 4{,}70\cdot\frac{2}{36} + (-1{,}00)\cdot\frac{28}{36} = \frac{16{,}2 + 9{,}4 - 28}{36} = \frac{-2{,}4}{36} \approx -0{,}067$$
+              <div class="resultado-final">→ El juego no está equilibrado: el valor esperado es negativo ($-\$0{,}067$ por apuesta). El jugador pierde en promedio.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">5</span>
+            <div class="paso-contenido">
+              <strong>Transformada inversa eficiente con $U=[0{,}5371;\ldots]$.</strong> Ordenar de mayor a menor probabilidad: primero "otra combinación" (0,778), luego "sale 7" (0,167), luego "sale 11" (0,056):
+              $$U < 0{,}778 \to \text{neto}=-1{,}00 \qquad 0{,}778\leq U < 0{,}944 \to \text{neto}=+2{,}70 \qquad U \geq 0{,}944 \to \text{neto}=+4{,}70$$
+              <div class="paso-nota">⚠ La aclaración del enunciado dice "en caso de igualdad de probabilidades, ordenar de peor a mejor resultado". Acá no hay igualdad, así que el criterio es solo mayor a menor $p_j$.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">6</span>
+            <div class="paso-contenido">
+              <strong>¿Cuánto debería pagar el 11 para equilibrar?</strong> Llamar $x$ al nuevo pago por el 11. Equilibrio: $E[\text{neto}]=0$:
+              $$2{,}70\cdot\frac{6}{36} + (x-0{,}30)\cdot\frac{2}{36} + (-1{,}00)\cdot\frac{28}{36} = 0$$
+              $$16{,}2 + 2(x-0{,}30) - 28 = 0 \implies 2x = 12{,}4 \implies x = \$6{,}20$$
+              <div class="resultado-final">→ Para equilibrar el juego, el premio del 11 debería ser $\$6{,}20$ (en lugar de $\$5{,}00$).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Estructura general -->
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">ESQUEMA</span>
+          <span class="ej-title">Estructura general para cualquier ejercicio de FGP de siniestros</span>
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">A</span>
+            <div class="paso-contenido">
+              <strong>Si te dan pólizas con probabilidad de siniestro $p$ y distribución del monto.</strong>
+              $$G_{S_i}(w) = (1-p) + p\cdot G_{\text{monto}}(w)$$
+              Donde $G_{\text{monto}}(w) = \sum_j P(\text{monto}=m_j)\cdot w^{m_j}$.
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">B</span>
+            <div class="paso-contenido">
+              <strong>Si te dan la distribución de $S_i$ directamente (con $P(S_i=0)$ ya incluida).</strong>
+              $$G_{S_i}(w) = \sum_j P(S_i = s_j)\cdot w^{s_j}$$
+              No hay que agregar nada — el cero ya está en la distribución.
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">C</span>
+            <div class="paso-contenido">
+              <strong>Cartera total: independencia = producto.</strong>
+              $$G_S(w) = \prod_{i=1}^n G_{S_i}(w)$$
+              Expandir el producto, colectar coeficientes de cada potencia de $w$, leer las probabilidades.
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">D</span>
+            <div class="paso-contenido">
+              <strong>Propiedades útiles.</strong>
+              $$G_S(1) = 1 \quad\text{(verificación)} \qquad G'_S(1) = E[S] \qquad G''_S(1) = E[S(S-1)]$$
+              $$\text{Var}[S] = G''_S(1) + G'_S(1) - [G'_S(1)]^2$$
+              <div class="paso-nota">💡 Si piden $P(X=0)=k\cdot P(X=200)$, usar esa condición para resolver el parámetro desconocido antes de construir la FGP.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /FGP card -->
+
+</div><!-- /section -->
+</div><!-- /wrapper bloque VII -->
 
 <script>
-function toggle(card) {
-  card.classList.toggle('open');
-}
-// Open all cards with alta frequency by default for quick review
-document.querySelectorAll('.freq-alta').forEach(badge => {
-  badge.closest('.topic-card').classList.add('open');
+// Toggle for exam cards and teo cards
+document.querySelectorAll('.exam-header, .teo-header').forEach(h => {
+  h.addEventListener('click', () => h.parentElement.classList.toggle('open'));
 });
 </script>
 </body>
