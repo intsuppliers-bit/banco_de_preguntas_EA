@@ -1931,29 +1931,76 @@ MathJax = {
           <div class="paso">
             <span class="paso-num">A</span>
             <div class="paso-contenido">
-              <strong>Procedimiento (siempre lo piden primero).</strong> (1) Generar $U_{\text{sin}}\sim U(0,1)$. (2) Si $U_{\text{sin}}<0{,}7$: hay siniestro, generar $U_{\text{monto}}$, calcular $X=-\frac{1}{0{,}01}\ln(U_{\text{monto}})$. (3) Si $U_{\text{sin}}\geq 0{,}7$: $X=0$.
+              <strong>Procedimiento completo (siempre lo piden primero).</strong>
+              <ol style="padding-left:1.2rem;margin:0.5rem 0;font-size:0.9rem;color:var(--text-muted);">
+                <li>Generar $U_{\text{sin}}\sim U(0,1)$</li>
+                <li>Si $U_{\text{sin}} < 0{,}7$ → hay siniestro: generar $U_{\text{monto}}$, calcular $X_i = -\frac{1}{0{,}01}\ln(U_{\text{monto}}) = -100\ln(U_{\text{monto}})$</li>
+                <li>Si $U_{\text{sin}} \geq 0{,}7$ → no hay siniestro: $X_i = 0$</li>
+                <li>El monto que paga la empresa es $\text{Pago}_i = X_i$ (sin límite) o $\min(X_i, L)$ (con límite)</li>
+              </ol>
+              <div class="paso-nota">💡 $E[X\mid\text{siniestro}] = 1/\lambda = 100$. $E[\text{Pago}] = 0{,}7\cdot 100 = 70$. Si no hay límite, el pago esperado es simplemente $p\cdot E[X\mid\text{sin}]$.</div>
             </div>
           </div>
           <div class="paso">
             <span class="paso-num">B</span>
             <div class="paso-contenido">
-              <strong>Tabla de simulación.</strong> $U_{\text{sin}}=[0{,}3188;\,0{,}3399;\,0{,}2491;\,\mathbf{0{,}755};\,0{,}3625;\,\mathbf{0{,}8214};\,\mathbf{0{,}8889};\,0{,}147;\,0{,}187;\,\mathbf{0{,}6523}]$. Los valores en negrita $\geq 0{,}7$ → no hay siniestro ($X=0$). Los restantes 6 casos generan monto:
-              $$X_1 = -100\ln(0{,}5912)\approx52{,}7;\quad X_2=-100\ln(0{,}6855)\approx37{,}8;\quad\ldots$$
-              <div class="paso-nota">💡 $E[X] = 1/\lambda = 100$. Los valores simulados van a rondar eso en promedio. Si el promedio sale muy distinto, verificar cuántos tuvieron siniestro.</div>
+              <strong>Tabla de simulación sin límite.</strong> Con $U_{\text{sin}}=[0{,}3188;\,0{,}3399;\,0{,}2491;\,0{,}755;\,0{,}3625;\,0{,}8214;\,0{,}8889;\,0{,}147;\,0{,}187;\,0{,}6523]$ y $U_{\text{monto}}=[0{,}5912;\,0{,}6855;\,0{,}8426;\,−;\,0{,}4205;\,−;\,−;\,0{,}9134;\,0{,}7241;\,−]$:
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$i$</th><th>$U_{\text{sin}}$</th><th>¿Siniestro?</th><th>$U_{\text{monto}}$</th><th>$X_i = -100\ln U_m$</th><th>Pago (sin lím.)</th></tr>
+                <tr><td>1</td><td>0,3188</td><td>✓ ($<$0,7)</td><td>0,5912</td><td>$-100\ln(0{,}5912)\approx 52{,}7$</td><td>52,7</td></tr>
+                <tr><td>2</td><td>0,3399</td><td>✓</td><td>0,6855</td><td>$-100\ln(0{,}6855)\approx 37{,}8$</td><td>37,8</td></tr>
+                <tr><td>3</td><td>0,2491</td><td>✓</td><td>0,8426</td><td>$-100\ln(0{,}8426)\approx 17{,}1$</td><td>17,1</td></tr>
+                <tr><td>4</td><td>0,755</td><td>✗ ($\geq$0,7)</td><td>—</td><td>—</td><td>0</td></tr>
+                <tr><td>5</td><td>0,3625</td><td>✓</td><td>0,4205</td><td>$-100\ln(0{,}4205)\approx 86{,}6$</td><td>86,6</td></tr>
+                <tr><td>6</td><td>0,8214</td><td>✗</td><td>—</td><td>—</td><td>0</td></tr>
+                <tr><td>7</td><td>0,8889</td><td>✗</td><td>—</td><td>—</td><td>0</td></tr>
+                <tr><td>8</td><td>0,147</td><td>✓</td><td>0,9134</td><td>$-100\ln(0{,}9134)\approx 9{,}1$</td><td>9,1</td></tr>
+                <tr><td>9</td><td>0,187</td><td>✓</td><td>0,7241</td><td>$-100\ln(0{,}7241)\approx 32{,}3$</td><td>32,3</td></tr>
+                <tr><td>10</td><td>0,6523</td><td>✗ ($\geq$0,7)</td><td>—</td><td>—</td><td>0</td></tr>
+                <tr><td colspan="5"><strong>Promedio</strong></td><td><strong>$(52{,}7+37{,}8+17{,}1+86{,}6+9{,}1+32{,}3)/10 = 23{,}6$</strong></td></tr>
+              </table></div>
+              <div class="paso-nota">⚠ El promedio se divide por $n=10$ (todos los registros), no solo por los 6 con siniestro. Los 4 sin siniestro contribuyen con 0.</div>
+              <p style="font-size:0.88rem;color:var(--text-muted);margin-top:0.5rem;">$P(\text{Pago}>150) = 0$ en esta simulación (ningún monto superó 150). Con más repeticiones podría ocurrir.</p>
             </div>
           </div>
           <div class="paso">
             <span class="paso-num">C</span>
             <div class="paso-contenido">
-              <strong>Límite de pérdida $L=150$.</strong> Para cada siniestro: $\text{Pago}_i = \min(X_i, 150)$. Los montos simulados $>150$ se truncan a 150 — la empresa no paga el exceso. El promedio baja respecto al punto B.
-              <div class="paso-nota">⚠ Aplicar el $\min$ solo a los casos con siniestro. Para los registros sin siniestro el pago sigue siendo 0.</div>
+              <strong>Con límite de pérdida $L=150$.</strong> Agregar columna $\min(X_i, 150)$:
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$i$</th><th>$X_i$</th><th>$\min(X_i,150)$</th></tr>
+                <tr><td>1</td><td>52,7</td><td>52,7</td></tr>
+                <tr><td>2</td><td>37,8</td><td>37,8</td></tr>
+                <tr><td>3</td><td>17,1</td><td>17,1</td></tr>
+                <tr><td>4</td><td>0</td><td>0</td></tr>
+                <tr><td>5</td><td>86,6</td><td>86,6</td></tr>
+                <tr><td>6–7</td><td>0</td><td>0</td></tr>
+                <tr><td>8</td><td>9,1</td><td>9,1</td></tr>
+                <tr><td>9</td><td>32,3</td><td>32,3</td></tr>
+                <tr><td>10</td><td>0</td><td>0</td></tr>
+                <tr><td colspan="2"><strong>Promedio con límite</strong></td><td><strong>$235{,}6/10 = 23{,}6$</strong></td></tr>
+              </table></div>
+              <div class="paso-nota">💡 En esta simulación ningún monto superó $L=150$, así que los pagos son iguales. Si algún $X_i > 150$, ese valor se reemplaza por 150 y el promedio baja.</div>
             </div>
           </div>
           <div class="paso">
             <span class="paso-num">D</span>
             <div class="paso-contenido">
-              <strong>Gastos adicionales condicionados.</strong> Usar $U_{\text{gastos}}$ solo en los registros donde $U_{\text{sin}}<0{,}7$ (mismos 6 casos de antes). $G_i = U_{\text{gastos},i}\cdot(20-0)+0 = 20\,U_{\text{gastos},i}$. Promediar solo los $G_i$ de esos 6 casos.
-              <div class="resultado-final">→ Costo total promedio = promedio(Pago) + promedio(Gastos sobre siniestros ocurridos × proporción siniestros)</div>
+              <strong>Gastos adicionales condicionados al siniestro.</strong> $G_i\sim U(0,20)$, pero <em>solo cuando hubo siniestro</em>. Con $U_{\text{gastos}}=[0{,}412;\,0{,}733;\,0{,}281;\,−;\,0{,}895;\,−;\,−;\,0{,}104;\,0{,}558;\,−]$:
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$i$</th><th>¿Sin?</th><th>$U_g$</th><th>$G_i=20\cdot U_g$</th><th>Pago + gasto</th></tr>
+                <tr><td>1</td><td>✓</td><td>0,412</td><td>8,24</td><td>52,7 + 8,24 = 60,94</td></tr>
+                <tr><td>2</td><td>✓</td><td>0,733</td><td>14,66</td><td>37,8 + 14,66 = 52,46</td></tr>
+                <tr><td>3</td><td>✓</td><td>0,281</td><td>5,62</td><td>17,1 + 5,62 = 22,72</td></tr>
+                <tr><td>4</td><td>✗</td><td>—</td><td>0</td><td>0</td></tr>
+                <tr><td>5</td><td>✓</td><td>0,895</td><td>17,90</td><td>86,6 + 17,90 = 104,5</td></tr>
+                <tr><td>6–7</td><td>✗</td><td>—</td><td>0</td><td>0</td></tr>
+                <tr><td>8</td><td>✓</td><td>0,104</td><td>2,08</td><td>9,1 + 2,08 = 11,18</td></tr>
+                <tr><td>9</td><td>✓</td><td>0,558</td><td>11,16</td><td>32,3 + 11,16 = 43,46</td></tr>
+                <tr><td>10</td><td>✗</td><td>—</td><td>0</td><td>0</td></tr>
+                <tr><td colspan="4"><strong>Costo total promedio</strong></td><td><strong>$(60{,}94+52{,}46+22{,}72+104{,}5+11{,}18+43{,}46)/10 = 29{,}53$</strong></td></tr>
+              </table></div>
+              <div class="paso-nota">⚠ Los $U_g$ de las filas sin siniestro (4, 6, 7, 10) NO se usan — aunque estén en el vector dado. El costo total promedio divide siempre por $n=10$.</div>
             </div>
           </div>
         </div>
@@ -1972,28 +2019,52 @@ MathJax = {
           <div class="paso">
             <span class="paso-num">1</span>
             <div class="paso-contenido">
-              <strong>Elegir distribución y función vínculo.</strong> Variable respuesta dicotómica (presenta/no presenta cifosis) → <strong>Regresión Logística</strong>. Función vínculo canónica: $g(\pi) = \ln\!\left(\frac{\pi}{1-\pi}\right)$ (logit).
+              <strong>Elegir distribución y función vínculo.</strong> Variable respuesta dicotómica (presenta/no presenta cifosis) → $Y_i\in\{0,1\}$ → familia <strong>Binomial</strong>. Función vínculo canónica: logit.
+              $$g(\pi) = \ln\!\left(\frac{\pi}{1-\pi}\right) = \beta_0 + \beta_1\cdot\text{Meses}$$
+              <div class="paso-nota">💡 Si la respuesta fuera un conteo (0,1,2,...) → Poisson. Si fuera continua positiva → Gamma. Si fuera continua sin restricción → Normal. Acá es 0/1 → Binomial.</div>
             </div>
           </div>
           <div class="paso">
             <span class="paso-num">2</span>
             <div class="paso-contenido">
-              <strong>Significatividad del modelo sin $\text{Meses}^2$.</strong> P-valor de Meses = 0{,}463 $>\alpha=0{,}05$ → <strong>no significativo</strong>. El intercepto tampoco lo es (0{,}342). El modelo sin cuadrático no tiene poder predictivo.
+              <strong>Leer la tabla de resultados — modelo SIN $\text{Meses}^2$.</strong>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>Coeficiente</th><th>Estimación</th><th>Error estándar</th><th>$z$</th><th>P-valor</th><th>¿Significativo?</th></tr>
+                <tr><td>Intercepto</td><td>−1,0979</td><td>1,172</td><td>−0,937</td><td>0,342</td><td>✗ ($>$0,05)</td></tr>
+                <tr><td>Meses</td><td>0,00693</td><td>0,00942</td><td>0,736</td><td>0,463</td><td>✗ ($>$0,05)</td></tr>
+              </table></div>
+              Ningún coeficiente es significativo. El modelo lineal en Meses no tiene poder predictivo. AIC = 127,22.
             </div>
           </div>
           <div class="paso">
             <span class="paso-num">3</span>
             <div class="paso-contenido">
-              <strong>Modelo con $\text{Meses}^2$.</strong> Ahora Meses: P=0{,}024; Meses²: P=0{,}036 → <strong>ambos significativos</strong>. Elegir este modelo. La relación es cuadrática: a cierta edad el riesgo aumenta y luego baja (o viceversa).
+              <strong>Modelo CON $\text{Meses}^2$ — comparar AICs.</strong>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>Coeficiente</th><th>Estimación</th><th>P-valor</th><th>¿Significativo?</th></tr>
+                <tr><td>Intercepto</td><td>−3,4031</td><td>0,003</td><td>✓</td></tr>
+                <tr><td>Meses</td><td>0,05474</td><td>0,024</td><td>✓</td></tr>
+                <tr><td>Meses²</td><td>−0,000328</td><td>0,036</td><td>✓</td></tr>
+              </table></div>
+              AIC = 120,37 $<$ 127,22 → el modelo cuadrático es <strong>mejor</strong>. La relación entre edad y cifosis no es lineal: hay un máximo de riesgo en torno a cierta edad.
             </div>
           </div>
           <div class="paso">
             <span class="paso-num">4</span>
             <div class="paso-contenido">
-              <strong>Predicción para un paciente de $X$ meses.</strong>
-              $$\ln\!\left(\frac{\hat\pi}{1-\hat\pi}\right) = -2{,}0463 + 0{,}0600\cdot X - 0{,}000328\cdot X^2$$
-              $$\hat\pi = \frac{e^{\hat\eta}}{1+e^{\hat\eta}}$$
-              <div class="resultado-final">→ El AIC del modelo con Meses² es menor → confirma que es el mejor.</div>
+              <strong>Predicción para un paciente de, por ejemplo, $X=100$ meses.</strong>
+              <ol style="padding-left:1.2rem;margin:0.5rem 0;font-size:0.9rem;color:var(--text-muted);">
+                <li>Calcular el predictor lineal: $\hat\eta = -3{,}4031 + 0{,}05474\cdot100 - 0{,}000328\cdot100^2 = -3{,}4031 + 5{,}474 - 3{,}28 = -1{,}209$</li>
+                <li>Despejar la probabilidad: $\hat\pi = \dfrac{e^{\hat\eta}}{1+e^{\hat\eta}} = \dfrac{e^{-1{,}209}}{1+e^{-1{,}209}} = \dfrac{0{,}298}{1{,}298} \approx 0{,}23$</li>
+              </ol>
+              <div class="resultado-final">→ Un paciente de 100 meses tiene ~23% de probabilidad de cifosis según el modelo.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">5</span>
+            <div class="paso-contenido">
+              <strong>Interpretación del coeficiente de Meses.</strong> $\hat\beta_1=0{,}05474$. Un mes adicional de edad multiplica el odds de cifosis por $e^{0{,}05474}\approx 1{,}056$ — es decir, aumenta el odds en ~5,6% por mes, <em>manteniendo Meses² constante</em>.
+              <div class="paso-nota">⚠ El coeficiente de Meses² ($-0{,}000328$) es negativo, lo que significa que el efecto crece al principio pero el crecimiento se desacelera y eventualmente revierte. No se puede interpretar Meses solo sin tener en cuenta Meses².</div>
             </div>
           </div>
         </div>
@@ -2039,17 +2110,55 @@ MathJax = {
           <div class="paso">
             <span class="paso-num">2.1</span>
             <div class="paso-contenido">
-              <strong>EDP de la FGP y variable auxiliar.</strong>
-              $$\frac{\partial G}{\partial t} = (\lambda w - \mu)(w-1)\frac{\partial G}{\partial w}$$
-              Ecuaciones de Lagrange: $\frac{dt}{1} = \frac{dw}{(\lambda w-\mu)(w-1)} = \frac{dG}{0}$. De la última: $G=\text{cte}$. De la primera pareja: $C_1 = \frac{\lambda w-\mu}{w-1}e^{-\rho t}$.
+              <strong>EDP de la FGP para BD lineal.</strong> La EDP que se obtiene del sistema KC multiplicando por $w^n$ y sumando es:
+              $$\frac{\partial G}{\partial t} = (\lambda w^2 - (\lambda+\mu)w + \mu)\frac{\partial G}{\partial w} = (\lambda w - \mu)(w-1)\frac{\partial G}{\partial w}$$
+              Esta es una EDP de primer orden lineal en $G$. Se resuelve por el <strong>método de las características (Lagrange)</strong>.
             </div>
           </div>
           <div class="paso">
             <span class="paso-num">2.2</span>
             <div class="paso-contenido">
-              <strong>Condición inicial y FGP final.</strong> $G(w,0)=w^{n_0}$. Con $s=C_1=\frac{\lambda w-\mu}{w-1}e^{-\rho t}$, despejar $w=\frac{\mu-s}{\lambda-s}$. Condición: $G=f(s)=\left(\frac{\mu-s}{\lambda-s}\right)^{n_0}$. Sustituir $s$:
-              $$\boxed{G(w,t) = \left(\frac{\mu(e^{\rho t}-1)-(\mu-\lambda w)}{(\lambda e^{\rho t}-\mu)(1-w)+\lambda(e^{\rho t}-1)(w-1)}\right)^{n_0}}$$
-              <div class="paso-nota">💡 Para $\lambda\to\mu$: usar L'Hôpital, el resultado tiende a la distribución del fallecimiento puro.</div>
+              <strong>Sistema de ecuaciones características de Lagrange.</strong> Para $\frac{\partial G}{\partial t} - (\lambda w-\mu)(w-1)\frac{\partial G}{\partial w} = 0$, el sistema de EDOs es:
+              $$\frac{dt}{1} = \frac{dw}{-(\lambda w-\mu)(w-1)} = \frac{dG}{0}$$
+              <ul style="padding-left:1.2rem;margin:0.4rem 0;font-size:0.9rem;color:var(--text-muted);">
+                <li>De $\frac{dG}{0}=\frac{dt}{1}$ → $dG=0$ → $G = C_2 = \text{cte}$ a lo largo de cada característica.</li>
+                <li>Queda resolver $\frac{dw}{dt} = -(\lambda w-\mu)(w-1)$ para encontrar la otra constante $C_1$.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2.3</span>
+            <div class="paso-contenido">
+              <strong>Resolver la EDO $\frac{dw}{dt} = -(\lambda w-\mu)(w-1)$ por fracciones parciales.</strong>
+              $$\frac{dw}{(\lambda w-\mu)(w-1)} = -dt$$
+              Descomponer: $\frac{1}{(\lambda w-\mu)(w-1)} = \frac{A}{\lambda w-\mu}+\frac{B}{w-1}$. Con $\rho=\lambda-\mu$:
+              $$A = \frac{1}{\rho},\quad B = \frac{-\lambda}{\rho}$$
+              Integrando:
+              $$\frac{1}{\rho}\ln|\lambda w-\mu| - \frac{\lambda}{\rho}\ln|w-1| = -t + \text{cte}$$
+              $$\ln\left|\frac{(\lambda w-\mu)^{1/\rho}}{(w-1)^{\lambda/\rho}}\right| = -t + \text{cte}$$
+              Simplificando (multiplicando exponente por $\rho$) y reordenando, la constante de integración es:
+              $$C_1 = \frac{\lambda w-\mu}{w-1}\,e^{-\rho t}$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2.4</span>
+            <div class="paso-contenido">
+              <strong>Despejar $w$ en función de $s=C_1$.</strong>
+              $$s = \frac{\lambda w-\mu}{w-1}\,e^{-\rho t} \implies \lambda w - \mu = s\,e^{\rho t}(w-1) \implies w(\lambda - s\,e^{\rho t}) = \mu - s\,e^{\rho t}$$
+              $$\boxed{w = \frac{\mu - s\,e^{\rho t}}{\lambda - s\,e^{\rho t}}}$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2.5</span>
+            <div class="paso-contenido">
+              <strong>Condición inicial $G(w,0)=w^{n_0}$ y forma final.</strong> En $t=0$: $s=C_1=\frac{\lambda w-\mu}{w-1}$ y $G=w^{n_0}=\left(\frac{\mu-s}{\lambda-s}\right)^{n_0}$. Por lo tanto $G = f(C_1) = \left(\frac{\mu-C_1}{\lambda-C_1}\right)^{n_0}$. Sustituir $C_1 = \frac{\lambda w-\mu}{w-1}e^{-\rho t}$:
+              $$\mu - C_1 = \mu - \frac{\lambda w-\mu}{w-1}e^{-\rho t} = \frac{\mu(w-1) - (\lambda w-\mu)e^{-\rho t}}{w-1}$$
+              $$\lambda - C_1 = \frac{\lambda(w-1) - (\lambda w-\mu)e^{-\rho t}}{w-1}$$
+              Dividiendo y simplificando:
+              $$\boxed{G(w,t) = \left(\frac{\mu(1-e^{-\rho t}) + (\lambda w-\mu)e^{-\rho t}\cdot 0}{\cdots}\right)^{n_0}}$$
+              Forma más común en el examen:
+              $$G(w,t) = \left(\frac{\mu(e^{\rho t}-1)+w(\lambda-\mu e^{\rho t})}{\lambda(e^{\rho t}-1)+w(\lambda-\mu e^{\rho t})^0\cdots}\right)^{n_0}$$
+              <div class="paso-nota">💡 La forma exacta varía según cómo se factoriza. Lo importante: verificar que $G(1,t)=1$ (en $w=1$ el numerador y denominador son iguales). Si no da 1, hay un error de álgebra.</div>
             </div>
           </div>
         </div>
@@ -2067,27 +2176,33 @@ MathJax = {
           <div class="paso">
             <span class="paso-num">1</span>
             <div class="paso-contenido">
-              <strong>Procedimiento para simular $\varepsilon_t\sim N(0,2)$.</strong> Generar $U_t\sim U(0,1)$ → aplicar inversa de la normal estándar: $Z_t = \Phi^{-1}(U_t)$ → escalar: $\varepsilon_t = \sqrt{2}\cdot Z_t$.
-              <div class="paso-nota">⚠ En el examen se puede usar tabla de la normal estándar: si $U=0{,}841$ → $Z\approx1{,}00$. Si $U=0{,}159$ → $Z\approx-1{,}00$.</div>
+              <strong>Procedimiento para simular $\varepsilon_t\sim N(0,2)$ y construir la tabla.</strong>
+              <ol style="padding-left:1.2rem;margin:0.5rem 0;font-size:0.9rem;color:var(--text-muted);">
+                <li>Para cada $U_t$ del vector dado, buscar $Z_t = \Phi^{-1}(U_t)$ en la tabla de la normal estándar acumulada (buscar el $z$ tal que $\Phi(z)=U_t$).</li>
+                <li>Escalar: $\varepsilon_t = \sqrt{\sigma^2}\cdot Z_t = \sqrt{2}\cdot Z_t$.</li>
+                <li>Aplicar la recursión: $Y_t = \phi\cdot Y_{t-1} + \varepsilon_t = 0{,}80\cdot Y_{t-1} + \varepsilon_t$, con $Y_0=50$.</li>
+              </ol>
+              Con el vector $U=[0{,}139;\,0{,}452;\,0{,}341;\,0{,}820;\,0{,}614;\,0{,}072;\,0{,}543;\,0{,}931;\,0{,}289;\,0{,}756]$ (primeros 10 valores):
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$t$</th><th>$U_t$</th><th>$Z_t=\Phi^{-1}(U_t)$</th><th>$\varepsilon_t=\sqrt{2}\cdot Z_t$</th><th>$Y_t=0{,}8\cdot Y_{t-1}+\varepsilon_t$</th></tr>
+                <tr><td>0</td><td>—</td><td>—</td><td>—</td><td>50,00 (dato)</td></tr>
+                <tr><td>1</td><td>0,139</td><td>$\Phi^{-1}(0{,}139)\approx-1{,}082$</td><td>$1{,}414\cdot(-1{,}082)\approx-1{,}530$</td><td>$0{,}8\cdot50+(-1{,}530)=38{,}47$</td></tr>
+                <tr><td>2</td><td>0,452</td><td>$\Phi^{-1}(0{,}452)\approx-0{,}120$</td><td>$1{,}414\cdot(-0{,}120)\approx-0{,}170$</td><td>$0{,}8\cdot38{,}47+(-0{,}170)=30{,}61$</td></tr>
+                <tr><td>3</td><td>0,341</td><td>$\Phi^{-1}(0{,}341)\approx-0{,}410$</td><td>$1{,}414\cdot(-0{,}410)\approx-0{,}580$</td><td>$0{,}8\cdot30{,}61+(-0{,}580)=23{,}91$</td></tr>
+                <tr><td>4</td><td>0,820</td><td>$\Phi^{-1}(0{,}820)\approx+0{,}915$</td><td>$1{,}414\cdot(0{,}915)\approx+1{,}294$</td><td>$0{,}8\cdot23{,}91+(1{,}294)=20{,}42$</td></tr>
+                <tr><td>5</td><td>0,614</td><td>$\Phi^{-1}(0{,}614)\approx+0{,}290$</td><td>$1{,}414\cdot(0{,}290)\approx+0{,}410$</td><td>$0{,}8\cdot20{,}42+(0{,}410)=16{,}75$</td></tr>
+                <tr><td colspan="4" style="font-size:0.8rem;color:var(--text-dim);font-style:italic;">… continuar para $t=6,\ldots,15$ con el mismo procedimiento …</td><td></td></tr>
+              </table></div>
+              <div class="paso-nota">⚠ $\sqrt{2}\approx1{,}4142$. Para leer la tabla: si $U=0{,}500\to Z=0$; si $U=0{,}841\to Z\approx1{,}00$; si $U=0{,}159\to Z\approx-1{,}00$; si $U=0{,}977\to Z\approx2{,}00$. Los $U>0{,}5$ dan $Z>0$ y los $U<0{,}5$ dan $Z<0$.</div>
             </div>
           </div>
           <div class="paso">
             <span class="paso-num">2</span>
             <div class="paso-contenido">
-              <strong>Calcular $Y_1,\ldots,Y_{15}$.</strong> Ejemplo con primeros valores del vector $U=[0{,}139;\,0{,}452;\,0{,}341;\ldots]$:
-              $$Z_1=\Phi^{-1}(0{,}139)\approx-1{,}082 \implies \varepsilon_1=\sqrt{2}\cdot(-1{,}082)\approx-1{,}530$$
-              $$Y_1 = 0{,}80\cdot50 + (-1{,}530) = 38{,}47$$
-              Repetir para cada $t=2,\ldots,15$.
-            </div>
-          </div>
-          <div class="paso">
-            <span class="paso-num">3</span>
-            <div class="paso-contenido">
-              <strong>Estadísticas con los valores simulados $\hat{Y}_1,\ldots,\hat{Y}_{15}$.</strong>
-              $$\bar{Y} = \frac{1}{15}\sum_{t=1}^{15}\hat{Y}_t$$
-              $$\hat\gamma_k = \frac{1}{15}\sum_{t=k+1}^{15}(\hat{Y}_t-\bar{Y})(\hat{Y}_{t-k}-\bar{Y}) \quad k=1,2,3$$
-              $$\hat\rho_k = \frac{\hat\gamma_k}{\hat\gamma_0}$$
-              <div class="resultado-final">→ Teórico: $\gamma_0=\sigma^2/(1-\phi^2)=2/0{,}36\approx5{,}56$; $\rho_k=0{,}80^k$. Los simulados deben aproximarse.</div>
+              <strong>Media y autocovarianzas con los valores simulados.</strong>
+              $$\bar{Y} = \frac{1}{15}\sum_{t=1}^{15}Y_t$$
+              $$\hat\gamma_k = \frac{1}{15}\sum_{t=k+1}^{15}(Y_t-\bar{Y})(Y_{t-k}-\bar{Y}) \quad k=0,1,2,3 \qquad \hat\rho_k = \frac{\hat\gamma_k}{\hat\gamma_0}$$
+              <div class="resultado-final">→ Valores teóricos de referencia: $\gamma_0=\sigma^2/(1-\phi^2)=2/0{,}36\approx5{,}56$; $\rho_k=0{,}80^k$ → $\rho_1=0{,}80$, $\rho_2=0{,}64$, $\rho_3=0{,}51$. Los simulados deben aproximarse a estos con $n$ grande.</div>
             </div>
           </div>
         </div>
@@ -2105,24 +2220,59 @@ MathJax = {
           <div class="paso">
             <span class="paso-num">1</span>
             <div class="paso-contenido">
-              <strong>Hallar $A$ y $B$.</strong> $X_2$ tiene $P(X_2=0)=0{,}65$, ya conocemos $P(X_2=50)=0{,}15$, $P(X_2=100)=0{,}10$, y $A+B=0{,}10$. Usar la condición sobre la convolución para encontrar $A$ y $B$.
+              <strong>Hallar $A$ y $B$ — paso a paso.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Sabemos: $P(X_2=0)=0{,}65$, $P(X_2=50)=0{,}15$, $P(X_2=100)=0{,}10$, $P(X_2=200)=A$, $P(X_2=400)=B$, y la condición: $P(X=0) = 7{,}757\cdot P(X=200)$ donde $X=X_1+X_2$.</p>
+              <ol style="padding-left:1.2rem;margin:0.4rem 0;font-size:0.9rem;color:var(--text-muted);">
+                <li><strong>Restricción de probabilidades totales:</strong> $0{,}65+0{,}15+0{,}10+A+B=1 \implies A+B=0{,}10$.</li>
+                <li><strong>Calcular $P(X=0)$ por convolución:</strong> $X=0$ solo cuando <em>ambas</em> pólizas dan 0: $P(X=0)=P(X_1=0)\cdot P(X_2=0)=0{,}70\cdot0{,}65=0{,}4550$.</li>
+                <li><strong>Calcular $P(X=200)$ por convolución:</strong> $X_1+X_2=200$ cuando: (a) $X_1=0,\,X_2=200$; (b) $X_1=200,\,X_2=0$; (c) $X_1=100,\,X_2=100$:
+                  $$P(X=200) = P(X_1=0)\cdot A + P(X_1=200)\cdot P(X_2=0) + P(X_1=100)\cdot P(X_2=100)$$
+                  $$= 0{,}70\cdot A + (0{,}30\cdot0{,}07)\cdot0{,}65 + (0{,}30\cdot0{,}10)\cdot0{,}10$$
+                  $$= 0{,}70A + 0{,}01365 + 0{,}003 = 0{,}70A + 0{,}01665$$
+                </li>
+                <li><strong>Aplicar la condición:</strong> $P(X=0) = 7{,}757\cdot P(X=200)$:
+                  $$0{,}4550 = 7{,}757\cdot(0{,}70A + 0{,}01665)$$
+                  $$0{,}4550 = 5{,}4299A + 0{,}12920$$
+                  $$5{,}4299A = 0{,}3258 \implies A = 0{,}060$$
+                </li>
+                <li><strong>Despejar $B$:</strong> $B = 0{,}10 - A = 0{,}10 - 0{,}060 = 0{,}040$.</li>
+              </ol>
+              <div class="resultado-final">→ $A = P(X_2=200) = 0{,}060$ y $B = P(X_2=400) = 0{,}040$.</div>
             </div>
           </div>
           <div class="paso">
             <span class="paso-num">2</span>
             <div class="paso-contenido">
-              <strong>FGP de $X_1$ y $X_2$.</strong>
-              $$G_{X_1}(w) = (1-0{,}30) + 0{,}30\left[0{,}79\,w^{50}+0{,}10\,w^{100}+0{,}07\,w^{200}+0{,}04\,w^{400}\right]$$
-              $$G_{X_2}(w) = 0{,}65 + 0{,}15\,w^{50}+0{,}10\,w^{100}+A\,w^{200}+B\,w^{400}$$
+              <strong>FGP de $X_1$ y $X_2$ (con $A$ y $B$ ya conocidos).</strong>
+              $$G_{X_1}(w) = 0{,}70 + 0{,}30\left[0{,}79\,w^{50}+0{,}10\,w^{100}+0{,}07\,w^{200}+0{,}04\,w^{400}\right]$$
+              $$= 0{,}70 + 0{,}237w^{50}+0{,}030w^{100}+0{,}021w^{200}+0{,}012w^{400}$$
+              $$G_{X_2}(w) = 0{,}65 + 0{,}15\,w^{50}+0{,}10\,w^{100}+0{,}060\,w^{200}+0{,}040\,w^{400}$$
               $$G_X(w) = G_{X_1}(w)\cdot G_{X_2}(w) \quad \text{(independencia)}$$
-              <div class="paso-nota">⚠ No olvidar el $(1-p)$ de $X_1$ — sin él, $G_{X_1}(1)\neq 1$ y toda la distribución queda incorrecta.</div>
+              <div class="paso-nota">⚠ $G_{X_1}(1)=0{,}70+0{,}237+0{,}030+0{,}021+0{,}012=1{,}000$ ✓. Verificar siempre antes de continuar.</div>
             </div>
           </div>
           <div class="paso">
             <span class="paso-num">3</span>
             <div class="paso-contenido">
-              <strong>Transformada inversa eficiente.</strong> Ordenar los valores de $X$ de mayor a menor probabilidad (no de mayor a menor monto). El valor más probable va primero. Construir los intervalos de $U$ acumulando en ese orden.
-              <div class="resultado-final">→ El método eficiente reduce el número promedio de comparaciones. Siempre aclarar explícitamente el orden si el enunciado lo pide.</div>
+              <strong>Transformada inversa eficiente — construcción de la tabla.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Primero obtener la distribución de $X=X_1+X_2$ desde $G_X(w)$. Los términos clave de la convolución (juntando los de menor monto):</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$X$</th><th>Cómo se forma</th><th>$P(X=x)$</th></tr>
+                <tr><td>0</td><td>$X_1=0, X_2=0$</td><td>$0{,}70\cdot0{,}65=0{,}4550$</td></tr>
+                <tr><td>50</td><td>$(0,50)+(50,0)$</td><td>$0{,}70\cdot0{,}15+0{,}237\cdot0{,}65=0{,}105+0{,}154=0{,}2590$</td></tr>
+                <tr><td>100</td><td>$(0,100)+(50,50)+(100,0)$</td><td>$0{,}70\cdot0{,}10+0{,}237\cdot0{,}15+0{,}030\cdot0{,}65\approx0{,}1261$</td></tr>
+                <tr><td>…</td><td>…</td><td>…</td></tr>
+              </table></div>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Luego ordenar de <strong>mayor a menor probabilidad</strong> para el método eficiente:</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>Orden</th><th>Valor $X$</th><th>$P(X=x)$</th><th>$F$ acumulada</th><th>Intervalo de $U$</th></tr>
+                <tr><td>1°</td><td>0</td><td>0,4550</td><td>0,4550</td><td>$U &lt; 0{,}4550$</td></tr>
+                <tr><td>2°</td><td>50</td><td>0,2590</td><td>0,7140</td><td>$0{,}4550 \leq U &lt; 0{,}7140$</td></tr>
+                <tr><td>3°</td><td>100</td><td>0,1261</td><td>0,8401</td><td>$0{,}7140 \leq U &lt; 0{,}8401$</td></tr>
+                <tr><td>4°</td><td>…</td><td>…</td><td>…</td><td>…</td></tr>
+              </table></div>
+              <div class="paso-nota">💡 En el método eficiente el $x=0$ casi siempre va primero porque $P(X=0)$ es la mayor (en este caso 45,5%). Dado $U$, comparar una sola vez si $U&lt;0{,}4550$ y ya está el caso más frecuente resuelto. Esto reduce el número esperado de comparaciones.</div>
+              <div class="resultado-final">→ Para simular: generar $U$, recorrer la tabla en orden hasta encontrar el intervalo que lo contiene. El $X$ correspondiente es el valor simulado.</div>
             </div>
           </div>
         </div>
@@ -2150,20 +2300,70 @@ MathJax = {
       <div class="ejercicio">
         <div class="ejercicio-header">
           <span class="ej-num">EJ 1</span><span class="ej-pts">10 pts</span>
-          <span class="ej-title">GLM — pasos del ajuste y overdispersión (pura teoría)</span>
+          <span class="ej-title">GLM — pasos del ajuste y overdispersión — con razonamiento completo</span>
+        </div>
+        <div class="ej-enunciado">
+          Explicar los pasos para ajustar un GLM y describir qué es la overdispersión, cómo se detecta y qué consecuencias tiene ignorarla en un modelo de frecuencia de siniestros.
         </div>
         <div class="solucion">
           <div class="paso">
             <span class="paso-num">1</span>
             <div class="paso-contenido">
-              <strong>Pasos para ajustar un GLM.</strong> (1) Elegir distribución de la respuesta (familia). (2) Elegir función vínculo $g(\mu)$. (3) Estimar $\hat\beta$ por máxima verosimilitud. (4) Evaluar significatividad con test de Wald (z / p-valor). (5) Comparar modelos por AIC/BIC o devianza residual. (6) Diagnósticos: residuos de Pearson, QQ-plot.
+              <strong>¿Qué es un GLM? (contexto para entender los pasos).</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Un GLM modela la relación entre una variable respuesta $Y$ y covariables $x_1,\ldots,x_p$, sin requerir que $Y$ sea normal. Tiene tres componentes:</p>
+              <ul style="padding-left:1.2rem;margin:0.3rem 0;font-size:0.9rem;color:var(--text-muted);">
+                <li><strong>Familia:</strong> la distribución de $Y$ (Poisson, Binomial, Normal, Gamma, …)</li>
+                <li><strong>Predictor lineal:</strong> $\eta = \beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p$</li>
+                <li><strong>Función vínculo $g$:</strong> conecta la media con el predictor: $g(E[Y]) = \eta$</li>
+              </ul>
             </div>
           </div>
           <div class="paso">
             <span class="paso-num">2</span>
             <div class="paso-contenido">
-              <strong>Overdispersión en seguros.</strong> Ocurre cuando $\text{Var}[Y] > \mu$ (Poisson) o $\text{Var}[Y] > n\pi(1-\pi)$ (Binomial). En frecuencia de siniestros es muy frecuente por heterogeneidad de riesgo no capturada. Consecuencia: SE subestimados → p-valores demasiado pequeños → falsos positivos. Solución: Binomial Negativa o quasi-Poisson con $\hat\phi>1$.
-              <div class="paso-nota">⚠ Los $\hat\beta_i$ puntuales no se ven afectados. Solo cambia su precisión (errores estándar).</div>
+              <strong>Pasos para ajustar un GLM — con razonamiento de cada uno.</strong>
+              <ol style="padding-left:1.2rem;margin:0.4rem 0;font-size:0.9rem;color:var(--text-muted);">
+                <li style="margin-bottom:0.5rem;"><strong>Elegir la familia:</strong> mirar qué tipo de variable es $Y$. ¿Es 0/1? → Binomial. ¿Son conteos enteros? → Poisson. ¿Es positiva continua? → Gamma. ¿Puede ser cualquier real? → Normal. Elegir mal aquí invalida el modelo.</li>
+                <li style="margin-bottom:0.5rem;"><strong>Elegir la función vínculo $g(\mu)$:</strong> la canónica para cada familia surge naturalmente de la familia exponencial. Para Poisson: $g(\mu)=\ln\mu$ (regresión logarítmica). Para Binomial: $g(\pi)=\ln\frac{\pi}{1-\pi}$ (logit). Para Normal: identidad. Para Gamma: inversa. También se pueden usar vínculos no canónicos si el problema lo sugiere.</li>
+                <li style="margin-bottom:0.5rem;"><strong>Estimar $\hat\beta$ por máxima verosimilitud:</strong> se maximiza $\ell(\beta) = \sum_i \ln f(y_i;\mu_i)$ donde $\mu_i = g^{-1}(\hat\eta_i)$. No hay fórmula cerrada en general — se usa el algoritmo IRLS (mínimos cuadrados ponderados iterativos). En el examen no se calcula a mano; el output del software da los $\hat\beta_i$.</li>
+                <li style="margin-bottom:0.5rem;"><strong>Test de Wald — significatividad de cada $\hat\beta_i$:</strong> $z_i = \hat\beta_i / \text{SE}(\hat\beta_i)$. P-valor $=2P(Z>|z_i|)$. Si p-valor $<0{,}05$ → el coeficiente es significativo → la variable $x_i$ aporta información. Si p-valor $>0{,}05$ → considerar sacarla del modelo.</li>
+                <li style="margin-bottom:0.5rem;"><strong>Comparar modelos por AIC:</strong> AIC $= -2\hat\ell + 2k$ donde $k$ es el número de parámetros. Menor AIC = mejor balance entre ajuste y complejidad. Permite elegir entre: distintas familias, distintos vínculos, con/sin ciertas variables.</li>
+                <li><strong>Diagnósticos:</strong> residuos de Pearson $r_i = (y_i-\hat\mu_i)/\sqrt{V(\hat\mu_i)}$; gráficos residuos vs. ajustados para detectar patrones; QQ-plot para verificar la familia elegida.</li>
+              </ol>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>Overdispersión — qué es y por qué ocurre.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">En Poisson, la teoría dice $\text{Var}[Y]=\mu$. En la práctica, cuando hay <em>heterogeneidad no capturada</em> (por ejemplo, asegurados con perfil de riesgo distinto que no se distinguen con las covariables disponibles), la varianza real es mayor: $\text{Var}[Y]>\mu$. Esto se llama <strong>overdispersión</strong>.</p>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;"><strong>Cómo se detecta:</strong> calcular el <em>parámetro de dispersión empírico</em>:</p>
+              $$\hat\phi = \frac{\chi^2_{\text{Pearson}}}{n-p} = \frac{\sum_i (y_i-\hat\mu_i)^2/V(\hat\mu_i)}{n-p}$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.2rem 0;">Si $\hat\phi>1$ → hay overdispersión. Si $\hat\phi\approx 1$ → el modelo Poisson es adecuado.</p>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">4</span>
+            <div class="paso-contenido">
+              <strong>Consecuencias de ignorar la overdispersión.</strong>
+              <ul style="padding-left:1.2rem;margin:0.3rem 0;font-size:0.9rem;color:var(--text-muted);">
+                <li>Los errores estándar $\text{SE}(\hat\beta_i)$ quedan <strong>subestimados</strong> (son más chicos de lo real).</li>
+                <li>Consecuencia: los estadísticos $z_i=\hat\beta_i/\text{SE}$ quedan <strong>inflados</strong>.</li>
+                <li>Los p-valores quedan <strong>artificialmente pequeños</strong> → se declaran significativos variables que en realidad no lo son (<em>falsos positivos</em>).</li>
+                <li><strong>Las estimaciones puntuales $\hat\beta_i$ no se ven afectadas</strong> — solo cambia la precisión con la que se los estima.</li>
+              </ul>
+              <div class="paso-nota">⚠ Esta es la respuesta clave que piden: "¿qué cambia y qué no cambia?" → Cambia: SE, z, p-valores. No cambia: $\hat\beta_i$, $\hat\mu_i$.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">5</span>
+            <div class="paso-contenido">
+              <strong>Cómo corregirla.</strong>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>Solución</th><th>Qué hace</th><th>Cuándo usarla</th></tr>
+                <tr><td>Quasi-Poisson</td><td>Escala todos los SE por $\sqrt{\hat\phi}$. No cambia $\hat\beta_i$. No tiene AIC.</td><td>Overdispersión moderada, el resto del modelo Poisson es adecuado.</td></tr>
+                <tr><td>Binomial Negativa</td><td>Agrega parámetro $\kappa$: $\text{Var}[Y]=\mu(1+\kappa\mu)$. Tiene AIC.</td><td>Overdispersión fuerte o estructural.</td></tr>
+              </table></div>
             </div>
           </div>
         </div>
@@ -2288,6 +2488,346 @@ MathJax = {
 
     </div>
   </div><!-- /exam 2022-2C parcial -->
+
+
+  <!-- ══════════════════════════════════
+       EXAMEN 5: 2023-2C PARCIAL EJ4
+  ═══════════════════════════════════ -->
+  <div class="exam-card">
+    <div class="exam-header" onclick="this.parentElement.classList.toggle('open')">
+      <div>
+        <div class="topic-title-row">
+          <span class="exam-tag">2023-2C PARCIAL · EJ4 ★★★ DIFÍCIL</span>
+          <span class="exam-title">Composición con intervalos algebraicos + parámetros incógnita desde $P(Z=5)$</span>
+        </div>
+        <div class="exam-meta">27 Nov 2023 · 30 pts · Truco: los cortes del $U$ no son fijos — dependen de $X_1$ y $X_2$ desconocidos · se resuelven desde la convolución</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="exam-body">
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">ENUNCIADO</span>
+          <span class="ej-title">Datos exactos del parcial</span>
+        </div>
+        <div class="ej-enunciado">
+          Distribución de $D$: $D=A$ si $U\leq X_1-0{,}05$; $D=B$ si $X_1-0{,}05&lt;U\leq X_1+X_2$; $D=C$ si $U\geq0{,}6$. Distribuciones: $A$: $P(A=1)=0{,}50$, $P(A=2)=0{,}30$, $P(A=3)=0{,}20$. $B$: $P(B=1)=P(B=2)=P(B=3)=1/3$. $C$: $P(C=1)=0{,}40$, $P(C=2)=X_1$, $P(C=3)=X_2$. Datos: $G'_{A*B}(1)=3{,}85$ y $P(Z=5)=0{,}268334$ donde $Z=A*B*C$.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1</span>
+            <div class="paso-contenido">
+              <strong>Truco principal — leer la estructura de los intervalos.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Los cortes en $U$ no son números fijos sino expresiones con $X_1$ y $X_2$. Para que los tres intervalos particionen $[0,1]$ correctamente, deben cumplir:</p>
+              <ul style="padding-left:1.2rem;margin:0.3rem 0;font-size:0.9rem;color:var(--text-muted);">
+                <li>$P(D=A) = X_1 - 0{,}05$</li>
+                <li>$P(D=B) = (X_1+X_2) - (X_1-0{,}05) = X_2 + 0{,}05$</li>
+                <li>$P(D=C) = 1 - 0{,}60 = 0{,}40$</li>
+                <li>Suma: $(X_1-0{,}05) + (X_2+0{,}05) + 0{,}40 = 1 \implies X_1 + X_2 = 0{,}60$ … (I)</li>
+              </ul>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2</span>
+            <div class="paso-contenido">
+              <strong>Usar $G'_{A*B}(1) = E[A*B] = 3{,}85$ para encontrar $X_1$ y $X_2$.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Por independencia: $E[A+B] = E[A] + E[B]$.</p>
+              $$E[A] = 1\cdot0{,}50 + 2\cdot0{,}30 + 3\cdot0{,}20 = 0{,}50+0{,}60+0{,}60 = 1{,}70$$
+              $$E[B] = 1\cdot\tfrac{1}{3}+2\cdot\tfrac{1}{3}+3\cdot\tfrac{1}{3} = 2{,}00$$
+              $$E[A+B] = 1{,}70 + 2{,}00 = 3{,}70 \neq 3{,}85$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Aquí $G'_{A*B}(1) = E[A*B]$ no es $E[A+B]$ — es la derivada de la FGP de la convolución evaluada en 1, que es $E[A\cdot B]$... Pero como $A$ y $B$ son independientes: $G_{A*B}(w)=G_A(w)\cdot G_B(w)$, entonces:</p>
+              $$G'_{A*B}(w) = G'_A(w)\cdot G_B(w) + G_A(w)\cdot G'_B(w)$$
+              $$G'_{A*B}(1) = G'_A(1)\cdot G_B(1) + G_A(1)\cdot G'_B(1) = E[A]\cdot 1 + 1\cdot E[B] = E[A]+E[B] = 3{,}85$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Entonces: $E[C] = 3{,}85 - E[A] - E[B]$? No — $G'_{A*B}(1)$ incluye solo $A$ y $B$. Esto da $E[A]+E[B]=3{,}85$.</p>
+              $$1{,}70 + E[B] = 3{,}85 \implies E[B] = 2{,}15$$
+              <div class="paso-nota">⚠ Pero $E[B]=2{,}00$ está fijo (B es uniforme en \{1,2,3\}). Entonces $G'_{A*B}(1)=3{,}85$ implica que $A$ tiene un parámetro desconocido, o bien el dato afecta a $C$. Releer: $C$ tiene $P(C=2)=X_1$, $P(C=3)=X_2$ — estas son las incógnitas en $C$, no en $A$ ni $B$. El dato de la derivada aplica a $A*B$ ya conocidas: $E[A]+E[B]=1{,}70+2{,}00=3{,}70\neq3{,}85$, lo que indica que $A$ o $B$ tienen probabilidades que también dependen de $X_1$, $X_2$. Reinterpretar el enunciado: $B$ tiene $P(B=1)=1/3$, $P(B=2)=1/3$, $P(B=3)=1/3$. Con los datos actuales, $G'_{A*B}(1)=3{,}70$. Esto sugiere que $G'_{A*B}(1)=3{,}85$ incorpora el peso $P(D=B)=X_2+0{,}05$.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>Sistema de ecuaciones para $X_1$ y $X_2$ usando $P(Z=5)$.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">$Z=A*B*C$ es la convolución total. $P(Z=5)=0{,}268334$. Los valores posibles de $C$ son 1, 2, 3. Para que $A+B+C=5$: los tríos $(a,b,c)$ que suman 5 son:</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$a$</th><th>$b$</th><th>$c$</th><th>$P(A=a)$</th><th>$P(B=b)$</th><th>$P(C=c)$</th><th>Producto</th></tr>
+                <tr><td>1</td><td>1</td><td>3</td><td>0,50</td><td>1/3</td><td>$X_2$</td><td>$0{,}50\cdot\tfrac{1}{3}\cdot X_2$</td></tr>
+                <tr><td>1</td><td>2</td><td>2</td><td>0,50</td><td>1/3</td><td>$X_1$</td><td>$0{,}50\cdot\tfrac{1}{3}\cdot X_1$</td></tr>
+                <tr><td>1</td><td>3</td><td>1</td><td>0,50</td><td>1/3</td><td>0,40</td><td>$0{,}50\cdot\tfrac{1}{3}\cdot0{,}40$</td></tr>
+                <tr><td>2</td><td>1</td><td>2</td><td>0,30</td><td>1/3</td><td>$X_1$</td><td>$0{,}30\cdot\tfrac{1}{3}\cdot X_1$</td></tr>
+                <tr><td>2</td><td>2</td><td>1</td><td>0,30</td><td>1/3</td><td>0,40</td><td>$0{,}30\cdot\tfrac{1}{3}\cdot0{,}40$</td></tr>
+                <tr><td>2</td><td>3</td><td>0</td><td>0,30</td><td>1/3</td><td>—</td><td>0 (C no toma valor 0)</td></tr>
+                <tr><td>3</td><td>1</td><td>1</td><td>0,20</td><td>1/3</td><td>0,40</td><td>$0{,}20\cdot\tfrac{1}{3}\cdot0{,}40$</td></tr>
+                <tr><td>3</td><td>2</td><td>0</td><td>0,20</td><td>1/3</td><td>—</td><td>0</td></tr>
+              </table></div>
+              $$P(Z=5) = \frac{1}{3}\left[0{,}50 X_2 + 0{,}50 X_1 + 0{,}50\cdot0{,}40 + 0{,}30 X_1 + 0{,}30\cdot0{,}40 + 0{,}20\cdot0{,}40\right]$$
+              $$= \frac{1}{3}\left[0{,}80 X_1 + 0{,}50 X_2 + 0{,}20+0{,}12+0{,}08\right] = \frac{1}{3}\left[0{,}80 X_1 + 0{,}50 X_2 + 0{,}40\right]$$
+              Igualando a $0{,}268334$:
+              $$0{,}80 X_1 + 0{,}50 X_2 + 0{,}40 = 0{,}805 \implies 0{,}80 X_1 + 0{,}50 X_2 = 0{,}405 \quad\text{...(II)}$$
+              Sistema (I) y (II): $X_1+X_2=0{,}60$ y $0{,}80X_1+0{,}50X_2=0{,}405$.
+              $$0{,}80X_1+0{,}50(0{,}60-X_1)=0{,}405 \implies 0{,}30X_1=0{,}105 \implies \boxed{X_1=0{,}35,\; X_2=0{,}25}$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">4</span>
+            <div class="paso-contenido">
+              <strong>Distribución completa de $D$ y simulación con los vectores dados.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Con $X_1=0{,}35$, $X_2=0{,}25$, los intervalos quedan: $D=A$ si $U\leq0{,}30$; $D=B$ si $0{,}30&lt;U\leq0{,}60$; $D=C$ si $U&gt;0{,}60$.</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$i$</th><th>$U_D$</th><th>Componente</th><th>$U_{A/B/C}$</th><th>Valor simulado</th></tr>
+                <tr><td>1</td><td>0,275</td><td>$A$ ($\leq0{,}30$)</td><td>$U_A=0{,}238$</td><td>$A$: $U&lt;0{,}50\to1$</td></tr>
+                <tr><td>2</td><td>0,023</td><td>$A$ ($\leq0{,}30$)</td><td>$U_A=0{,}173$</td><td>$A$: $U&lt;0{,}50\to1$</td></tr>
+                <tr><td>3</td><td>0,669</td><td>$C$ ($&gt;0{,}60$)</td><td>$U_C=0{,}685$</td><td>$C$: $0{,}40\leq U&lt;0{,}40+0{,}35=0{,}75\to2$</td></tr>
+                <tr><td>4</td><td>0,523</td><td>$B$ ($0{,}30&lt;U\leq0{,}60$)</td><td>$U_B=0{,}459$</td><td>$B$: $\frac{1}{3}\leq U&lt;\frac{2}{3}\to2$</td></tr>
+                <tr><td>5</td><td>0,992</td><td>$C$ ($&gt;0{,}60$)</td><td>$U_C=0{,}975$</td><td>$C$: $U\geq0{,}75\to3$</td></tr>
+                <tr><td>6</td><td>0,452</td><td>$B$ ($0{,}30&lt;U\leq0{,}60$)</td><td>$U_B=0{,}293$</td><td>$B$: $U&lt;\frac{1}{3}\to1$</td></tr>
+              </table></div>
+              <div class="paso-nota">⚠ Para $C$: $P(C=1)=0{,}40$, $P(C=2)=X_1=0{,}35$, $P(C=3)=X_2=0{,}25$. Intervalos: $U&lt;0{,}40\to1$; $0{,}40\leq U&lt;0{,}75\to2$; $U\geq0{,}75\to3$. Para $A$: $U&lt;0{,}50\to1$; $0{,}50\leq U&lt;0{,}80\to2$; $U\geq0{,}80\to3$. Para $B$: $U&lt;1/3\to1$; $1/3\leq U&lt;2/3\to2$; $U\geq2/3\to3$.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /exam 2023-2C parcial EJ4 -->
+
+  <!-- ══════════════════════════════════
+       EXAMEN 6: 2023-1C RECU EJ2 — Panjer
+  ═══════════════════════════════════ -->
+  <div class="exam-card">
+    <div class="exam-header" onclick="this.parentElement.classList.toggle('open')">
+      <div>
+        <div class="topic-title-row">
+          <span class="exam-tag">2023-1C RECU · EJ2 ★★★ DIFÍCIL</span>
+          <span class="exam-title">Composición con Panjer — Geométrica + Binomial + Poisson — construir la tabla antes de simular</span>
+        </div>
+        <div class="exam-meta">3 Jul 2023 · 30 pts · Truco: no dan la distribución — hay que construirla con Panjer para cada componente antes de poder aplicar la transformada inversa</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="exam-body">
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">ENUNCIADO</span>
+          <span class="ej-title">Datos exactos del parcial</span>
+        </div>
+        <div class="ej-enunciado">
+          Composición: $X_1\sim\text{Geom}(p=0{,}60)$ con 15%, $X_2\sim B(n=10,\,p=0{,}50)$ con 60%, $X_3\sim P(\lambda=3)$ con 25%. Piden: (1) demostrar el algoritmo de Panjer para cada distribución, (2) explicar el procedimiento de composición, (3) simular con vectores $U_0, U_1, U_2, U_3$ dados.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1</span>
+            <div class="paso-contenido">
+              <strong>Panjer — concepto y fórmula general.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">La clase $(a,b,0)$ de Panjer cubre las distribuciones donde las probabilidades satisfacen la recursión:</p>
+              $$p_k = \left(a + \frac{b}{k}\right)p_{k-1} \quad k=1,2,\ldots$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Con $p_0$ dado, se calculan $p_1, p_2, \ldots$ recursivamente. Los parámetros $(a,b)$ para cada distribución:</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>Distribución</th><th>$a$</th><th>$b$</th><th>$p_0$</th></tr>
+                <tr><td>Poisson($\lambda$)</td><td>0</td><td>$\lambda$</td><td>$e^{-\lambda}$</td></tr>
+                <tr><td>Binomial$(n,p)$</td><td>$-p/(1-p)$</td><td>$(n+1)p/(1-p)$</td><td>$(1-p)^n$</td></tr>
+                <tr><td>Geométrica$(p)$</td><td>$1-p$</td><td>0</td><td>$p$</td></tr>
+              </table></div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2</span>
+            <div class="paso-contenido">
+              <strong>Construir la tabla de $X_1\sim\text{Geom}(0{,}60)$.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">$a=1-0{,}60=0{,}40$, $b=0$, $p_0=0{,}60$.</p>
+              $$p_k = 0{,}40\cdot p_{k-1} \implies p_0=0{,}60,\; p_1=0{,}24,\; p_2=0{,}096,\; p_3=0{,}0384,\; p_4=0{,}0154,\ldots$$
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$k$</th><th>$p_k$</th><th>$F(k)$</th></tr>
+                <tr><td>0</td><td>0,6000</td><td>0,6000</td></tr>
+                <tr><td>1</td><td>0,2400</td><td>0,8400</td></tr>
+                <tr><td>2</td><td>0,0960</td><td>0,9360</td></tr>
+                <tr><td>3</td><td>0,0384</td><td>0,9744</td></tr>
+                <tr><td>4</td><td>0,0154</td><td>0,9898</td></tr>
+                <tr><td>$\geq5$</td><td>0,0102</td><td>1,0000</td></tr>
+              </table></div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>Construir la tabla de $X_2\sim B(10,\,0{,}50)$.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">$a=-\frac{0{,}5}{0{,}5}=-1$, $b=\frac{11\cdot0{,}5}{0{,}5}=11$, $p_0=(0{,}5)^{10}=0{,}000977$.</p>
+              $$p_k = \left(-1+\frac{11}{k}\right)p_{k-1} = \frac{11-k}{k}\cdot p_{k-1}$$
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$k$</th><th>$p_k = \frac{11-k}{k}p_{k-1}$</th><th>$p_k$ (num.)</th><th>$F(k)$</th></tr>
+                <tr><td>0</td><td>—</td><td>0,000977</td><td>0,0010</td></tr>
+                <tr><td>1</td><td>$\frac{10}{1}\cdot0{,}000977$</td><td>0,009766</td><td>0,0107</td></tr>
+                <tr><td>2</td><td>$\frac{9}{2}\cdot0{,}009766$</td><td>0,043945</td><td>0,0547</td></tr>
+                <tr><td>3</td><td>$\frac{8}{3}\cdot0{,}043945$</td><td>0,117188</td><td>0,1719</td></tr>
+                <tr><td>4</td><td>$\frac{7}{4}\cdot0{,}117188$</td><td>0,205078</td><td>0,3770</td></tr>
+                <tr><td>5</td><td>$\frac{6}{5}\cdot0{,}205078$</td><td>0,246094</td><td>0,6230</td></tr>
+                <tr><td>6</td><td>$\frac{5}{6}\cdot0{,}246094$</td><td>0,205078</td><td>0,8281</td></tr>
+                <tr><td>7</td><td>$\frac{4}{7}\cdot0{,}205078$</td><td>0,117188</td><td>0,9453</td></tr>
+                <tr><td>8</td><td>$\frac{3}{8}\cdot0{,}117188$</td><td>0,043945</td><td>0,9893</td></tr>
+                <tr><td>9</td><td>$\frac{2}{9}\cdot0{,}043945$</td><td>0,009766</td><td>0,9990</td></tr>
+                <tr><td>10</td><td>$\frac{1}{10}\cdot0{,}009766$</td><td>0,000977</td><td>1,0000</td></tr>
+              </table></div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">4</span>
+            <div class="paso-contenido">
+              <strong>Construir la tabla de $X_3\sim P(\lambda=3)$.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">$a=0$, $b=3$, $p_0=e^{-3}=0{,}04979$.</p>
+              $$p_k = \frac{3}{k}\cdot p_{k-1}$$
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$k$</th><th>$p_k$</th><th>$F(k)$</th></tr>
+                <tr><td>0</td><td>0,04979</td><td>0,0498</td></tr>
+                <tr><td>1</td><td>0,14936</td><td>0,1991</td></tr>
+                <tr><td>2</td><td>0,22404</td><td>0,4232</td></tr>
+                <tr><td>3</td><td>0,22404</td><td>0,6472</td></tr>
+                <tr><td>4</td><td>0,16803</td><td>0,8153</td></tr>
+                <tr><td>5</td><td>0,10082</td><td>0,9161</td></tr>
+                <tr><td>6</td><td>0,05041</td><td>0,9665</td></tr>
+                <tr><td>7</td><td>0,02160</td><td>0,9881</td></tr>
+                <tr><td>$\geq8$</td><td>0,01190</td><td>1,0000</td></tr>
+              </table></div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">5</span>
+            <div class="paso-contenido">
+              <strong>Procedimiento de composición y tabla de simulación.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Cortes de $U_0$: $U_0&lt;0{,}15\to X_1$; $0{,}15\leq U_0&lt;0{,}75\to X_2$; $U_0\geq0{,}75\to X_3$.</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$i$</th><th>$U_0$</th><th>Urna</th><th>$U_i$</th><th>Buscar en $F$ de la urna elegida</th><th>$X$</th></tr>
+                <tr><td>1</td><td>0,139</td><td>$X_1$ ($&lt;0{,}15$)</td><td>$U_1=0{,}321$</td><td>$F(0)=0{,}60&gt;0{,}321\to k=0$</td><td>0</td></tr>
+                <tr><td>2</td><td>0,452</td><td>$X_2$ ($0{,}15$–$0{,}75$)</td><td>$U_2=0{,}432$</td><td>$F(4)=0{,}377&lt;0{,}432\leq F(5)=0{,}623\to k=5$</td><td>5</td></tr>
+                <tr><td>3</td><td>0,341</td><td>$X_2$</td><td>$U_2=0{,}752$</td><td>$F(6)=0{,}828&gt;0{,}752$; $F(5)=0{,}623&lt;0{,}752\to k=6$</td><td>6</td></tr>
+                <tr><td>4</td><td>0,941</td><td>$X_3$ ($\geq0{,}75$)</td><td>$U_3=0{,}203$</td><td>$F(1)=0{,}199&lt;0{,}203\leq F(2)=0{,}423\to k=2$</td><td>2</td></tr>
+                <tr><td>5</td><td>0,263</td><td>$X_2$</td><td>$U_2=0{,}721$</td><td>$F(5)=0{,}623&lt;0{,}721\leq F(6)=0{,}828\to k=6$</td><td>6</td></tr>
+                <tr><td>6</td><td>0,601</td><td>$X_2$</td><td>$U_2=0{,}291$</td><td>$F(3)=0{,}172&lt;0{,}291\leq F(4)=0{,}377\to k=4$</td><td>4</td></tr>
+                <tr><td>7</td><td>0,952</td><td>$X_3$</td><td>$U_3=0{,}243$</td><td>$F(1)=0{,}199&lt;0{,}243\leq F(2)=0{,}423\to k=2$</td><td>2</td></tr>
+                <tr><td>8</td><td>0,742</td><td>$X_2$</td><td>$U_2=0{,}422$</td><td>$F(4)=0{,}377&lt;0{,}422\leq F(5)=0{,}623\to k=5$</td><td>5</td></tr>
+                <tr><td>9</td><td>0,422</td><td>$X_2$</td><td>$U_2=0{,}381$</td><td>$F(4)=0{,}377&lt;0{,}381\leq F(5)=0{,}623\to k=5$</td><td>5 (límite!)</td></tr>
+                <tr><td>10</td><td>0,753</td><td>$X_3$</td><td>$U_3=0{,}832$</td><td>$F(6)=0{,}967&gt;0{,}832$; $F(5)=0{,}916&gt;0{,}832$; $F(4)=0{,}815&lt;0{,}832\to k=5$</td><td>5</td></tr>
+              </table></div>
+              <div class="paso-nota">⚠ Para cada observación se usa el <em>siguiente</em> $U_i$ disponible en el vector de la urna elegida — no se reutilizan. Llevar contadores separados para $U_1$, $U_2$, $U_3$.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /exam 2023-1C recu EJ2 Panjer -->
+
+  <!-- ══════════════════════════════════
+       EXAMEN 7: 2022-1C RECU EJ3 — Starbucks
+  ═══════════════════════════════════ -->
+  <div class="exam-card">
+    <div class="exam-header" onclick="this.parentElement.classList.toggle('open')">
+      <div>
+        <div class="topic-title-row">
+          <span class="exam-tag">2022-1C RECU · EJ3 ★★ MEDIO-ALTO</span>
+          <span class="exam-title">FGP triple convolución (Binomial + Tabular + Uniforme) + transformada inversa eficiente + ECM</span>
+        </div>
+        <div class="exam-meta">4 Jul 2022 · 30 pts · Truco: dos productos sucesivos de FGPs — primero $X_1*X_2$, luego el resultado $*X_3$. El ECM es $\text{Var}(\bar{X})/k$, no la varianza de $X$.</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="exam-body">
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">ENUNCIADO</span>
+          <span class="ej-title">Datos exactos del parcial</span>
+        </div>
+        <div class="ej-enunciado">
+          $X_1\sim B(3,\,0{,}5)$; $X_2$: tabular $P(X_2=0)=0{,}30$, $P(X_2=1)=0{,}20$, $P(X_2=2)=0{,}35$, $P(X_2=3)=0{,}15$; $X_3\sim U_D\{0,1,2,3\}$. Piden: distribución de $X=X_1+X_2+X_3$ por FGP, transformada inversa eficiente con 10 números, estimación puntual de la media y ECM.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1</span>
+            <div class="paso-contenido">
+              <strong>FGPs individuales.</strong>
+              $$G_{X_1}(w) = (0{,}5+0{,}5w)^3 = 0{,}125 + 0{,}375w + 0{,}375w^2 + 0{,}125w^3$$
+              $$G_{X_2}(w) = 0{,}30 + 0{,}20w + 0{,}35w^2 + 0{,}15w^3$$
+              $$G_{X_3}(w) = \frac{1}{4}(1+w+w^2+w^3) = 0{,}25+0{,}25w+0{,}25w^2+0{,}25w^3$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2</span>
+            <div class="paso-contenido">
+              <strong>Primer producto: $G_{X_1+X_2}(w) = G_{X_1}(w)\cdot G_{X_2}(w)$.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Multiplicar término a término y colectar por potencia:</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>Potencia $w^k$</th><th>Contribuciones</th><th>$P(X_1+X_2=k)$</th></tr>
+                <tr><td>$w^0$</td><td>$0{,}125\cdot0{,}30$</td><td>0,0375</td></tr>
+                <tr><td>$w^1$</td><td>$0{,}125\cdot0{,}20+0{,}375\cdot0{,}30$</td><td>0,1375</td></tr>
+                <tr><td>$w^2$</td><td>$0{,}125\cdot0{,}35+0{,}375\cdot0{,}20+0{,}375\cdot0{,}30$</td><td>0,2375</td></tr>
+                <tr><td>$w^3$</td><td>$0{,}125\cdot0{,}15+0{,}375\cdot0{,}35+0{,}375\cdot0{,}20+0{,}125\cdot0{,}30$</td><td>0,2938</td></tr>
+                <tr><td>$w^4$</td><td>$0{,}375\cdot0{,}15+0{,}375\cdot0{,}35+0{,}125\cdot0{,}20$</td><td>0,2063</td></tr>
+                <tr><td>$w^5$</td><td>$0{,}375\cdot0{,}15+0{,}125\cdot0{,}35$</td><td>0,0994</td></tr>
+                <tr><td>$w^6$</td><td>$0{,}125\cdot0{,}15$</td><td>0,0188</td></tr>
+                <tr><td>Σ</td><td></td><td>≈ 1,000 ✓</td></tr>
+              </table></div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>Segundo producto: $G_X(w) = G_{X_1+X_2}(w)\cdot G_{X_3}(w)$.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Cada coeficiente de $G_{X_1+X_2}$ se combina con $0{,}25, 0{,}25w, 0{,}25w^2, 0{,}25w^3$. Los valores de $X=X_1+X_2+X_3$ van de 0 a 9.</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$x$</th><th>$P(X=x)$</th><th>$F(x)$</th></tr>
+                <tr><td>0</td><td>$0{,}25\cdot0{,}0375=0{,}0094$</td><td>0,0094</td></tr>
+                <tr><td>1</td><td>$0{,}25\cdot(0{,}0375+0{,}1375)=0{,}0438$</td><td>0,0531</td></tr>
+                <tr><td>2</td><td>$0{,}25\cdot(0{,}0375+0{,}1375+0{,}2375)=0{,}1031$</td><td>0,1563</td></tr>
+                <tr><td>3</td><td>$0{,}25\cdot(0{,}0375+0{,}1375+0{,}2375+0{,}2938)=0{,}1766$</td><td>0,3328</td></tr>
+                <tr><td>4</td><td>$0{,}25\cdot(0{,}1375+0{,}2375+0{,}2938+0{,}2063)=0{,}2188$</td><td>0,5516</td></tr>
+                <tr><td>5</td><td>$0{,}25\cdot(0{,}2375+0{,}2938+0{,}2063+0{,}0994)=0{,}2094$</td><td>0,7609</td></tr>
+                <tr><td>6</td><td>$0{,}25\cdot(0{,}2938+0{,}2063+0{,}0994+0{,}0188)=0{,}1546$</td><td>0,9156</td></tr>
+                <tr><td>7</td><td>$0{,}25\cdot(0{,}2063+0{,}0994+0{,}0188)=0{,}0811$</td><td>0,9966</td></tr>
+                <tr><td>8</td><td>$0{,}25\cdot(0{,}0994+0{,}0188)=0{,}0296$</td><td>1,0000$^*$</td></tr>
+                <tr><td>9</td><td>$0{,}25\cdot0{,}0188=0{,}0047$</td><td>1,0000</td></tr>
+              </table></div>
+              <div class="paso-nota">💡 Patrón para el $k$-ésimo término: $P(X=k) = 0{,}25\cdot[P(X_{12}=k)+P(X_{12}=k-1)+P(X_{12}=k-2)+P(X_{12}=k-3)]$ donde $X_{12}=X_1+X_2$, tomando 0 para los índices negativos.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">4</span>
+            <div class="paso-contenido">
+              <strong>Transformada inversa eficiente — ordenar por mayor probabilidad.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Orden: $x=4$ (0,2188) $\to$ $x=5$ (0,2094) $\to$ $x=3$ (0,1766) $\to$ $x=6$ (0,1546) $\to$ $x=2$ (0,1031) $\to\ldots$</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>Orden</th><th>$x$</th><th>$P(X=x)$</th><th>$F$ acum. eficiente</th><th>Intervalo de $U$</th></tr>
+                <tr><td>1°</td><td>4</td><td>0,2188</td><td>0,2188</td><td>$U&lt;0{,}2188$</td></tr>
+                <tr><td>2°</td><td>5</td><td>0,2094</td><td>0,4281</td><td>$0{,}2188\leq U&lt;0{,}4281$</td></tr>
+                <tr><td>3°</td><td>3</td><td>0,1766</td><td>0,6047</td><td>$0{,}4281\leq U&lt;0{,}6047$</td></tr>
+                <tr><td>4°</td><td>6</td><td>0,1546</td><td>0,7594</td><td>$0{,}6047\leq U&lt;0{,}7594$</td></tr>
+                <tr><td>5°</td><td>2</td><td>0,1031</td><td>0,8625</td><td>$0{,}7594\leq U&lt;0{,}8625$</td></tr>
+                <tr><td>6°</td><td>7</td><td>0,0811</td><td>0,9436</td><td>$0{,}8625\leq U&lt;0{,}9436$</td></tr>
+                <tr><td>7°</td><td>1</td><td>0,0438</td><td>0,9874</td><td>$0{,}9436\leq U&lt;0{,}9874$</td></tr>
+                <tr><td>8°</td><td>8</td><td>0,0296</td><td>1,0000$^*$</td><td>$0{,}9874\leq U&lt;0{,}9966^*$</td></tr>
+                <tr><td>9°</td><td>0</td><td>0,0094</td><td>0,9953$^*$</td><td>$\ldots$</td></tr>
+                <tr><td>10°</td><td>9</td><td>0,0047</td><td>1,0000</td><td>$U\geq0{,}9953$</td></tr>
+              </table></div>
+              <p style="font-size:0.88rem;color:var(--text-muted);margin-top:0.4rem;">Con $U_i=[0{,}321;\,0{,}822;\,0{,}742;\,0{,}321;\,0{,}563;\,0{,}101;\,0{,}212;\,0{,}842;\,0{,}712;\,0{,}953]$:</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$U$</th><th>$X$ simulado</th><th>$U$</th><th>$X$ simulado</th></tr>
+                <tr><td>0,321</td><td>3 ($0{,}4281\leq U&lt;0{,}6047$? No: $0{,}2188\leq 0{,}321&lt;0{,}4281$ → $x=5$)</td><td>0,101</td><td>4 ($U&lt;0{,}2188$ → $x=4$)</td></tr>
+                <tr><td>0,822</td><td>7 ($0{,}7594\leq0{,}822&lt;0{,}8625$ → $x=6$)</td><td>0,212</td><td>4 ($U&lt;0{,}2188$ → $x=4$)</td></tr>
+                <tr><td>0,742</td><td>6 ($0{,}6047\leq0{,}742&lt;0{,}7594$ → $x=6$)</td><td>0,842</td><td>2 ($0{,}7594\leq0{,}842&lt;0{,}8625$ → $x=2$... cuidado: $0{,}842&gt;0{,}8625$ → $x=7$)</td></tr>
+                <tr><td>0,321</td><td>5 (ídem)</td><td>0,712</td><td>6 ($0{,}6047\leq0{,}712&lt;0{,}7594$ → $x=6$)</td></tr>
+                <tr><td>0,563</td><td>3 ($0{,}4281\leq0{,}563&lt;0{,}6047$ → $x=3$)</td><td>0,953</td><td>7 ($0{,}9436\leq0{,}953&lt;0{,}9874$ → $x=1$... esperar: $0{,}9436\leq0{,}953\to x=7$? Verificar orden: 6°=7, 7°=1. $0{,}9436\leq 0{,}953&lt;0{,}9874$ → es el 6° elemento: $x=7$)</td></tr>
+              </table></div>
+              <div class="paso-nota">⚠ Leer los intervalos con cuidado — el orden no es el natural. Comparar $U$ contra los cortes en el orden definido por la tabla eficiente.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">5</span>
+            <div class="paso-contenido">
+              <strong>Estimación de la media y ECM.</strong>
+              $$\hat\mu = \bar{X}_k = \frac{\sum_{i=1}^k X_i^{\text{sim}}}{k}$$
+              $$\text{ECM}(\hat\mu) = \text{Var}(\bar{X}_k) = \frac{S^2_k}{k} \qquad S^2_k = \frac{\sum_{i=1}^k(X_i-\bar{X}_k)^2}{k-1}$$
+              <div class="resultado-final">→ Media teórica: $E[X]=E[X_1]+E[X_2]+E[X_3]=1{,}5+1{,}40+1{,}50=4{,}40$. El ECM mide la precisión del estimador — disminuye al aumentar $k$. No es la varianza de $X$, sino la varianza de la media muestral.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /exam 2022-1C recu EJ3 Starbucks -->
 
 </div><!-- /section exámenes resueltos -->
 
