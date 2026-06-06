@@ -2829,6 +2829,396 @@ MathJax = {
     </div>
   </div><!-- /exam 2022-1C recu EJ3 Starbucks -->
 
+
+  <!-- ══════════════════════════════════
+       EXAMEN 8: 2025-1C PARCIAL
+  ═══════════════════════════════════ -->
+  <div class="exam-card">
+    <div class="exam-header" onclick="this.parentElement.classList.toggle('open')">
+      <div>
+        <div class="topic-title-row">
+          <span class="exam-tag">2025-1C PARCIAL · NUEVO</span>
+          <span class="exam-title">Varianza BD por FGM · Chi² no uniforme · Demostración $P_y(t)$ desde KC del Poisson</span>
+        </div>
+        <div class="exam-meta">23 de Junio 2025 · 3 ejercicios · 25+25+25 pts · EJ3 es demostración teórica de alta dificultad, nunca antes vista</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="exam-body">
+
+      <!-- EJ 1 -->
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 1</span><span class="ej-pts">25 pts</span>
+          <span class="ej-title">BD lineal — varianza por FGM + versión determinística</span>
+        </div>
+        <div class="ej-enunciado">
+          $\{n(t)\}$ BD lineal con $\lambda_n=n\lambda$, $\mu_n=n\mu$, EDP de la FGM dada. Piden: (1) demostrar la varianza del tamaño de la población; (2) resolver la versión determinística y comparar con la esperanza.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1.1</span>
+            <div class="paso-contenido">
+              <strong>Obtener $m_2(t)=E[n(t)^2]$ derivando dos veces la EDP de la FGM.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Partimos de la EDP: $\frac{\partial M}{\partial t} = \left[-(\lambda+\mu)+\lambda e^w+\mu e^{-w}\right]\frac{\partial M}{\partial w}$. Derivamos ambos lados respecto a $w$:</p>
+              $$\frac{\partial^2 M}{\partial t\,\partial w} = \left[\lambda e^w - \mu e^{-w}\right]\frac{\partial M}{\partial w} + \left[-(\lambda+\mu)+\lambda e^w+\mu e^{-w}\right]\frac{\partial^2 M}{\partial w^2}$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Derivar nuevamente respecto a $w$ y evaluar en $w=0$, usando $M(0,t)=1$, $\frac{\partial M}{\partial w}\big|_0=m_1$, $\frac{\partial^2 M}{\partial w^2}\big|_0=m_2$:</p>
+              $$m'_2(t) = (\lambda-\mu)\cdot 2m_2(t) + (\lambda+\mu)\cdot m_1(t)\cdot 2$$
+              <div class="paso-nota">⚠ El truco: al evaluar en $w=0$ el término $[\lambda e^w-\mu e^{-w}]_{w=0}=\lambda-\mu=\rho$ y $[-(\lambda+\mu)+\lambda+\mu]_{w=0}=0$. La derivada segunda del coeficiente evaluada en $w=0$ da $\lambda+\mu$.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">1.2</span>
+            <div class="paso-contenido">
+              <strong>EDO para $m_2(t)$ y solución.</strong> Con $m_1(t)=n_0 e^{\rho t}$:
+              $$m'_2(t) = 2\rho\, m_2(t) + 2(\lambda+\mu)\,n_0\,e^{\rho t}$$
+              EDO lineal de primer orden. Factor integrante: $e^{-2\rho t}$. Solución:
+              $$m_2(t) = n_0^2 e^{2\rho t} + \frac{(\lambda+\mu)n_0}{\rho}\left(e^{2\rho t}-e^{\rho t}\right) \quad (\rho\neq 0)$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">1.3</span>
+            <div class="paso-contenido">
+              <strong>Varianza: $\text{Var}[n(t)] = m_2(t) - [m_1(t)]^2$.</strong>
+              $$\text{Var}[n(t)] = n_0^2 e^{2\rho t} + \frac{(\lambda+\mu)n_0}{\rho}(e^{2\rho t}-e^{\rho t}) - n_0^2 e^{2\rho t}$$
+              $$\boxed{\text{Var}[n(t)] = \frac{(\lambda+\mu)n_0}{\rho}\,e^{\rho t}(e^{\rho t}-1)}$$
+              <div class="paso-nota">💡 Cuando $\rho=0$ ($\lambda=\mu$): usar L'Hôpital o el caso límite: $\text{Var}[n(t)] = 2\lambda n_0 t$. La varianza crece linealmente en el tiempo de extinción segura.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2.1</span>
+            <div class="paso-contenido">
+              <strong>Versión determinística del BD lineal.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">El modelo determinístico reemplaza la ecuación estocástica por la EDO de la esperanza. Como $E[\lambda_n]=\lambda E[n]$ y $E[\mu_n]=\mu E[n]$, la dinámica determinística es:</p>
+              $$\frac{dn}{dt} = \lambda n - \mu n = (\lambda-\mu)n = \rho\, n$$
+              $$\implies n(t) = n_0\, e^{\rho t}$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2.2</span>
+            <div class="paso-contenido">
+              <strong>Comparación: determinístico vs. esperanza estocástica.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;"><strong>Similitud:</strong> la trayectoria determinística $n(t)=n_0 e^{\rho t}$ coincide exactamente con la esperanza del proceso estocástico $E[n(t)]=n_0 e^{\rho t}$. El modelo determinístico captura el comportamiento medio.</p>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;"><strong>Diferencia:</strong> el modelo determinístico da una trayectoria única (sin aleatoriedad). El proceso estocástico tiene varianza positiva — cada realización puede diferir significativamente de la media, especialmente cuando $\rho$ es grande o la población es chica. En particular, el proceso estocástico puede extinguirse con probabilidad positiva aunque $\lambda>\mu$, algo imposible en la versión determinística.</p>
+              <div class="resultado-final">→ Determinístico = media estocástica, pero no captura la dispersión ni la extinción aleatoria.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EJ 2 -->
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 2</span><span class="ej-pts">25 pts</span>
+          <span class="ej-title">Chi² con distribución NO uniforme — $\Omega=\{1..8\}$, probs distintas, $n=80$</span>
+        </div>
+        <div class="ej-enunciado">
+          $X$ discreta con $\Omega(X)=\{1,2,3,4,5,6,7,8\}$ y $P(X)=\{0{,}10;\,0{,}20;\,0{,}30;\,0{,}07;\,0{,}03;\,0{,}15;\,0{,}09;\,0{,}06\}$. Muestra $n=80$: $N_i=[12,5,19,7,7,12,10,8]$. Piden: hipótesis, estadístico, P-valor analítico, simulación del P-valor.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1</span>
+            <div class="paso-contenido">
+              <strong>Hipótesis.</strong>
+              $$H_0: P[X=i]=p_i^e \text{ según la tabla dada} \qquad H_1: \exists\,i\text{ tal que }P[X=i]\neq p_i^e$$
+              <div class="paso-nota">⚠ Diferencia clave con el ejercicio de la uniforme: aquí las $p_i^e$ no son todas iguales. Cada $n\cdot p_i^e$ es distinto. No se puede usar $7{,}5$ para todos.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2</span>
+            <div class="paso-contenido">
+              <strong>Tabla de cálculo completa.</strong>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$i$</th><th>$p_i^e$</th><th>$N_i$</th><th>$n\,p_i^e=80\,p_i^e$</th><th>$N_i-n\,p_i^e$</th><th>$(N_i-n\,p_i^e)^2$</th><th>$\frac{(\cdot)^2}{n\,p_i^e}$</th></tr>
+                <tr><td>1</td><td>0,10</td><td>12</td><td>8,0</td><td>4,0</td><td>16,00</td><td>2,000</td></tr>
+                <tr><td>2</td><td>0,20</td><td>5</td><td>16,0</td><td>−11,0</td><td>121,00</td><td>7,563</td></tr>
+                <tr><td>3</td><td>0,30</td><td>19</td><td>24,0</td><td>−5,0</td><td>25,00</td><td>1,042</td></tr>
+                <tr><td>4</td><td>0,07</td><td>7</td><td>5,6</td><td>1,4</td><td>1,96</td><td>0,350</td></tr>
+                <tr><td>5</td><td>0,03</td><td>7</td><td>2,4</td><td>4,6</td><td>21,16</td><td>8,817</td></tr>
+                <tr><td>6</td><td>0,15</td><td>12</td><td>12,0</td><td>0,0</td><td>0,00</td><td>0,000</td></tr>
+                <tr><td>7</td><td>0,09</td><td>10</td><td>7,2</td><td>2,8</td><td>7,84</td><td>1,089</td></tr>
+                <tr><td>8</td><td>0,06</td><td>8</td><td>4,8</td><td>3,2</td><td>10,24</td><td>2,133</td></tr>
+                <tr><td><strong>Σ</strong></td><td>1,00</td><td><strong>80</strong></td><td><strong>80,0</strong></td><td><strong>0</strong></td><td>—</td><td><strong>22,994</strong></td></tr>
+              </table></div>
+              $$T^e = 22{,}994 \sim \chi^2_7 \text{ bajo }H_0$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>P-valor analítico.</strong> $P(\chi^2_7 \geq 22{,}994)$. El valor crítico al 1% es 18,48 y al 0,1% es 24,32. Como $18{,}48 < 22{,}994 < 24{,}32$, el P-valor está entre 0,001 y 0,01.
+              <div class="resultado-final">→ P-valor $\approx 0{,}002 < \alpha=0{,}05$ ⟹ <strong>Rechazar $H_0$</strong>. La distribución de la muestra no es compatible con las probabilidades teóricas dadas. La categoría 5 ($p^e=0{,}03$ pero $N_5=7$, más del doble de lo esperado) contribuye con 8,8 del estadístico — es la que más "jala".</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">4</span>
+            <div class="paso-contenido">
+              <strong>Simulación del P-valor.</strong>
+              <ol style="padding-left:1.2rem;margin:0.4rem 0;font-size:0.9rem;color:var(--text-muted);">
+                <li>Generar $n=80$ VA i.i.d. con la distribución bajo $H_0$ (probs $0{,}10;0{,}20;0{,}30;\ldots$) usando transformada inversa: $X=i$ si $U\in [F(i-1),F(i))$ con $F(i)=\sum_{j=1}^i p_j^e$.</li>
+                <li>Calcular $N_i^{(l)}$ y $T^{(l)}=\sum_i \frac{(N_i^{(l)}-80\,p_i^e)^2}{80\,p_i^e}$.</li>
+                <li>Repetir $r$ veces (ej: $r=10.000$).</li>
+                <li>$\hat p = \#\{l: T^{(l)}\geq 22{,}994\}/r$.</li>
+              </ol>
+              <div class="paso-nota">⚠ Los cortes de $U$ para la transformada inversa son acumulados de las probs dadas: $F(1)=0{,}10$, $F(2)=0{,}30$, $F(3)=0{,}60$, $F(4)=0{,}67$, $F(5)=0{,}70$, $F(6)=0{,}85$, $F(7)=0{,}94$, $F(8)=1$.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EJ 3 -->
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 3</span><span class="ej-pts">25 pts ★★★</span>
+          <span class="ej-title">Demostración de $P_y(t)=-\frac{1}{\rho}\sum_{j=0}^y P'_j(t)$ desde KC del Poisson</span>
+        </div>
+        <div class="ej-enunciado">
+          $\{Y(t)\}$ Poisson con tasa $\rho$ constante, AR(1) y Linealidad. Demostrar que $P_y(t)=-\frac{1}{\rho}\sum_{j=0}^y P'_j(t)$. Luego calcular $P(Y=2)$ y expresar la prob. acumulada genérica.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1.1</span>
+            <div class="paso-contenido">
+              <strong>Sistema KC del Poisson puro (solo nacimientos).</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Con $\lambda_n=\rho$ (tasa constante, independiente de $n$) y $\mu_n=0$, las ecuaciones KC son:</p>
+              $$P'_0(t) = -\rho\, P_0(t)$$
+              $$P'_y(t) = -\rho\, P_y(t) + \rho\, P_{y-1}(t) \quad y=1,2,\ldots$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">1.2</span>
+            <div class="paso-contenido">
+              <strong>Demostración por inducción o sumatoria.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;"><strong>Paso base $y=0$:</strong> de KC, $P'_0(t)=-\rho P_0(t) \implies P_0(t)=-\frac{1}{\rho}P'_0(t)$. Como la suma solo tiene el término $j=0$: $-\frac{1}{\rho}\sum_{j=0}^0 P'_j(t)=-\frac{1}{\rho}P'_0(t)=P_0(t)$ ✓</p>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;"><strong>Paso inductivo:</strong> suponer que la fórmula vale para $y-1$: $P_{y-1}(t)=-\frac{1}{\rho}\sum_{j=0}^{y-1}P'_j(t)$. Usar KC para $y$:</p>
+              $$P'_y(t) = -\rho P_y(t) + \rho P_{y-1}(t)$$
+              $$P_y(t) = -\frac{1}{\rho}P'_y(t) + P_{y-1}(t) = -\frac{1}{\rho}P'_y(t) - \frac{1}{\rho}\sum_{j=0}^{y-1}P'_j(t) = -\frac{1}{\rho}\sum_{j=0}^{y}P'_j(t) \quad \checkmark$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">1.3</span>
+            <div class="paso-contenido">
+              <strong>Interpretación.</strong> La fórmula dice que $P_y(t)$ se puede expresar como la suma de las tasas de cambio instantáneas de todos los estados $0, 1, \ldots, y$. Es una representación integral del flujo acumulado de probabilidad hacia el estado $y$ y los anteriores.
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2.1</span>
+            <div class="paso-contenido">
+              <strong>Calcular $P(Y(t)=2)$ usando la fórmula.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Primero necesito $P_0(t)$, $P_1(t)$, $P_2(t)$ y sus derivadas.</p>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">Resolviendo el sistema KC en cascada con condición inicial $P_0(0)=1$:</p>
+              $$P_0(t) = e^{-\rho t}$$
+              $$P_1(t) = \rho t\, e^{-\rho t}$$
+              $$P_2(t) = \frac{(\rho t)^2}{2}\,e^{-\rho t}$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">Verificar con la fórmula: $P'_0=-\rho e^{-\rho t}$; $P'_1=\rho e^{-\rho t}-\rho^2 t\,e^{-\rho t}=\rho(1-\rho t)e^{-\rho t}$; $P'_2=(\rho^2 t - \frac{\rho^3 t^2}{2})e^{-\rho t}$:</p>
+              $$-\frac{1}{\rho}(P'_0+P'_1+P'_2) = -\frac{1}{\rho}\left[-\rho e^{-\rho t}+\rho(1-\rho t)e^{-\rho t}+\rho^2 t(1-\frac{\rho t}{2})e^{-\rho t}\right]$$
+              Simplificando dentro del corchete: $e^{-\rho t}\left[-\rho+\rho-\rho^2 t+\rho^2 t-\frac{\rho^3 t^2}{2}\right]\cdot\frac{1}{\rho}\cdot(-1)$... redondea a:
+              $$P_2(t) = \frac{(\rho t)^2}{2}e^{-\rho t} \checkmark$$
+              <div class="resultado-final">→ Es la probabilidad de Poisson: $P_y(t)=e^{-\rho t}\frac{(\rho t)^y}{y!}$. La fórmula es consistente con la distribución de Poisson.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>Probabilidad acumulada genérica.</strong>
+              $$P(Y(t)\leq y) = \sum_{k=0}^y P_k(t) = -\frac{1}{\rho}\sum_{k=0}^y\sum_{j=0}^k P'_j(t)$$
+              Reordenando la doble suma (cada $P'_j$ aparece $y-j+1$ veces):
+              $$P(Y(t)\leq y) = -\frac{1}{\rho}\sum_{j=0}^y (y-j+1)\,P'_j(t)$$
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /exam 2025-1C parcial -->
+
+  <!-- ══════════════════════════════════
+       EXAMEN 9: 2025-1C RECU
+  ═══════════════════════════════════ -->
+  <div class="exam-card">
+    <div class="exam-header" onclick="this.parentElement.classList.toggle('open')">
+      <div>
+        <div class="topic-title-row">
+          <span class="exam-tag">2025-1C RECU · NUEVO</span>
+          <span class="exam-title">FGP 3 pólizas incendio tabulares distintas + pseudo-código eficiente · SIR/SI FGM bivariate + $T_{0,1}$ exponencial</span>
+        </div>
+        <div class="exam-meta">30 de Junio 2025 · 2 ejercicios · 30+40 pts · EJ2 tiene FGM con dos variables $w_1, w_2$ — el tipo más difícil del curso</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="exam-body">
+
+      <!-- EJ 1 -->
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 1</span><span class="ej-pts">30 pts</span>
+          <span class="ej-title">FGP de 3 pólizas de incendio independientes (tabulares distintas) + pseudo-código eficiente</span>
+        </div>
+        <div class="ej-enunciado">
+          Compañía "La Argentina S.A." con 3 pólizas independientes $S_1$, $S_2$, $S_3$. $S_1$: $P(0)=0{,}30$, $P(50)=0{,}25$, $P(100)=0{,}35$, $P(150)=0{,}10$. $S_2$: $P(0)=0{,}20$, $P(20)=0{,}10$, $P(50)=0{,}15$, $P(80)=0{,}30$, $P(100)=0{,}25$. $S_3$: $P(0)=0{,}75$, $P(200)=0{,}25$. Piden: distribución de $S=S_1+S_2+S_3$ por FGP; pseudo-código eficiente con primeros 10 valores simulados.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1</span>
+            <div class="paso-contenido">
+              <strong>FGPs individuales.</strong>
+              $$G_{S_1}(w) = 0{,}30 + 0{,}25w^{50} + 0{,}35w^{100} + 0{,}10w^{150}$$
+              $$G_{S_2}(w) = 0{,}20 + 0{,}10w^{20} + 0{,}15w^{50} + 0{,}30w^{80} + 0{,}25w^{100}$$
+              $$G_{S_3}(w) = 0{,}75 + 0{,}25w^{200}$$
+              <div class="paso-nota">💡 Verificar: $G_{S_i}(1)=1$ para cada una. $S_1$: $0{,}30+0{,}25+0{,}35+0{,}10=1$ ✓. $S_2$: $0{,}20+0{,}10+0{,}15+0{,}30+0{,}25=1$ ✓. $S_3$: $0{,}75+0{,}25=1$ ✓.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2</span>
+            <div class="paso-contenido">
+              <strong>Primer producto: $G_{S_{12}}(w) = G_{S_1}(w)\cdot G_{S_2}(w)$.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Multiplicar cada término de $G_{S_1}$ por cada término de $G_{S_2}$, colectar por potencias:</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$s_{12}$</th><th>Combinaciones $(s_1, s_2)$</th><th>$P(S_{12}=s_{12})$</th></tr>
+                <tr><td>0</td><td>$(0,0)$</td><td>$0{,}30\cdot0{,}20=0{,}0600$</td></tr>
+                <tr><td>20</td><td>$(0,20)$</td><td>$0{,}30\cdot0{,}10=0{,}0300$</td></tr>
+                <tr><td>50</td><td>$(0,50)+(50,0)$</td><td>$0{,}30\cdot0{,}15+0{,}25\cdot0{,}20=0{,}0450+0{,}0500=0{,}0950$</td></tr>
+                <tr><td>70</td><td>$(0,80)$... espera: $0+80=80\neq70$. $(50,20)$</td><td>$0{,}25\cdot0{,}10=0{,}0250$</td></tr>
+                <tr><td>80</td><td>$(0,80)$</td><td>$0{,}30\cdot0{,}30=0{,}0900$</td></tr>
+                <tr><td>100</td><td>$(0,100)+(50,50)+(100,0)$</td><td>$0{,}30\cdot0{,}25+0{,}25\cdot0{,}15+0{,}35\cdot0{,}20=0{,}0750+0{,}0375+0{,}0700=0{,}1825$</td></tr>
+                <tr><td>120</td><td>$(50,80)+(20+100\text{?})$... $(50,80)$</td><td>$0{,}25\cdot0{,}30=0{,}0750$</td></tr>
+                <tr><td>130</td><td>$(100,20)+(50,80)$... $(100,20)$</td><td>$0{,}35\cdot0{,}10=0{,}0350$</td></tr>
+                <tr><td>150</td><td>$(50,100)+(100,50)+(150,0)$</td><td>$0{,}25\cdot0{,}25+0{,}35\cdot0{,}15+0{,}10\cdot0{,}20=0{,}0625+0{,}0525+0{,}0200=0{,}1350$</td></tr>
+                <tr><td>170</td><td>$(100,80)$... $(100,80)$? $100+80=180\neq170$. $(150,20)$</td><td>$0{,}10\cdot0{,}10=0{,}0100$</td></tr>
+                <tr><td>180</td><td>$(100,80)$</td><td>$0{,}35\cdot0{,}30=0{,}1050$</td></tr>
+                <tr><td>200</td><td>$(100,100)+(150,50)$</td><td>$0{,}35\cdot0{,}25+0{,}10\cdot0{,}15=0{,}0875+0{,}0150=0{,}1025$</td></tr>
+                <tr><td>230</td><td>$(150,80)$</td><td>$0{,}10\cdot0{,}30=0{,}0300$</td></tr>
+                <tr><td>250</td><td>$(150,100)$</td><td>$0{,}10\cdot0{,}25=0{,}0250$</td></tr>
+                <tr><td colspan="2">Σ</td><td>≈ 1,000 ✓</td></tr>
+              </table></div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3</span>
+            <div class="paso-contenido">
+              <strong>Segundo producto: $G_S(w) = G_{S_{12}}(w)\cdot G_{S_3}(w)$.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">$G_{S_3}(w)=0{,}75+0{,}25w^{200}$. Cada término de $G_{S_{12}}$ se multiplica por $0{,}75$ (queda igual) y por $0{,}25w^{200}$ (suma 200 al índice). Por lo tanto:</p>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.2rem 0;">$P(S=s) = 0{,}75\cdot P(S_{12}=s) + 0{,}25\cdot P(S_{12}=s-200)$ para cada valor $s$. Los valores van de 0 a 450.</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$s$</th><th>$0{,}75\cdot P(S_{12}=s)$</th><th>$0{,}25\cdot P(S_{12}=s-200)$</th><th>$P(S=s)$</th></tr>
+                <tr><td>0</td><td>$0{,}75\cdot0{,}0600=0{,}0450$</td><td>0</td><td>0,0450</td></tr>
+                <tr><td>20</td><td>$0{,}75\cdot0{,}0300=0{,}0225$</td><td>0</td><td>0,0225</td></tr>
+                <tr><td>50</td><td>$0{,}75\cdot0{,}0950=0{,}0713$</td><td>0</td><td>0,0713</td></tr>
+                <tr><td>100</td><td>$0{,}75\cdot0{,}1825=0{,}1369$</td><td>0</td><td>0,1369</td></tr>
+                <tr><td>200</td><td>$0{,}75\cdot0{,}1025=0{,}0769$</td><td>$0{,}25\cdot0{,}0600=0{,}0150$</td><td>0,0919</td></tr>
+                <tr><td>300</td><td>0</td><td>$0{,}25\cdot0{,}1825=0{,}0456$</td><td>0,0456</td></tr>
+                <tr><td>$\ldots$</td><td>$\ldots$</td><td>$\ldots$</td><td>$\ldots$</td></tr>
+              </table></div>
+              <div class="paso-nota">💡 El truco de $S_3$ binaria simplifica enormemente: en lugar de expandir todos los productos, se usa la regla: "la prob de $S=s$ es 75% de la prob de $S_{12}=s$ más 25% de la prob de $S_{12}=s-200$".</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">4</span>
+            <div class="paso-contenido">
+              <strong>Pseudo-código para la transformada inversa eficiente.</strong>
+              <div style="background:var(--surface2);border:1px solid var(--border-soft);border-radius:7px;padding:0.9rem 1.1rem;font-family:'Space Mono',monospace;font-size:0.78rem;color:var(--text-muted);margin:0.5rem 0;line-height:1.9;">
+                <span style="color:var(--accent);">// 1. Calcular distribución y ordenar eficientemente</span><br>
+                CALCULAR P[S=s_i] para cada valor s_i ∈ Ω(S)<br>
+                ORDENAR valores s_i de MAYOR a MENOR P[S=s_i]<br>
+                CALCULAR F_eficiente[k] = Σ_{j=1}^{k} P_ordenado[j]<br><br>
+                <span style="color:var(--accent);">// 2. Simulación de los 10 valores</span><br>
+                PARA i = 1 HASTA 10:<br>
+                &nbsp;&nbsp;GENERAR U ~ Uniforme(0,1)<br>
+                &nbsp;&nbsp;k = 1<br>
+                &nbsp;&nbsp;MIENTRAS U >= F_eficiente[k]:<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;k = k + 1<br>
+                &nbsp;&nbsp;X_simulado[i] = s_ordenado[k]<br>
+                FIN PARA<br><br>
+                RETORNAR X_simulado[1..10]
+              </div>
+              <div class="paso-nota">⚠ El orden eficiente pone primero el $s$ con mayor probabilidad. En este caso $s=100$ tiene $P=0{,}1369$ → va primero. Esto minimiza el número esperado de comparaciones por simulación.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EJ 2 -->
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 2</span><span class="ej-pts">40 pts ★★★</span>
+          <span class="ej-title">Modelo SI — FGM bivariante + $T_{0,1}$ exponencial</span>
+        </div>
+        <div class="ej-enunciado">
+          Modelo SI (Susceptible-Infectado): $\lambda_i=\beta i(1-i/N)$, $\mu_i=(b+\gamma)i$. FGM con dos variables $w_1$ (femenino) y $w_2$ (masculino) dada. Datos Francia: $\lambda_{\text{MLE}}=0{,}100$, $\mu_{\text{MLE}}=0{,}0371$. Datos Suecia: $\lambda=0{,}0729$, $\mu=0{,}0106$. $i(0)=100$.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">1.1</span>
+            <div class="paso-contenido">
+              <strong>¿Por qué GLM en lugar de regresión lineal? (punto teórico).</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">El CDB (Capital Doméstico Bruto) es una variable de <strong>conteo positiva creciente</strong>, no simétrica. La regresión lineal clásica asume: residuos normales, varianza constante (homocedasticidad) y respuesta en $(-\infty,+\infty)$. El CDB viola estos supuestos: crece exponencialmente (residuos heterocedásticos) y no puede ser negativo.</p>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;"><strong>Variantes GLM conocidas:</strong> Normal (identidad), Poisson (log), Binomial (logit), Gamma (inversa/log), Log-Normal (identidad sobre $\ln Y$), Gaussiana Inversa.</p>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;"><strong>Ejemplo de función de distribución:</strong> Gamma — usada para variables continuas positivas con varianza proporcional a $\mu^2$.</p>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">1.2</span>
+            <div class="paso-contenido">
+              <strong>Selección del mejor modelo por AIC.</strong>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>Modelo</th><th>Link</th><th>$\hat\beta_0$</th><th>$\hat\beta_1$</th><th>AIC</th></tr>
+                <tr><td>Log-Normal (*)</td><td>Identidad</td><td>7,311</td><td>0,0841</td><td>254,30</td></tr>
+                <tr><td>Normal</td><td>Logaritmo</td><td>7,3429</td><td>0,08144</td><td>256,86</td></tr>
+                <tr><td>Gamma</td><td>Logaritmo</td><td>7,3117</td><td>0,0841</td><td>254,31</td></tr>
+              </table></div>
+              AIC mínimo: Log-Normal con AIC = 254,30. <strong>Elegir Log-Normal</strong>. La diferencia con Gamma es mínima (0,01), pero el criterio es siempre el menor.
+              <div class="paso-nota">⚠ (*) En el Log-Normal se modela $\ln(Y)$ como variable respuesta con link identidad. El modelo ajusta $E[\ln Y]=\beta_0+\beta_1 t$, lo que implica $\hat Y = e^{\hat\beta_0+\hat\beta_1 t}$.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2.1</span>
+            <div class="paso-contenido">
+              <strong>Predicción para el año 1968 ($t=1968-1948=20$) con el modelo Log-Normal.</strong>
+              $$\hat{\ln Y}(20) = 7{,}311 + 0{,}0841\cdot 20 = 7{,}311 + 1{,}682 = 8{,}993$$
+              $$\hat Y(20) = e^{8{,}993} \approx 8.038$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">Valor observado: $Y_{\ {1968}}=7734$. Residuo: $7734-8038=-304$ (el modelo sobreestima levemente).</p>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">2.2</span>
+            <div class="paso-contenido">
+              <strong>Comparar con Normal y Gamma.</strong>
+              $$\text{Normal: }\hat Y(20)=e^{7{,}3429+0{,}08144\cdot 20}=e^{8{,}971}\approx 7.863$$
+              $$\text{Gamma: }\hat Y(20)=e^{7{,}3117+0{,}0841\cdot 20}=e^{8{,}994}\approx 8.046$$
+              <div class="resultado-final">→ Los tres modelos dan predicciones similares (~7.800–8.050 vs. observado 7.734). El Log-Normal es el elegido por AIC. En seguros, la Gamma suele preferirse para montos de siniestros por su mayor flexibilidad en la cola.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3.1</span>
+            <div class="paso-contenido">
+              <strong>Infectados esperados del modelo SI por FGM bivariante.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">La FGM bivariante del proceso SI (con $w_1$ para susceptibles y $w_2$ para infectados) satisface una EDP. Para obtener $m_1(I(t))=E[I(t)]$, se deriva $M(w_1,w_2,t)$ respecto a $w_2$ y se evalúa en $w_1=w_2=0$:</p>
+              $$\frac{\partial M}{\partial t} = \left[-(\lambda_f+\lambda_v+\mu_f)+\lambda_f e^{w_1}+\lambda_v e^{w_2}+\mu_f e^{-w_1}\right]\frac{\partial M}{\partial w_1} + \mu_v(e^{-w_2}-1)\frac{\partial M}{\partial w_2}$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">Derivar respecto a $w_2$ y evaluar en $(0,0)$. El término $\mu_v(e^{-w_2}-1)\partial M/\partial w_2$ tiene derivada en $w_2=0$ igual a $-\mu_v m_1(v)$, donde $m_1(v)=E[v(t)]$. El coeficiente de $\partial M/\partial w_1$ derivado respecto a $w_2$ evaluado en $(0,0)$ da $\lambda_v\cdot m_1^{(12)}$ (covarianza). Para el modelo simplificado:</p>
+              $$m'_1(I) = (\lambda - \mu)\,m_1(I) = \rho\,m_1(I)$$
+              $$\boxed{E[I(t)] = i(0)\,e^{(\lambda-\mu)t}}$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">3.2</span>
+            <div class="paso-contenido">
+              <strong>$T_{0,1}$ — demostración de que se distribuye exponencial.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">$T_{0,1}$ es el tiempo de espera hasta la primera infección, partiendo de $i(0)$ infectados. En el estado actual del proceso, la tasa total de transición (hacia arriba) es $\lambda_{i(0)}=\lambda\cdot i(0)\cdot(1-i(0)/N)\approx\lambda\cdot i(0)$ para poblaciones grandes.</p>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">La propiedad AR(1) del proceso BD implica que el tiempo hasta el próximo evento es memoryless. La función de distribución del tiempo de espera hasta el primer cambio en estado $n$ es:</p>
+              $$F_{T_{0,1}}(t) = P(T_{0,1}\leq t) = 1 - e^{-(\lambda_n+\mu_n)t}$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">Con $\lambda_n+\mu_n=(\lambda+\mu)n$, y para el modelo SI con $i(0)=100$:</p>
+              $$F_{T_{0,1}}(t) = 1 - e^{-(\lambda+\mu)\cdot i(0)\cdot t}$$
+              <strong>Demostración por FGM:</strong> la FGM de $T_{0,1}\sim\text{Exp}(\theta)$ con $\theta=(\lambda+\mu)\cdot n$ es:
+              $$M_{T_{0,1}}(s) = E[e^{sT}] = \int_0^\infty e^{st}\theta e^{-\theta t}dt = \frac{\theta}{\theta-s} \quad (s<\theta)$$
+              Esta es la FGM de una exponencial con tasa $\theta=(\lambda+\mu)\cdot n$, lo que demuestra que $T_{0,1}\sim\text{Exp}((\lambda+\mu)\cdot n)$.
+              <div class="resultado-final">→ Para Francia con $n=100$: $\theta=(0{,}100+0{,}0371)\cdot100=13{,}71$. $E[T_{0,1}]=1/13{,}71\approx0{,}073$ unidades de tiempo.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /exam 2025-1C recu -->
 </div><!-- /section exámenes resueltos -->
 
 
@@ -3054,6 +3444,98 @@ MathJax = {
 
   </div>
 
+
+  <!-- ══ SUBGRUPO: NUEVAS 2025 ══ -->
+  <div style="margin-bottom:1.2rem;margin-top:2rem;">
+    <div style="font-family:'Space Mono',monospace;font-size:0.62rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.15em;margin-bottom:0.8rem;">Preguntas teóricas — exámenes 2025</div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Qué diferencias y similitudes tiene el modelo determinístico del proceso BD con su valor esperado estocástico?</span>
+        <span class="teo-freq">★★★ 2025-1C Parcial EJ1 punto 2 · 10 pts</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p><strong>Similitud clave:</strong> la trayectoria determinística $n(t)=n_0 e^{\rho t}$ es numéricamente idéntica a la esperanza del proceso estocástico $E[n(t)]=n_0 e^{\rho t}$. El modelo determinístico captura exactamente el comportamiento promedio.</p>
+          <p><strong>Diferencias:</strong></p>
+          <p><strong>1. Variabilidad:</strong> el modelo determinístico da una trayectoria única y fija. El proceso estocástico tiene varianza $\text{Var}[n(t)]=\frac{(\lambda+\mu)n_0}{\rho}e^{\rho t}(e^{\rho t}-1)>0$ — cada realización puede diferir significativamente de la media.</p>
+          <p><strong>2. Extinción:</strong> en el modelo determinístico con $\lambda>\mu$, la población nunca se extingue ($n(t)\to\infty$). En el proceso estocástico, la probabilidad de extinción es $P_{\text{ext}}=(\mu/\lambda)^{n_0}>0$ incluso cuando $\lambda>\mu$. Esto es imposible en el mundo determinístico.</p>
+          <p><strong>3. Información:</strong> el modelo estocástico provee la distribución completa de $n(t)$ (FGP, FGM), no solo la media. Permite calcular $P(n(t)>k)$, cuantiles, etc.</p>
+        </div>
+        <div class="teo-origin">2025-1C Parcial, EJ1 punto 2</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Por qué usar GLM en lugar de regresión lineal cuando la variable respuesta es el CDB (Capital Doméstico Bruto)?</span>
+        <span class="teo-freq">★★ 2025-1C Recu EJ2 punto 1 · 15 pts</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p><strong>Motivos para usar GLM:</strong></p>
+          <p><strong>1. La variable respuesta es positiva:</strong> el CDB solo puede tomar valores positivos. La regresión lineal puede predecir valores negativos, lo que carece de sentido económico. Un GLM con distribución Gamma o Log-Normal garantiza predicciones positivas.</p>
+          <p><strong>2. Crecimiento exponencial:</strong> el gráfico muestra tendencia exponencial, no lineal. Con un GLM y link logarítmico, el predictor lineal modela $\ln(E[Y])$, capturando el crecimiento exponencial naturalmente.</p>
+          <p><strong>3. Varianza no constante (heterocedasticidad):</strong> a medida que crece el CDB, la dispersión también crece. La regresión lineal asume varianza constante. La Gamma tiene $\text{Var}[Y]=\mu^2/\nu$ — la varianza crece con la media.</p>
+          <p><strong>Variantes GLM conocidas:</strong> Normal (identidad), Poisson (log), Binomial (logit), Gamma (inversa o log), Log-Normal (identidad sobre $\ln Y$), Gaussiana Inversa (link $1/\mu^2$), Binomial Negativa.</p>
+        </div>
+        <div class="teo-origin">2025-1C Recu, EJ2 punto 1</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Cómo se interpreta la fórmula $P_y(t) = -\frac{1}{\rho}\sum_{j=0}^y P'_j(t)$? ¿Qué rol juega $P'_j(t)$?</span>
+        <span class="teo-freq">★★★ 2025-1C Parcial EJ3 punto 1 · 10 pts — demostración teórica nueva</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p>$P'_j(t)=\frac{d}{dt}P_j(t)$ es la tasa de cambio instantánea de la probabilidad del estado $j$. En el sistema KC del Poisson: $P'_j(t)=-\rho P_j(t)+\rho P_{j-1}(t)$, es decir, la probabilidad del estado $j$ crece cuando hay eventos que lo alimentan desde $j-1$ y decrece cuando hay eventos que lo abandonan hacia $j+1$.</p>
+          <p><strong>Interpretación de la fórmula:</strong> la probabilidad de tener exactamente $y$ siniestros al tiempo $t$ equivale a la suma ponderada (con peso $-1/\rho$) de todas las tasas de cambio de los estados anteriores. Es una representación acumulativa del flujo de probabilidad: cada $P'_j$ captura cuánta probabilidad fluye a través del estado $j$, y la suma hasta $j=y$ mide la probabilidad acumulada que "llegó" al estado $y$ o inferior.</p>
+          <p><strong>Utilidad práctica:</strong> permite calcular $P_y(t)$ sin resolver el sistema completo — alcanza con conocer las derivadas $P'_j(t)$ para $j=0,\ldots,y$, que se obtienen directamente de KC.</p>
+        </div>
+        <div class="teo-origin">2025-1C Parcial, EJ3 punto 1</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">En el modelo SIR, ¿qué representa $T_{0,1}$ y por qué se distribuye exponencialmente?</span>
+        <span class="teo-freq">★★ 2025-1C Recu EJ2 punto 2 · 15 pts</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p>$T_{0,1}$ es el <strong>tiempo de espera hasta la primera transición</strong> del proceso (el tiempo hasta que hay una nueva infección o recuperación, partiendo del estado inicial $i(0)$).</p>
+          <p><strong>Por qué es exponencial:</strong> en cualquier proceso BD con AR(1) y Linealidad, la distribución del tiempo de permanencia en el estado $n$ es exponencial con tasa $\lambda_n+\mu_n$. Esto se demuestra calculando:</p>
+          <p>$P(T_{0,1}>t \mid n(0)=n_0) = P(\text{ningún evento en }[0,t]) = e^{-(\lambda_{n_0}+\mu_{n_0})t}$</p>
+          <p>que es la función de supervivencia de una exponencial. La clave está en la propiedad de Poisson: en cada intervalo infinitesimal, la probabilidad de un evento es $c\cdot\Delta t$ (para $c=\lambda_n+\mu_n$) y la probabilidad de más de uno es $o(\Delta t)$. La suma acumulada de estos tiempos infinitesimales converge a la exponencial.</p>
+          <p>Para el modelo SI con $i(0)=100$ y datos de Francia: $\theta=(\lambda+\mu)\cdot n = (0{,}100+0{,}0371)\cdot 100=13{,}71$, por lo que $E[T_{0,1}]=1/13{,}71\approx 0{,}073$ unidades de tiempo.</p>
+        </div>
+        <div class="teo-origin">2025-1C Recu, EJ2 punto 2</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">En un Chi-cuadrado de bondad de ajuste con probabilidades NO uniformes, ¿qué cambia respecto al caso uniforme?</span>
+        <span class="teo-freq">★★ 2025-1C Parcial EJ2 — trampa frecuente</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p><strong>Lo que cambia:</strong> las frecuencias esperadas $n\cdot p_i^e$ son distintas para cada categoría. No se puede usar un valor único para toda la tabla. Hay que calcular $n\cdot p_i^e$ individualmente para cada $i$.</p>
+          <p><strong>Lo que NO cambia:</strong> la fórmula del estadístico $T^e=\sum_i(N_i-n\,p_i^e)^2/(n\,p_i^e)$; la distribución asintótica $\chi^2_{k-1}$; el criterio de decisión por P-valor; el procedimiento de simulación del P-valor.</p>
+          <p><strong>Trampa en el examen:</strong> cuando las probabilidades no son iguales, las categorías con $p_i^e$ muy chico (por ejemplo $p_5^e=0{,}03$ con $n\cdot p_5^e=2{,}4$) pueden tener frecuencias esperadas menores que 5. En ese caso la aproximación chi-cuadrado es cuestionable y debería unirse esa categoría con una adyacente. Si el enunciado no lo pide, se resuelve igual pero se puede hacer una aclaración.</p>
+        </div>
+        <div class="teo-origin">2025-1C Parcial, EJ2</div>
+      </div>
+    </div>
+
+  </div>
 </div><!-- /section preguntas teóricas -->
 
 </div><!-- /wrapper extra -->
