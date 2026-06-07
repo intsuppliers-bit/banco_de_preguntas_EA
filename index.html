@@ -2479,8 +2479,22 @@ MathJax = {
           <div class="paso">
             <span class="paso-num">3</span>
             <div class="paso-contenido">
-              <strong>Aplicar a los 10 valores.</strong> Para cada observación: leer $U_0$ para decidir urna, tomar el $U_i$ del vector correspondiente (no confundir columnas), calcular $X$. Completar la tabla.
-              <div class="resultado-final">→ Usar el $U_i$ de la urna elegida, no el siguiente disponible del vector general.</div>
+              <strong>Tabla de simulación completa con los vectores del examen.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">$U_0=[0{,}139;0{,}452;0{,}341;0{,}941;0{,}263;0{,}601;0{,}952;0{,}742;0{,}422;0{,}753]$. Cortes: $U_0&lt;0{,}45\to X_1$; $0{,}45\leq U_0&lt;0{,}75\to X_2$; $U_0\geq0{,}75\to X_3$.</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$i$</th><th>$U_0$</th><th>Urna</th><th>$U_i$ usado</th><th>Fórmula</th><th>$X$</th></tr>
+                <tr><td>1</td><td>0,139</td><td>$X_1$ ($&lt;0{,}45$)</td><td>$U_1[1]=0{,}321$</td><td>$\text{ent}(10\cdot0{,}321)+1=3+1$</td><td><strong>4</strong></td></tr>
+                <tr><td>2</td><td>0,452</td><td>$X_2$ ($0{,}45$–$0{,}75$)</td><td>$U_2[1]=0{,}432$</td><td>$\text{ent}(5\cdot0{,}432)+4=2+4$</td><td><strong>6</strong></td></tr>
+                <tr><td>3</td><td>0,341</td><td>$X_1$</td><td>$U_1[2]=0{,}822$</td><td>$\text{ent}(10\cdot0{,}822)+1=8+1$</td><td><strong>9</strong></td></tr>
+                <tr><td>4</td><td>0,941</td><td>$X_3$ ($\geq0{,}75$)</td><td>$U_3[1]=0{,}546$</td><td>$\text{ent}(9\cdot0{,}546)+2=4+2$</td><td><strong>6</strong></td></tr>
+                <tr><td>5</td><td>0,263</td><td>$X_1$</td><td>$U_1[3]=0{,}742$</td><td>$\text{ent}(10\cdot0{,}742)+1=7+1$</td><td><strong>8</strong></td></tr>
+                <tr><td>6</td><td>0,601</td><td>$X_2$</td><td>$U_2[2]=0{,}752$</td><td>$\text{ent}(5\cdot0{,}752)+4=3+4$</td><td><strong>7</strong></td></tr>
+                <tr><td>7</td><td>0,952</td><td>$X_3$</td><td>$U_3[2]=0{,}623$</td><td>$\text{ent}(9\cdot0{,}623)+2=5+2$</td><td><strong>7</strong></td></tr>
+                <tr><td>8</td><td>0,742</td><td>$X_2$</td><td>$U_2[3]=0{,}521$</td><td>$\text{ent}(5\cdot0{,}521)+4=2+4$</td><td><strong>6</strong></td></tr>
+                <tr><td>9</td><td>0,422</td><td>$X_1$</td><td>$U_1[4]=0{,}321$</td><td>$\text{ent}(10\cdot0{,}321)+1=3+1$</td><td><strong>4</strong></td></tr>
+                <tr><td>10</td><td>0,753</td><td>$X_3$</td><td>$U_3[3]=0{,}320$</td><td>$\text{ent}(9\cdot0{,}320)+2=2+2$</td><td><strong>4</strong></td></tr>
+              </table></div>
+              <div class="resultado-final">→ Valores simulados: [4, 6, 9, 6, 8, 7, 7, 6, 4, 4]. Media muestral $\bar X = 61/10 = 6{,}1$. Media teórica: $E[X]=0{,}45\cdot5{,}5+0{,}30\cdot6+0{,}25\cdot6=5{,}475$. Usar el $U_i$ de la urna elegida en orden — se llevan contadores independientes para $U_1$, $U_2$, $U_3$.</div>
             </div>
           </div>
         </div>
@@ -3219,6 +3233,298 @@ MathJax = {
 
     </div>
   </div><!-- /exam 2025-1C recu -->
+
+  <!-- ══════════════════════════════════
+       EXAMEN 10: 2025-2C PARCIAL
+  ═══════════════════════════════════ -->
+  <div class="exam-card">
+    <div class="exam-header" onclick="this.parentElement.classList.toggle('open')">
+      <div>
+        <div class="topic-title-row">
+          <span class="exam-tag">2025-2C PARCIAL · NUEVO</span>
+          <span class="exam-title">GARCH(1,1) + $T_n\sim\Gamma$ por FGM · GLM Binomial polillas · FGM frecuencia×severidad + prima con franquicia</span>
+        </div>
+        <div class="exam-meta">20 de Noviembre 2025 · 4 ejercicios · EJ1 GARCH es completamente nuevo — nunca apareció antes · EJ4 prima por FGM es un tipo nuevo</div>
+      </div>
+      <span class="topic-chevron">›</span>
+    </div>
+    <div class="exam-body">
+
+      <!-- EJ 1 -->
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 1</span><span class="ej-pts">25 pts ★★★ NUEVO</span>
+          <span class="ej-title">GARCH(1,1) — elegir serie, simular retorno, estadísticas</span>
+        </div>
+        <div class="ej-enunciado">
+          $y_t = \mu + \varepsilon_t$ con $\varepsilon_t = z_t\sqrt{\sigma_t^2}$; $\sigma_t^2 = \omega + \alpha\varepsilon_{t-1}^2 + \beta\sigma_{t-1}^2$. Parámetros: $\mu=0{,}060054$, $\omega=0{,}022852$, $\alpha=0{,}121195$, $\beta=0{,}862614$, $\varepsilon_{t-1}^2=0{,}025$, $\sigma_{t-1}^2=0{,}004952$. Series A, B, C dadas. Piden: (a) elegir la serie adecuada para simular; (b) simular $y_t$ por transformada inversa; (c) estadísticas y comparación con valores reales.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">a</span>
+            <div class="paso-contenido">
+              <strong>¿Qué necesita el modelo? ¿Cuál serie usar?</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">El modelo necesita $z_t \sim N(0,1)$ — números normales estándar. Las tres series tienen rangos distintos:</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>Serie</th><th>Rango de valores</th><th>¿Sirve para $N(0,1)$?</th><th>Decisión</th></tr>
+                <tr><td>A</td><td>0,021 a 0,221 — todos entre 0 y 1</td><td>Parecen $U(0,1)$</td><td>✓ Usar esta — son uniformes para aplicar $\Phi^{-1}(U)$</td></tr>
+                <tr><td>B</td><td>0,0001 a 0,0017 — muy pequeños</td><td>No son $U(0,1)$</td><td>✗ Descartar</td></tr>
+                <tr><td>C</td><td>0,0989 a 0,9902 — entre 0 y 1 pero con 0,8191</td><td>Podrían ser $U(0,1)$</td><td>✗ Descartar — tienen valores extremos que sugieren otro tipo</td></tr>
+              </table></div>
+              <div class="paso-nota">⚠ La serie A tiene valores entre 0,021 y 0,221 — son consistentes con números uniformes en $[0,1]$ para usar con $\Phi^{-1}$. La serie B tiene valores muy cercanos a 0 (parecen varianzas o probabilidades de eventos raros). La serie C tiene un valor inicial muy alto (0,8191) que la hace menos adecuada como generador de $N(0,1)$ mediante transformada inversa.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">b.1</span>
+            <div class="paso-contenido">
+              <strong>Calcular $\sigma_t^2$ (varianza condicional) antes de simular.</strong>
+              $$\sigma_t^2 = \omega + \alpha\varepsilon_{t-1}^2 + \beta\sigma_{t-1}^2 = 0{,}022852 + 0{,}121195\cdot0{,}025 + 0{,}862614\cdot0{,}004952$$
+              $$= 0{,}022852 + 0{,}003030 + 0{,}004272 = 0{,}030154$$
+              $$\sigma_t = \sqrt{0{,}030154} \approx 0{,}1737$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">b.2</span>
+            <div class="paso-contenido">
+              <strong>Simular $z_t$ desde la serie A usando transformada inversa.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Para cada $U_t$ de la serie A: $z_t = \Phi^{-1}(U_t)$. Luego $\varepsilon_t = z_t\cdot\sigma_t$ y $y_t = \mu + \varepsilon_t$.</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$t$</th><th>$U_t$ (Serie A)</th><th>$z_t=\Phi^{-1}(U_t)$</th><th>$\varepsilon_t=z_t\cdot\sigma_t$</th><th>$y_t=\mu+\varepsilon_t$</th></tr>
+                <tr><td>1</td><td>0,021</td><td>$\Phi^{-1}(0{,}021)\approx-2{,}034$</td><td>$-2{,}034\cdot0{,}1737\approx-0{,}353$</td><td>$0{,}060-0{,}353=-0{,}293$</td></tr>
+                <tr><td>2</td><td>0,071</td><td>$\Phi^{-1}(0{,}071)\approx-1{,}468$</td><td>$-1{,}468\cdot0{,}1737\approx-0{,}255$</td><td>$0{,}060-0{,}255=-0{,}195$</td></tr>
+                <tr><td>3</td><td>0,121</td><td>$\Phi^{-1}(0{,}121)\approx-1{,}167$</td><td>$-1{,}167\cdot0{,}1737\approx-0{,}203$</td><td>$0{,}060-0{,}203=-0{,}143$</td></tr>
+                <tr><td>4</td><td>0,171</td><td>$\Phi^{-1}(0{,}171)\approx-0{,}952$</td><td>$-0{,}952\cdot0{,}1737\approx-0{,}165$</td><td>$0{,}060-0{,}165=-0{,}105$</td></tr>
+                <tr><td>5</td><td>0,221</td><td>$\Phi^{-1}(0{,}221)\approx-0{,}768$</td><td>$-0{,}768\cdot0{,}1737\approx-0{,}133$</td><td>$0{,}060-0{,}133=-0{,}073$</td></tr>
+                <tr><td>6</td><td>0,218</td><td>$\approx-0{,}779$</td><td>$\approx-0{,}135$</td><td>$-0{,}075$</td></tr>
+                <tr><td>7</td><td>0,215</td><td>$\approx-0{,}789$</td><td>$\approx-0{,}137$</td><td>$-0{,}077$</td></tr>
+                <tr><td>8</td><td>0,212</td><td>$\approx-0{,}800$</td><td>$\approx-0{,}139$</td><td>$-0{,}079$</td></tr>
+                <tr><td>9</td><td>0,209</td><td>$\approx-0{,}810$</td><td>$\approx-0{,}141$</td><td>$-0{,}081$</td></tr>
+                <tr><td>10</td><td>0,206</td><td>$\approx-0{,}820$</td><td>$\approx-0{,}142$</td><td>$-0{,}082$</td></tr>
+              </table></div>
+              <div class="paso-nota">💡 Todos los valores de la Serie A son $<0{,}5$, entonces todos los $z_t<0$ y todos los retornos simulados son negativos. Esto es una característica de esta simulación particular — con una muestra más grande habría retornos positivos y negativos.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">c</span>
+            <div class="paso-contenido">
+              <strong>Estadísticas de los valores simulados.</strong>
+              $$\bar{y} = \frac{1}{10}\sum_{t=1}^{10} y_t \approx \frac{-1{,}203}{10} = -0{,}120$$
+              $$S^2 = \frac{\sum(y_t-\bar{y})^2}{9} \approx 0{,}0046 \qquad S \approx 0{,}068$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;"><strong>¿Qué debería suceder para igualar los estadísticos reales?</strong> Para que $\bar{y}_{\text{sim}}=\mu=0{,}060054$, el promedio de los $z_t$ simulados debería ser cero — es decir, la muestra de $U_t$ debería ser simétrica alrededor de 0,5. Para que $S_{\text{sim}}=\sigma_t=0{,}1737$, la dispersión de los $z_t$ debería ser exactamente 1 (normal estándar). Con $n\to\infty$, por la LGN, ambas condiciones se cumplen asintóticamente.</p>
+              <div class="resultado-final">→ Con solo 10 observaciones, las estadísticas muestrales difieren de los parámetros teóricos. La convergencia es $O(1/\sqrt{n})$ — necesitaríamos $n\approx 1000$ para una buena aproximación.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EJ 2 -->
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 2</span><span class="ej-pts">25 pts</span>
+          <span class="ej-title">BD lineal — $T_{0,1}$ exponencial + $T_n\sim\Gamma$ por FGM</span>
+        </div>
+        <div class="ej-enunciado">
+          BD lineal $\lambda_n=n\lambda$, $\mu_n=n\mu$. (a) Demostrar que $T_{0,1}\sim\text{Exp}$ con $f_{T_{0,1}}(t)=(\lambda_n+\mu_n)e^{-(\lambda_n+\mu_n)t}$. (b) Demostrar que $T_n=\sum_{i=1}^n T_{i-1,i}\sim\Gamma$ por FGM.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">a.1</span>
+            <div class="paso-contenido">
+              <strong>$T_{0,1}$ es el tiempo hasta la primera transición desde el estado $n_0$.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">En el estado $n_0$, la tasa total de salida es $c=\lambda_{n_0}+\mu_{n_0}=(\lambda+\mu)n_0$. Por la propiedad AR(1) del proceso:</p>
+              $$P(T_{0,1}>t+\Delta t \mid T_{0,1}>t) = P(T_{0,1}>\Delta t) = 1 - c\Delta t + o(\Delta t)$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">Esta es la propiedad de falta de memoria — característica única de la exponencial. Formalmente:</p>
+              $$P(T_{0,1}>t) = e^{-ct} \implies F_{T_{0,1}}(t) = 1-e^{-ct}$$
+              $$\boxed{f_{T_{0,1}}(t) = c\,e^{-ct} = (\lambda_n+\mu_n)\,e^{-(\lambda_n+\mu_n)t}}$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">b.1</span>
+            <div class="paso-contenido">
+              <strong>FGM de $T_{i-1,i}\sim\text{Exp}(c_i)$ con $c_i=(\lambda+\mu)\cdot i$.</strong>
+              $$M_{T_{i-1,i}}(s) = \frac{c_i}{c_i - s} = \frac{(\lambda+\mu)i}{(\lambda+\mu)i - s}$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">b.2</span>
+            <div class="paso-contenido">
+              <strong>FGM de $T_n = \sum_{i=1}^n T_{i-1,i}$ por independencia.</strong>
+              $$M_{T_n}(s) = \prod_{i=1}^n M_{T_{i-1,i}}(s) = \prod_{i=1}^n \frac{c_i}{c_i-s}$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">Para el caso especial $c_i = c$ (tasa constante — todos los intervalos con la misma tasa):</p>
+              $$M_{T_n}(s) = \left(\frac{c}{c-s}\right)^n = \left(1-\frac{s}{c}\right)^{-n}$$
+              Esta es la FGM de una distribución $\Gamma(\alpha=n,\,\beta=1/c)$:
+              $$\boxed{T_n \sim \Gamma\left(n,\,\frac{1}{c}\right)} \quad \text{con } E[T_n]=\frac{n}{c},\; \text{Var}[T_n]=\frac{n}{c^2}$$
+              <div class="paso-nota">💡 La FGM de la Gamma$(\alpha,\beta)$ es $(1-\beta s)^{-\alpha}$. El producto de $n$ exponenciales con la misma tasa da exactamente esta forma. Es el teorema de reproductividad de la Gamma: suma de $n$ Exp$(c)$ i.i.d. es Gamma$(n, 1/c)$.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EJ 3 -->
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 3</span><span class="ej-pts">25 pts</span>
+          <span class="ej-title">GLM Binomial — polillas resistentes a tóxico · dosis letal</span>
+        </div>
+        <div class="ej-enunciado">
+          Estudio de resistencia de polillas a dosis de tóxico. Variable respuesta: resiste o no (binaria). (a) justificar Binomial; (b) demostrar $\theta$, $\phi$, $a(\theta)$; (c) demostrar $E[Y]$ y $\text{Var}[Y]$; (d) dosis letal $D_{50}$ para machos y femeninas. Tabla con $\beta_0=3{,}4732$, $\alpha_{\text{masc}}=-1{,}1007$, $\alpha_{\text{fem}}=0$, $\beta_1=-1{,}0642$.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">a</span>
+            <div class="paso-contenido">
+              <strong>¿Por qué Binomial?</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">La variable respuesta es si la polilla resiste o muere ante la dosis: un outcome binario $Y_i\in\{0,1\}$. Esto corresponde a un ensayo de Bernoulli — la suma de $n$ ensayos independientes es Binomial. La Binomial modela la proporción de individuos que resisten, lo que es exactamente la pregunta de interés. Otras distribuciones no aplican: la Poisson es para conteos sin cota superior; la Normal no garantiza $\hat{p}\in[0,1]$.</p>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">b</span>
+            <div class="paso-contenido">
+              <strong>Parámetros canónicos de la Binomial.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">$f(y;p)=\binom{n}{y}p^y(1-p)^{n-y}$. Aplicando logaritmo:</p>
+              $$\ln f = y\ln p + (n-y)\ln(1-p) + \ln\binom{n}{y} = y\underbrace{\ln\frac{p}{1-p}}_{\theta} + n\underbrace{\ln(1-p)}_{-a(\theta)/\phi} + \ln\binom{n}{y}$$
+              $$\theta = \ln\frac{p}{1-p} \implies e^\theta = \frac{p}{1-p} \implies p = \frac{e^\theta}{1+e^\theta}$$
+              $$a(\theta) = n\ln(1+e^\theta) \qquad \phi = 1$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">c</span>
+            <div class="paso-contenido">
+              <strong>$E[Y]$ y $\text{Var}[Y]$ por derivadas de $a(\theta)$.</strong>
+              $$\dot{a}(\theta) = \frac{n\,e^\theta}{1+e^\theta} = n\cdot\frac{e^\theta}{1+e^\theta} = n\cdot p = E[Y] \checkmark$$
+              $$\ddot{a}(\theta) = \frac{n\,e^\theta(1+e^\theta) - n\,e^{2\theta}}{(1+e^\theta)^2} = \frac{n\,e^\theta}{(1+e^\theta)^2} = n\cdot p(1-p)$$
+              $$\text{Var}[Y] = \phi\cdot\ddot{a}(\theta) = 1\cdot n\cdot p(1-p) = np(1-p) \checkmark$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">d.1</span>
+            <div class="paso-contenido">
+              <strong>Modelo logístico ajustado.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">$Y=\beta_0+\alpha_i+\beta_1\cdot\text{Dosis}$ donde $\alpha_{\text{masc}}=-1{,}1007$, $\alpha_{\text{fem}}=0$ (categoría base).</p>
+              $$\text{Femenino: } \ln\frac{p}{1-p} = 3{,}4732 + 0 + (-1{,}0642)\cdot D$$
+              $$\text{Masculino: } \ln\frac{p}{1-p} = 3{,}4732 + (-1{,}1007) + (-1{,}0642)\cdot D = 2{,}3725 - 1{,}0642\cdot D$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">d.2</span>
+            <div class="paso-contenido">
+              <strong>$D_{50}$ — dosis para la cual el 50% ya no resiste ($p=0{,}5$).</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">Cuando $p=0{,}5$: $\ln\frac{0{,}5}{0{,}5}=0$. Entonces el predictor lineal $= 0$.</p>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;"><strong>Femenino:</strong></p>
+              $$3{,}4732 - 1{,}0642\cdot D_{50}^{\text{fem}} = 0 \implies D_{50}^{\text{fem}} = \frac{3{,}4732}{1{,}0642} \approx 3{,}264$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;"><strong>Masculino:</strong></p>
+              $$2{,}3725 - 1{,}0642\cdot D_{50}^{\text{masc}} = 0 \implies D_{50}^{\text{masc}} = \frac{2{,}3725}{1{,}0642} \approx 2{,}230$$
+              <div class="resultado-final">→ Las hembras necesitan más dosis ($D_{50}\approx3{,}26$) para que la mitad muera — son más resistentes. Los machos necesitan menos dosis ($D_{50}\approx2{,}23$). Esto es consistente con $\alpha_{\text{masc}}<0$: el coeficiente masculino baja el log-odds, indicando menor resistencia.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EJ 4 -->
+      <div class="ejercicio">
+        <div class="ejercicio-header">
+          <span class="ej-num">EJ 4</span><span class="ej-pts">25 pts ★★★ NUEVO TIPO</span>
+          <span class="ej-title">FGM frecuencia × severidad + franquicia + prima = $E(N)\cdot E(X)\cdot 1{,}23$</span>
+        </div>
+        <div class="ej-enunciado">
+          Cartera de robos de automotores. $M_N(t)=(0{,}95+0{,}05\,e^t)^{30}$ (FGM de $N$). $M_X(t)=\frac{1}{3}e^{1500t}+\frac{1}{6}e^{3000t}+\frac{1}{6}e^{3500t}+\frac{1}{6}e^{5000t}+\frac{1}{6}e^{7500t}$ (FGM de $X$ en ARS). Franquicia 800 ARS. Máximo 2 siniestros. Prima $=E(S)\cdot1{,}23$ con $E(S)=E(N)\cdot E(X)$.
+        </div>
+        <div class="solucion">
+          <div class="paso">
+            <span class="paso-num">a.1</span>
+            <div class="paso-contenido">
+              <strong>Identificar las distribuciones desde las FGMs.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">$M_N(t)=(0{,}95+0{,}05\,e^t)^{30}=(q+p\,e^t)^{30}$ con $p=0{,}05$, $q=0{,}95$, $n=30$ → $N\sim B(30,\,0{,}05)$.</p>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">$M_X(t)=\sum_j p_j\,e^{x_j t}$ → $X$ es discreta con:</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$x_j$ (ARS)</th><th>$P(X=x_j)$</th></tr>
+                <tr><td>1.500</td><td>1/3</td></tr>
+                <tr><td>3.000</td><td>1/6</td></tr>
+                <tr><td>3.500</td><td>1/6</td></tr>
+                <tr><td>5.000</td><td>1/6</td></tr>
+                <tr><td>7.500</td><td>1/6</td></tr>
+              </table></div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">a.2</span>
+            <div class="paso-contenido">
+              <strong>Calcular $E(N)$ y $E(X)$.</strong>
+              $$E(N) = np = 30\cdot0{,}05 = 1{,}5 \text{ siniestros esperados}$$
+              $$E(X) = \frac{1}{3}\cdot1500+\frac{1}{6}\cdot3000+\frac{1}{6}\cdot3500+\frac{1}{6}\cdot5000+\frac{1}{6}\cdot7500$$
+              $$= 500+500+583{,}3+833{,}3+1250 = 3666{,}7 \text{ ARS}$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">a.3</span>
+            <div class="paso-contenido">
+              <strong>Aplicar la franquicia de 800 ARS.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">La empresa solo paga si el siniestro supera 800 ARS. Como todos los montos de $X$ son $\geq1500>800$, la franquicia <em>no elimina ningún siniestro</em> — pero sí reduce el pago en 800 por cada siniestro que ocurre:</p>
+              $$E(X_{\text{neto}}) = E(X) - 800 = 3666{,}7 - 800 = 2866{,}7 \text{ ARS}$$
+              <div class="paso-nota">💡 Si hubiera montos $<800$, esos siniestros no se pagarían y habría que recalcular $E(X)$ condicionado a $X>800$. Aquí el mínimo es 1500, así que todos superan la franquicia.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">a.4</span>
+            <div class="paso-contenido">
+              <strong>Máximo de 2 siniestros — ajustar $E(N)$.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">La empresa cubre a lo sumo 2 siniestros. $E(\min(N,2))$ con $N\sim B(30,0{,}05)$:</p>
+              $$E(\min(N,2)) = \sum_{k=0}^{\infty}P(N>k)\big|_0^2 = 1\cdot P(N\geq1) + 1\cdot P(N\geq2)$$
+              $$= E(N) - \sum_{k=3}^{30}(k-2)\,P(N=k)$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">Aproximación práctica con $B(30,0{,}05)$: $P(N=0)=(0{,}95)^{30}\approx0{,}215$; $P(N=1)=30\cdot0{,}05\cdot(0{,}95)^{29}\approx0{,}339$; $P(N=2)\approx0{,}259$; $P(N\geq3)\approx0{,}187$.</p>
+              $$E(\min(N,2)) \approx 0\cdot0{,}215 + 1\cdot0{,}339 + 2\cdot(1-0{,}215-0{,}339) = 0 + 0{,}339 + 2\cdot0{,}446 = 1{,}231$$
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">a.5</span>
+            <div class="paso-contenido">
+              <strong>Prima pura y prima comercial.</strong>
+              $$E(S) = E(\min(N,2))\cdot E(X_{\text{neto}}) = 1{,}231\cdot2866{,}7 \approx 3.529 \text{ ARS}$$
+              $$\text{Prima comercial} = E(S)\cdot1{,}23 = 3.529\cdot1{,}23 \approx \mathbf{4.341 \text{ ARS}}$$
+              <div class="resultado-final">→ Sin el límite de 2 siniestros: $E(S)=1{,}5\cdot2866{,}7=4.300$ ARS y prima $=5.289$ ARS. El límite de 2 reduce la prima en ~$18\%$.</div>
+            </div>
+          </div>
+          <div class="paso">
+            <span class="paso-num">b</span>
+            <div class="paso-contenido">
+              <strong>Simulación — cantidad de siniestros (Serie i) e intensidad (Serie ii).</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;"><strong>Serie (i) para $N$:</strong> $N\sim B(30,0{,}05)$. Usando Panjer con $a=-p/(1-p)=-1/19$, $b=31p/(1-p)=31/19$. O más simple: como $N\leq2$ en la cobertura, se puede usar transformada inversa directamente con $P(N=0)=0{,}215$, $P(N=1)=0{,}339$, $P(N=2)=0{,}259$, $P(N\geq3)\to\min(N,2)=2$.</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$U$ (Serie i)</th><th>$N$ simulado</th><th>Intervalo</th></tr>
+                <tr><td>0,4512</td><td>1</td><td>$0{,}215\leq U&lt;0{,}554$</td></tr>
+                <tr><td>0,3339</td><td>1</td><td>$0{,}215\leq U&lt;0{,}554$</td></tr>
+                <tr><td>0,6091</td><td>2</td><td>$0{,}554\leq U&lt;0{,}813$</td></tr>
+                <tr><td>0,0743</td><td>0</td><td>$U&lt;0{,}215$</td></tr>
+                <tr><td>0,0177</td><td>0</td><td>$U&lt;0{,}215$</td></tr>
+                <tr><td>0,7020</td><td>2</td><td>$0{,}554\leq U&lt;0{,}813$</td></tr>
+                <tr><td>0,9487</td><td>$\geq3\to2$</td><td>$U\geq0{,}813$</td></tr>
+                <tr><td>0,6058</td><td>2</td><td>$0{,}554\leq U&lt;0{,}813$</td></tr>
+                <tr><td>0,20</td><td>0</td><td>$U&lt;0{,}215$</td></tr>
+                <tr><td>0,1646</td><td>0</td><td>$U&lt;0{,}215$</td></tr>
+              </table></div>
+              <div class="paso-nota">⚠ Los valores $N\geq3$ se truncan a 2 por la cobertura máxima. La nota manuscrita "0,20" sobre 0,6540 indica que ese valor fue corregido en el examen real.</div>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;"><strong>Serie (ii) para $X$ (intensidad):</strong> Transformada inversa con $P(X=1500)=1/3$, $P(X=3000)=1/6$, etc. Intervalos: $U&lt;1/3\to1500$; $1/3\leq U&lt;1/2\to3000$; $1/2\leq U&lt;2/3\to3500$; $2/3\leq U&lt;5/6\to5000$; $U\geq5/6\to7500$.</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$U$ (Serie ii)</th><th>$X$ simulado</th><th>$X_{\text{neto}}=X-800$</th></tr>
+                <tr><td>0,3339</td><td>3.000</td><td>2.200</td></tr>
+                <tr><td>0,1568</td><td>1.500</td><td>700</td></tr>
+                <tr><td>0,5239</td><td>3.500</td><td>2.700</td></tr>
+                <tr><td>0,6461</td><td>3.500</td><td>2.700</td></tr>
+                <tr><td>0,0023</td><td>1.500</td><td>700</td></tr>
+                <tr><td>0,4319</td><td>3.000</td><td>2.200</td></tr>
+                <tr><td>0,6678</td><td>3.500</td><td>2.700</td></tr>
+                <tr><td>0,8408</td><td>5.000</td><td>4.200</td></tr>
+                <tr><td>0,4773</td><td>3.000</td><td>2.200</td></tr>
+                <tr><td>0,8731</td><td>5.000</td><td>4.200</td></tr>
+              </table></div>
+              <div class="resultado-final">→ Usar el $X_{\text{neto}}$ correspondiente a cada siniestro ocurrido. $S_i = N_i\cdot X_{\text{neto},i}$ para cada observación. Promediar los $S_i$ para estimar la prima pura simulada y multiplicar por 1,23.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /exam 2025-2C parcial -->
 </div><!-- /section exámenes resueltos -->
 
 
@@ -3536,6 +3842,78 @@ MathJax = {
     </div>
 
   </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Qué es un modelo GARCH(1,1) y en qué se diferencia de un AR(1)? ¿Por qué sirve para finanzas?</span>
+        <span class="teo-freq">★★★ 2025-2C Parcial EJ1 — completamente nuevo en el curso</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p><strong>GARCH(1,1)</strong> (Generalized Autoregressive Conditional Heteroskedasticity): modela series donde la <em>volatilidad</em> (varianza) cambia en el tiempo. La estructura es:</p>
+          <p>$y_t = \mu + \varepsilon_t$ donde $\varepsilon_t = z_t\sqrt{\sigma_t^2}$, con $z_t\sim N(0,1)$ y $\sigma_t^2 = \omega + \alpha\varepsilon_{t-1}^2 + \beta\sigma_{t-1}^2$.</p>
+          <p><strong>Diferencia con AR(1):</strong> el AR(1) modela la media de la serie ($y_t=\phi y_{t-1}+\varepsilon_t$ con varianza constante). El GARCH modela la varianza de los errores — la varianza hoy depende del cuadrado del error ayer y de la varianza de ayer. En AR(1) la varianza es homocedástica; en GARCH es heterocedástica condicional.</p>
+          <p><strong>Por qué es útil en finanzas:</strong> los retornos financieros tienen "clusters de volatilidad" — períodos de alta volatilidad seguidos de alta volatilidad, y períodos de baja seguidos de baja. Esto viola la homocedasticidad del AR(1). El GARCH captura este fenómeno: $\alpha$ mide el impacto inmediato de shocks pasados sobre la volatilidad; $\beta$ mide la persistencia de la volatilidad; $\alpha+\beta<1$ garantiza estacionariedad.</p>
+          <p><strong>Para simular:</strong> necesitamos $z_t\sim N(0,1)$ → usar $\Phi^{-1}(U_t)$ con $U_t\sim U(0,1)$. Luego $\sigma_t^2$ se calcula recursivamente, $\varepsilon_t=z_t\sigma_t$ y $y_t=\mu+\varepsilon_t$.</p>
+        </div>
+        <div class="teo-origin">2025-2C Parcial, EJ1 — primera aparición en el curso</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Por qué la suma de exponenciales i.i.d. se distribuye como una Gamma? Demostración por FGM.</span>
+        <span class="teo-freq">★★★ 2025-2C Parcial EJ2 · 2022-1C Recu EJ2 — pregunta recurrente</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p><strong>FGM de la Exponencial$(c)$:</strong> $M_T(s) = \frac{c}{c-s}$ para $s < c$.</p>
+          <p><strong>Suma de $n$ exponenciales i.i.d.:</strong> por independencia, la FGM de la suma es el producto de las FGMs individuales:</p>
+          <p>$M_{T_n}(s) = \prod_{i=1}^n \frac{c}{c-s} = \left(\frac{c}{c-s}\right)^n = \left(1 - \frac{s}{c}\right)^{-n}$</p>
+          <p><strong>La FGM de la Gamma$(\alpha, \beta)$ es:</strong> $M(s) = (1-\beta s)^{-\alpha}$ para $s < 1/\beta$.</p>
+          <p>Comparando: $n=\alpha$ y $1/c=\beta$, es decir $T_n\sim\Gamma(n, 1/c)$. Por unicidad de la transformada de momentos, la distribución queda determinada unívocamente.</p>
+          <p><strong>Interpretación:</strong> $T_n$ es el tiempo hasta el $n$-ésimo evento de un PP$(c)$ — el tiempo de vida de $n$ generaciones sucesivas. $E[T_n]=n/c$, $\text{Var}[T_n]=n/c^2$.</p>
+        </div>
+        <div class="teo-origin">2025-2C P · 2022-1C R · Pregunta clásica del primer parcial también</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">En un GLM logístico con variable sexo, ¿cómo se interpreta el coeficiente $\alpha_{\text{masc}}=-1{,}1007$?</span>
+        <span class="teo-freq">★★ 2025-2C Parcial EJ3 · aparece cada vez que hay variables categóricas en GLM</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p>En el modelo $\ln\frac{p}{1-p}=\beta_0+\alpha_i+\beta_1\cdot\text{Dosis}$, la variable sexo es categórica con dos niveles: femenino (categoría base, $\alpha_{\text{fem}}=0$) y masculino ($\alpha_{\text{masc}}=-1{,}1007$).</p>
+          <p><strong>Interpretación de $\alpha_{\text{masc}}=-1{,}1007$:</strong> manteniendo la dosis constante, el log-odds de un macho es $1{,}1007$ unidades menor que el de una hembra. En odds ratio: $e^{-1{,}1007}\approx0{,}333$ — los machos tienen un odds de resistencia que es 33% del odds de las hembras. Dicho de otro modo, los machos son más vulnerables al tóxico.</p>
+          <p><strong>Dosis letal $D_{50}$:</strong> se halla igualando el predictor lineal a 0 (porque $p=0{,}5\Rightarrow\log\text{-odds}=0$). Para femenino: $D_{50}^{\text{fem}}=3{,}4732/1{,}0642\approx3{,}26$. Para masculino: $D_{50}^{\text{masc}}=(3{,}4732-1{,}1007)/1{,}0642=2{,}3725/1{,}0642\approx2{,}23$. Los machos mueren a dosis menores.</p>
+        </div>
+        <div class="teo-origin">2025-2C Parcial, EJ3 punto d</div>
+      </div>
+    </div>
+
+    <div class="teo-card">
+      <div class="teo-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="teo-q">¿Cómo se identifica la distribución de una variable desde su FGM? ¿Cómo leer $M_N(t)=(0{,}95+0{,}05\,e^t)^{30}$?</span>
+        <span class="teo-freq">★★★ 2025-2C Parcial EJ4 · 2022-1C R EJ3 · pregunta con trampa frecuente</span>
+        <span class="topic-chevron" style="color:var(--accent-purple);">›</span>
+      </div>
+      <div class="teo-body">
+        <div class="teo-respuesta">
+          <p><strong>Forma general de la FGM de la Binomial$(n,p)$:</strong> $M_N(t)=(q+p\,e^t)^n=(1-p+p\,e^t)^n$.</p>
+          <p>Comparando con $(0{,}95+0{,}05\,e^t)^{30}$: $p=0{,}05$, $q=0{,}95$, $n=30$ → $N\sim B(30,\,0{,}05)$.</p>
+          <p><strong>Forma general de la FGM de una discreta:</strong> $M_X(t)=\sum_j P(X=x_j)\,e^{x_j t}$. Los exponentes son los valores posibles y los coeficientes son las probabilidades.</p>
+          <p>Para $M_X(t)=\frac{1}{3}e^{1500t}+\frac{1}{6}e^{3000t}+\ldots$: $X$ toma el valor 1500 con prob 1/3, el valor 3000 con prob 1/6, etc. Verificar: $\sum p_j = 1/3+4\cdot1/6=1/3+2/3=1$ ✓.</p>
+          <p><strong>Trampa:</strong> al calcular $E(X)$ desde la FGM, derivar y evaluar en $t=0$: $E(X)=M'_X(0)=\sum_j x_j p_j$. No confundir los exponentes (valores) con los coeficientes (probabilidades).</p>
+        </div>
+        <div class="teo-origin">2025-2C Parcial EJ4 · 2022-1C R EJ3 (Starbucks)</div>
+      </div>
+    </div>
+
 </div><!-- /section preguntas teóricas -->
 
 </div><!-- /wrapper extra -->
@@ -3754,9 +4132,31 @@ MathJax = {
           <div class="paso">
             <span class="paso-num">5</span>
             <div class="paso-contenido">
-              <strong>Transformada inversa eficiente con $U=[0{,}5371;\ldots]$.</strong> Ordenar de mayor a menor probabilidad: primero "otra combinación" (0,778), luego "sale 7" (0,167), luego "sale 11" (0,056):
-              $$U < 0{,}778 \to \text{neto}=-1{,}00 \qquad 0{,}778\leq U < 0{,}944 \to \text{neto}=+2{,}70 \qquad U \geq 0{,}944 \to \text{neto}=+4{,}70$$
-              <div class="paso-nota">⚠ La aclaración del enunciado dice "en caso de igualdad de probabilidades, ordenar de peor a mejor resultado". Acá no hay igualdad, así que el criterio es solo mayor a menor $p_j$.</div>
+              <strong>Transformada inversa eficiente — tabla de intervalos y 10 valores simulados.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;">Ordenar de mayor a menor probabilidad: primero "otra combinación" (28/36=0,778), luego "sale 7" (6/36=0,167), luego "sale 11" (2/36=0,056):</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>Orden</th><th>Resultado</th><th>$P$</th><th>$F$ acum.</th><th>Intervalo de $U$</th></tr>
+                <tr><td>1°</td><td>Otra — neto $=-1{,}00$</td><td>0,7778</td><td>0,7778</td><td>$U&lt;0{,}7778$</td></tr>
+                <tr><td>2°</td><td>Sale 7 — neto $=+2{,}70$</td><td>0,1667</td><td>0,9444</td><td>$0{,}7778\leq U&lt;0{,}9444$</td></tr>
+                <tr><td>3°</td><td>Sale 11 — neto $=+4{,}70$</td><td>0,0556</td><td>1,0000</td><td>$U\geq0{,}9444$</td></tr>
+              </table></div>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Con $U=[0{,}5371;0{,}9731;0{,}9688;0{,}5680;0{,}5277;0{,}0073;0{,}3102;0{,}8445;0{,}4737;0{,}5595]$:</p>
+              <div class="table-wrap"><table class="cheat-table">
+                <tr><th>$i$</th><th>$U$</th><th>Intervalo</th><th>Resultado</th><th>Neto</th></tr>
+                <tr><td>1</td><td>0,5371</td><td>$&lt;0{,}7778$</td><td>Otra</td><td>−1,00</td></tr>
+                <tr><td>2</td><td>0,9731</td><td>$\geq0{,}9444$</td><td>Sale 11</td><td>+4,70</td></tr>
+                <tr><td>3</td><td>0,9688</td><td>$\geq0{,}9444$</td><td>Sale 11</td><td>+4,70</td></tr>
+                <tr><td>4</td><td>0,5680</td><td>$&lt;0{,}7778$</td><td>Otra</td><td>−1,00</td></tr>
+                <tr><td>5</td><td>0,5277</td><td>$&lt;0{,}7778$</td><td>Otra</td><td>−1,00</td></tr>
+                <tr><td>6</td><td>0,0073</td><td>$&lt;0{,}7778$</td><td>Otra</td><td>−1,00</td></tr>
+                <tr><td>7</td><td>0,3102</td><td>$&lt;0{,}7778$</td><td>Otra</td><td>−1,00</td></tr>
+                <tr><td>8</td><td>0,8445</td><td>$0{,}7778\leq U&lt;0{,}9444$</td><td>Sale 7</td><td>+2,70</td></tr>
+                <tr><td>9</td><td>0,4737</td><td>$&lt;0{,}7778$</td><td>Otra</td><td>−1,00</td></tr>
+                <tr><td>10</td><td>0,5595</td><td>$&lt;0{,}7778$</td><td>Otra</td><td>−1,00</td></tr>
+                <tr><td colspan="4"><strong>Resultado muestral</strong></td><td><strong>$(−1{,}00\cdot7+2{,}70\cdot1+4{,}70\cdot2)/10=−3{,}9/10=−0{,}39$</strong></td></tr>
+              </table></div>
+              <div class="resultado-final">→ El resultado muestral es $-\$0{,}39$ por apuesta. Como es negativo: <strong>no conviene seguir jugando</strong>. Es peor que el esperado teórico ($-\$0{,}067$) — la simulación particular tuvo más "otras combinaciones" de lo esperado. Con más repeticiones convergería a $-\$0{,}067$.</div>
+              <div class="paso-nota">⚠ La aclaración del enunciado dice "en caso de igualdad de probabilidades, ordenar de peor a mejor resultado". Acá no hay igualdad de probs, así que el criterio es solo mayor a menor $p_j$.</div>
             </div>
           </div>
           <div class="paso">
