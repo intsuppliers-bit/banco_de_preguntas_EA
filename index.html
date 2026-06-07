@@ -1986,21 +1986,24 @@ MathJax = {
           <div class="paso">
             <span class="paso-num">D</span>
             <div class="paso-contenido">
-              <strong>Gastos adicionales condicionados al siniestro.</strong> $G_i\sim U(0,20)$, pero <em>solo cuando hubo siniestro</em>. Con $U_{\text{gastos}}=[0{,}412;\,0{,}733;\,0{,}281;\,−;\,0{,}895;\,−;\,−;\,0{,}104;\,0{,}558;\,−]$:
+              <strong>Gastos adicionales condicionados al siniestro.</strong> $G_i\sim U(0,20)$ usando $X=U\cdot(20-0)+0=20U$. Vector dado: $U_{\text{Gastos}}=[0{,}0898;\,0{,}6548;\,0{,}0366;\,0{,}4324;\,0{,}8295;\,0{,}134;\,0{,}9187;\,0{,}5327;\,0{,}3752;\,0{,}0694]$. Se consumen <em>en orden</em> solo para las filas con siniestro (7 casos). El pago con límite (punto C) ya está calculado.
               <div class="table-wrap"><table class="cheat-table">
-                <tr><th>$i$</th><th>¿Sin?</th><th>$U_g$</th><th>$G_i=20\cdot U_g$</th><th>Pago + gasto</th></tr>
-                <tr><td>1</td><td>✓</td><td>0,412</td><td>8,24</td><td>52,7 + 8,24 = 60,94</td></tr>
-                <tr><td>2</td><td>✓</td><td>0,733</td><td>14,66</td><td>37,8 + 14,66 = 52,46</td></tr>
-                <tr><td>3</td><td>✓</td><td>0,281</td><td>5,62</td><td>17,1 + 5,62 = 22,72</td></tr>
-                <tr><td>4</td><td>✗</td><td>—</td><td>0</td><td>0</td></tr>
-                <tr><td>5</td><td>✓</td><td>0,895</td><td>17,90</td><td>86,6 + 17,90 = 104,5</td></tr>
-                <tr><td>6–7</td><td>✗</td><td>—</td><td>0</td><td>0</td></tr>
-                <tr><td>8</td><td>✓</td><td>0,104</td><td>2,08</td><td>9,1 + 2,08 = 11,18</td></tr>
-                <tr><td>9</td><td>✓</td><td>0,558</td><td>11,16</td><td>32,3 + 11,16 = 43,46</td></tr>
-                <tr><td>10</td><td>✗</td><td>—</td><td>0</td><td>0</td></tr>
-                <tr><td colspan="4"><strong>Costo total promedio</strong></td><td><strong>$(60{,}94+52{,}46+22{,}72+104{,}5+11{,}18+43{,}46)/10 = 29{,}53$</strong></td></tr>
+                <tr><th>$i$</th><th>¿Sin?</th><th>$U_{\text{gas}}$</th><th>$G_i=20\cdot U_g$</th><th>Pago (con lím. C)</th><th>Total $= $ Pago $+ G_i$</th></tr>
+                <tr><td>1</td><td>✓</td><td>0,0898</td><td>$20\cdot0{,}0898=1{,}8$</td><td>52,6</td><td>54,4</td></tr>
+                <tr><td>2</td><td>✓</td><td>0,6548</td><td>$20\cdot0{,}6548=13{,}1$</td><td>37,8</td><td>50,9</td></tr>
+                <tr><td>3</td><td>✓</td><td>0,0366</td><td>$20\cdot0{,}0366=0{,}7$</td><td>150,0</td><td>150,7</td></tr>
+                <tr><td>4</td><td>✗</td><td>—</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>5</td><td>✓</td><td>0,4324</td><td>$20\cdot0{,}4324=8{,}6$</td><td>137,8</td><td>146,4</td></tr>
+                <tr><td>6</td><td>✗</td><td>—</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>7</td><td>✗</td><td>—</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>8</td><td>✓</td><td>0,8295</td><td>$20\cdot0{,}8295=16{,}6$</td><td>150,0</td><td>166,6</td></tr>
+                <tr><td>9</td><td>✓</td><td>0,1340</td><td>$20\cdot0{,}1340=2{,}7$</td><td>94,9</td><td>97,6</td></tr>
+                <tr><td>10</td><td>✓</td><td>0,9187</td><td>$20\cdot0{,}9187=18{,}4$</td><td>150,0</td><td>168,4</td></tr>
+                <tr><td colspan="3"><strong>Promedio gastos</strong></td><td><strong>$61{,}9/10=6{,}2$</strong></td><td colspan="2"></td></tr>
+                <tr><td colspan="3"><strong>Costo total promedio</strong></td><td colspan="3"><strong>$(54{,}4+50{,}9+150{,}7+0+146{,}4+0+0+166{,}6+97{,}6+168{,}4)/10=83{,}5$</strong></td></tr>
               </table></div>
-              <div class="paso-nota">⚠ Los $U_g$ de las filas sin siniestro (4, 6, 7, 10) NO se usan — aunque estén en el vector dado. El costo total promedio divide siempre por $n=10$.</div>
+              <div class="paso-nota">⚠ $U_{\text{Gastos}}$ se consume en orden avanzando <em>solo cuando hay siniestro</em>: el 1° $U_g$ va a la fila 1, el 2° a la 2, el 3° a la 3, el 4° a la 5 (salta la 4 que no tuvo siniestro), y así. Las filas 4, 6 y 7 no consumen $U_g$.</div>
+              <div class="resultado-final">→ Resumen de los 4 puntos: B) promedio sin lím = <strong>107,6</strong> · $P(&gt;150)=0{,}30$ · C) con lím = <strong>77,3</strong> · D) costo total con lím + gastos = <strong>83,5</strong></div>
             </div>
           </div>
         </div>
