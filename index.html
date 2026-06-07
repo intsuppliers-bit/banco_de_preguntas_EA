@@ -3270,11 +3270,11 @@ MathJax = {
               <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">El modelo necesita $z_t \sim N(0,1)$ — números normales estándar. Las tres series tienen rangos distintos:</p>
               <div class="table-wrap"><table class="cheat-table">
                 <tr><th>Serie</th><th>Rango de valores</th><th>¿Sirve para $N(0,1)$?</th><th>Decisión</th></tr>
-                <tr><td>A</td><td>0,021 a 0,221 — todos entre 0 y 1</td><td>Parecen $U(0,1)$</td><td>✓ Usar esta — son uniformes para aplicar $\Phi^{-1}(U)$</td></tr>
-                <tr><td>B</td><td>0,0001 a 0,0017 — muy pequeños</td><td>No son $U(0,1)$</td><td>✗ Descartar</td></tr>
-                <tr><td>C</td><td>0,0989 a 0,9902 — entre 0 y 1 pero con 0,8191</td><td>Podrían ser $U(0,1)$</td><td>✗ Descartar — tienen valores extremos que sugieren otro tipo</td></tr>
+                <tr><td>A</td><td>0,021 a 0,221 — todos menores a 0,25</td><td>No cubren $U(0,1)$ completo</td><td>✗ Descartar — rango muy acotado, sesgado a valores bajos</td></tr>
+                <tr><td>B</td><td>0,0001 a 0,0017 — extremadamente pequeños</td><td>No son $U(0,1)$</td><td>✗ Descartar — parecen varianzas o p-valores</td></tr>
+                <tr><td>C</td><td>0,0001 a 0,9902 — cubren todo $(0,1)$</td><td>Sí, son $U(0,1)$</td><td>✓ <strong>Usar esta</strong> — cubren todo el rango, producen $z$ positivos y negativos</td></tr>
               </table></div>
-              <div class="paso-nota">⚠ La serie A tiene valores entre 0,021 y 0,221 — son consistentes con números uniformes en $[0,1]$ para usar con $\Phi^{-1}$. La serie B tiene valores muy cercanos a 0 (parecen varianzas o probabilidades de eventos raros). La serie C tiene un valor inicial muy alto (0,8191) que la hace menos adecuada como generador de $N(0,1)$ mediante transformada inversa.</div>
+              <div class="paso-nota">💡 La Serie C va de 0,0001 a 0,9902 — cubre todo el intervalo $(0,1)$ como debe una $U(0,1)$, dando $z_t$ tanto positivos como negativos. La Serie A solo tiene valores entre 0,021 y 0,221 (todos en la mitad inferior), lo que produciría únicamente $z_t &lt; 0$ y todos los retornos menores que $\mu$ — eso no es representativo. La Serie B tiene órdenes de magnitud $10^{-4}$, claramente no son uniformes.</div>
             </div>
           </div>
           <div class="paso">
@@ -3289,32 +3289,36 @@ MathJax = {
           <div class="paso">
             <span class="paso-num">b.2</span>
             <div class="paso-contenido">
-              <strong>Simular $z_t$ desde la serie A usando transformada inversa.</strong>
-              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">Para cada $U_t$ de la serie A: $z_t = \Phi^{-1}(U_t)$. Luego $\varepsilon_t = z_t\cdot\sigma_t$ y $y_t = \mu + \varepsilon_t$.</p>
+              <strong>Simular $z_t$ desde la Serie C usando transformada inversa.</strong>
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.4rem 0;">$U_C=[0{,}8191;\,0{,}0989;\,0{,}0209;\,0{,}3909;\,0{,}6184;\,0{,}4853;\,0{,}7767;\,0{,}9902;\,0{,}0001;\,0{,}3478]$. Para cada $U_t$: $z_t=\Phi^{-1}(U_t)$, luego $\varepsilon_t=z_t\cdot\sigma_t$ y $y_t=\mu+\varepsilon_t$.</p>
               <div class="table-wrap"><table class="cheat-table">
-                <tr><th>$t$</th><th>$U_t$ (Serie A)</th><th>$z_t=\Phi^{-1}(U_t)$</th><th>$\varepsilon_t=z_t\cdot\sigma_t$</th><th>$y_t=\mu+\varepsilon_t$</th></tr>
-                <tr><td>1</td><td>0,021</td><td>$\Phi^{-1}(0{,}021)\approx-2{,}034$</td><td>$-2{,}034\cdot0{,}1737\approx-0{,}353$</td><td>$0{,}060-0{,}353=-0{,}293$</td></tr>
-                <tr><td>2</td><td>0,071</td><td>$\Phi^{-1}(0{,}071)\approx-1{,}468$</td><td>$-1{,}468\cdot0{,}1737\approx-0{,}255$</td><td>$0{,}060-0{,}255=-0{,}195$</td></tr>
-                <tr><td>3</td><td>0,121</td><td>$\Phi^{-1}(0{,}121)\approx-1{,}167$</td><td>$-1{,}167\cdot0{,}1737\approx-0{,}203$</td><td>$0{,}060-0{,}203=-0{,}143$</td></tr>
-                <tr><td>4</td><td>0,171</td><td>$\Phi^{-1}(0{,}171)\approx-0{,}952$</td><td>$-0{,}952\cdot0{,}1737\approx-0{,}165$</td><td>$0{,}060-0{,}165=-0{,}105$</td></tr>
-                <tr><td>5</td><td>0,221</td><td>$\Phi^{-1}(0{,}221)\approx-0{,}768$</td><td>$-0{,}768\cdot0{,}1737\approx-0{,}133$</td><td>$0{,}060-0{,}133=-0{,}073$</td></tr>
-                <tr><td>6</td><td>0,218</td><td>$\approx-0{,}779$</td><td>$\approx-0{,}135$</td><td>$-0{,}075$</td></tr>
-                <tr><td>7</td><td>0,215</td><td>$\approx-0{,}789$</td><td>$\approx-0{,}137$</td><td>$-0{,}077$</td></tr>
-                <tr><td>8</td><td>0,212</td><td>$\approx-0{,}800$</td><td>$\approx-0{,}139$</td><td>$-0{,}079$</td></tr>
-                <tr><td>9</td><td>0,209</td><td>$\approx-0{,}810$</td><td>$\approx-0{,}141$</td><td>$-0{,}081$</td></tr>
-                <tr><td>10</td><td>0,206</td><td>$\approx-0{,}820$</td><td>$\approx-0{,}142$</td><td>$-0{,}082$</td></tr>
+                <tr><th>$t$</th><th>$U_t$ (Serie C)</th><th>$z_t=\Phi^{-1}(U_t)$</th><th>$\varepsilon_t=z_t\cdot0{,}1736$</th><th>$y_t=0{,}060+\varepsilon_t$</th></tr>
+                <tr><td>1</td><td>0,8191</td><td>$+0{,}912$</td><td>$+0{,}158$</td><td>$+0{,}218$</td></tr>
+                <tr><td>2</td><td>0,0989</td><td>$-1{,}288$</td><td>$-0{,}224$</td><td>$-0{,}164$</td></tr>
+                <tr><td>3</td><td>0,0209</td><td>$-2{,}036$</td><td>$-0{,}354$</td><td>$-0{,}294$</td></tr>
+                <tr><td>4</td><td>0,3909</td><td>$-0{,}277$</td><td>$-0{,}048$</td><td>$+0{,}012$</td></tr>
+                <tr><td>5</td><td>0,6184</td><td>$+0{,}301$</td><td>$+0{,}052$</td><td>$+0{,}112$</td></tr>
+                <tr><td>6</td><td>0,4853</td><td>$-0{,}037$</td><td>$-0{,}006$</td><td>$+0{,}054$</td></tr>
+                <tr><td>7</td><td>0,7767</td><td>$+0{,}761$</td><td>$+0{,}132$</td><td>$+0{,}192$</td></tr>
+                <tr><td>8</td><td>0,9902</td><td>$+2{,}334$</td><td>$+0{,}405$</td><td>$+0{,}465$</td></tr>
+                <tr><td>9</td><td>0,0001</td><td>$-3{,}719$</td><td>$-0{,}646$</td><td>$-0{,}586$</td></tr>
+                <tr><td>10</td><td>0,3478</td><td>$-0{,}391$</td><td>$-0{,}068$</td><td>$-0{,}008$</td></tr>
               </table></div>
-              <div class="paso-nota">💡 Todos los valores de la Serie A son $<0{,}5$, entonces todos los $z_t<0$ y todos los retornos simulados son negativos. Esto es una característica de esta simulación particular — con una muestra más grande habría retornos positivos y negativos.</div>
+              <div class="paso-nota">💡 Ahora los retornos son tanto positivos como negativos — la serie C es una $U(0,1)$ representativa. Los valores extremos $U=0{,}9902$ y $U=0{,}0001$ generan $z$ grandes en módulo ($\pm2{,}3$ a $\pm3{,}7$) — eventos de cola del retorno financiero.</div>
             </div>
           </div>
           <div class="paso">
             <span class="paso-num">c</span>
             <div class="paso-contenido">
               <strong>Estadísticas de los valores simulados.</strong>
-              $$\bar{y} = \frac{1}{10}\sum_{t=1}^{10} y_t \approx \frac{-1{,}203}{10} = -0{,}120$$
-              $$S^2 = \frac{\sum(y_t-\bar{y})^2}{9} \approx 0{,}0046 \qquad S \approx 0{,}068$$
-              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;"><strong>¿Qué debería suceder para igualar los estadísticos reales?</strong> Para que $\bar{y}_{\text{sim}}=\mu=0{,}060054$, el promedio de los $z_t$ simulados debería ser cero — es decir, la muestra de $U_t$ debería ser simétrica alrededor de 0,5. Para que $S_{\text{sim}}=\sigma_t=0{,}1737$, la dispersión de los $z_t$ debería ser exactamente 1 (normal estándar). Con $n\to\infty$, por la LGN, ambas condiciones se cumplen asintóticamente.</p>
-              <div class="resultado-final">→ Con solo 10 observaciones, las estadísticas muestrales difieren de los parámetros teóricos. La convergencia es $O(1/\sqrt{n})$ — necesitaríamos $n\approx 1000$ para una buena aproximación.</div>
+              $$\bar{y} = \frac{1}{10}\sum_{t=1}^{10} y_t \approx \frac{0{,}001}{10} \approx 0{,}0003$$
+              $$S = \sqrt{\frac{\sum(y_t-\bar{y})^2}{9}} \approx 0{,}293$$
+              <p style="font-size:0.9rem;color:var(--text-muted);margin:0.3rem 0;"><strong>¿Qué debería suceder para igualar los estadísticos reales?</strong></p>
+              <ul style="padding-left:1.2rem;margin:0.3rem 0;font-size:0.9rem;color:var(--text-muted);">
+                <li>Para que $\bar{y}_{\text{sim}}=\mu=0{,}060054$: el promedio de los $z_t$ debería ser exactamente 0 — equivale a que los $U_t$ sean simétricos alrededor de 0,5. Con $n\to\infty$ se cumple por la LGN.</li>
+                <li>Para que $S_{\text{sim}}=\sigma_t=0{,}1736$: la dispersión de los $z_t$ debería ser 1 (normal estándar exacta). Con $n=10$ el desvío muestral ($0{,}293$) supera $\sigma_t$ porque la muestra incluye valores extremos ($U=0{,}0001$ y $0{,}9902$).</li>
+              </ul>
+              <div class="resultado-final">→ Con $n=10$ las estadísticas difieren de los parámetros teóricos. La convergencia es $O(1/\sqrt{n})$ — con $n\approx10.000$ el promedio estaría dentro de $\pm0{,}002$ de $\mu$ con 95% de probabilidad.</div>
             </div>
           </div>
         </div>
